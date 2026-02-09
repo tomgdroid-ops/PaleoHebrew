@@ -1,0 +1,381 @@
+[
+  {
+    "letter": "א",
+    "name": "Aleph",
+    "paleoUnicode": "𐤀",
+    "pictograph": "Ox head",
+    "gematria": 1,
+    "meanings": [
+      { "text": "ox", "role": "noun", "primary": true },
+      { "text": "bull", "role": "noun", "primary": false },
+      { "text": "strength", "role": "noun", "primary": true },
+      { "text": "power", "role": "noun", "primary": true },
+      { "text": "leader", "role": "noun", "primary": true },
+      { "text": "chief", "role": "noun", "primary": false },
+      { "text": "first", "role": "adjective", "primary": true },
+      { "text": "to lead", "role": "verb", "primary": true },
+      { "text": "to teach", "role": "verb", "primary": false },
+      { "text": "to yoke", "role": "verb", "primary": false }
+    ]
+  },
+  {
+    "letter": "ב",
+    "name": "Bet",
+    "paleoUnicode": "𐤁",
+    "pictograph": "House/tent floor plan",
+    "gematria": 2,
+    "meanings": [
+      { "text": "house", "role": "noun", "primary": true },
+      { "text": "tent", "role": "noun", "primary": true },
+      { "text": "family", "role": "noun", "primary": true },
+      { "text": "dwelling", "role": "noun", "primary": false },
+      { "text": "household", "role": "noun", "primary": false },
+      { "text": "inside", "role": "noun", "primary": true },
+      { "text": "within", "role": "adverb", "primary": false },
+      { "text": "temple", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "ג",
+    "name": "Gimel",
+    "paleoUnicode": "𐤂",
+    "pictograph": "Foot/camel",
+    "gematria": 3,
+    "meanings": [
+      { "text": "camel", "role": "noun", "primary": true },
+      { "text": "foot", "role": "noun", "primary": true },
+      { "text": "to walk", "role": "verb", "primary": true },
+      { "text": "to carry", "role": "verb", "primary": true },
+      { "text": "to lift up", "role": "verb", "primary": true },
+      { "text": "to gather", "role": "verb", "primary": false },
+      { "text": "pride", "role": "noun", "primary": false },
+      { "text": "journey", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "ד",
+    "name": "Dalet",
+    "paleoUnicode": "𐤃",
+    "pictograph": "Door/tent entrance",
+    "gematria": 4,
+    "meanings": [
+      { "text": "door", "role": "noun", "primary": true },
+      { "text": "gate", "role": "noun", "primary": false },
+      { "text": "entrance", "role": "noun", "primary": true },
+      { "text": "pathway", "role": "noun", "primary": true },
+      { "text": "to move", "role": "verb", "primary": true },
+      { "text": "to hang", "role": "verb", "primary": false },
+      { "text": "low", "role": "adjective", "primary": false },
+      { "text": "poor", "role": "adjective", "primary": false }
+    ]
+  },
+  {
+    "letter": "ה",
+    "name": "Hey",
+    "paleoUnicode": "𐤄",
+    "pictograph": "Man with arms raised",
+    "gematria": 5,
+    "meanings": [
+      { "text": "behold", "role": "verb", "primary": true },
+      { "text": "to look", "role": "verb", "primary": true },
+      { "text": "to reveal", "role": "verb", "primary": true },
+      { "text": "breath", "role": "noun", "primary": true },
+      { "text": "wind", "role": "noun", "primary": false },
+      { "text": "spirit", "role": "noun", "primary": false },
+      { "text": "the", "role": "article", "primary": true },
+      { "text": "man", "role": "noun", "primary": false },
+      { "text": "life", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "ו",
+    "name": "Vav",
+    "paleoUnicode": "𐤅",
+    "pictograph": "Tent peg/hook",
+    "gematria": 6,
+    "meanings": [
+      { "text": "peg", "role": "noun", "primary": true },
+      { "text": "hook", "role": "noun", "primary": true },
+      { "text": "nail", "role": "noun", "primary": true },
+      { "text": "to secure", "role": "verb", "primary": true },
+      { "text": "to add", "role": "verb", "primary": true },
+      { "text": "to join", "role": "verb", "primary": false },
+      { "text": "and", "role": "conjunction", "primary": true },
+      { "text": "connection", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "ז",
+    "name": "Zayin",
+    "paleoUnicode": "𐤆",
+    "pictograph": "Mattock/plow/weapon",
+    "gematria": 7,
+    "meanings": [
+      { "text": "weapon", "role": "noun", "primary": true },
+      { "text": "plow", "role": "noun", "primary": true },
+      { "text": "to cut", "role": "verb", "primary": true },
+      { "text": "food", "role": "noun", "primary": true },
+      { "text": "to nourish", "role": "verb", "primary": false },
+      { "text": "to feed", "role": "verb", "primary": false },
+      { "text": "harvest", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "ח",
+    "name": "Chet",
+    "paleoUnicode": "𐤇",
+    "pictograph": "Tent wall/fence",
+    "gematria": 8,
+    "meanings": [
+      { "text": "wall", "role": "noun", "primary": true },
+      { "text": "fence", "role": "noun", "primary": true },
+      { "text": "to separate", "role": "verb", "primary": true },
+      { "text": "outside", "role": "noun", "primary": true },
+      { "text": "half", "role": "noun", "primary": false },
+      { "text": "to protect", "role": "verb", "primary": false },
+      { "text": "private", "role": "adjective", "primary": false },
+      { "text": "sin", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "ט",
+    "name": "Tet",
+    "paleoUnicode": "𐤈",
+    "pictograph": "Basket/container/snake coil",
+    "gematria": 9,
+    "meanings": [
+      { "text": "basket", "role": "noun", "primary": true },
+      { "text": "container", "role": "noun", "primary": true },
+      { "text": "to surround", "role": "verb", "primary": true },
+      { "text": "to contain", "role": "verb", "primary": true },
+      { "text": "mud", "role": "noun", "primary": false },
+      { "text": "clay", "role": "noun", "primary": false },
+      { "text": "good", "role": "adjective", "primary": false },
+      { "text": "serpent", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "י",
+    "name": "Yod",
+    "paleoUnicode": "𐤉",
+    "pictograph": "Hand and arm",
+    "gematria": 10,
+    "meanings": [
+      { "text": "hand", "role": "noun", "primary": true },
+      { "text": "arm", "role": "noun", "primary": true },
+      { "text": "to work", "role": "verb", "primary": true },
+      { "text": "to make", "role": "verb", "primary": true },
+      { "text": "deed", "role": "noun", "primary": true },
+      { "text": "to throw", "role": "verb", "primary": false },
+      { "text": "to worship", "role": "verb", "primary": false },
+      { "text": "power", "role": "noun", "primary": false },
+      { "text": "authority", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "כ",
+    "name": "Kaf",
+    "paleoUnicode": "𐤊",
+    "pictograph": "Open palm of hand",
+    "gematria": 20,
+    "meanings": [
+      { "text": "palm", "role": "noun", "primary": true },
+      { "text": "to open", "role": "verb", "primary": true },
+      { "text": "to cover", "role": "verb", "primary": true },
+      { "text": "to bend", "role": "verb", "primary": true },
+      { "text": "to allow", "role": "verb", "primary": false },
+      { "text": "to tame", "role": "verb", "primary": false },
+      { "text": "sole of foot", "role": "noun", "primary": false },
+      { "text": "to subdue", "role": "verb", "primary": false }
+    ]
+  },
+  {
+    "letter": "ל",
+    "name": "Lamed",
+    "paleoUnicode": "𐤋",
+    "pictograph": "Shepherd's staff/ox goad",
+    "gematria": 30,
+    "meanings": [
+      { "text": "staff", "role": "noun", "primary": true },
+      { "text": "goad", "role": "noun", "primary": false },
+      { "text": "to teach", "role": "verb", "primary": true },
+      { "text": "to learn", "role": "verb", "primary": true },
+      { "text": "to guide", "role": "verb", "primary": true },
+      { "text": "authority", "role": "noun", "primary": true },
+      { "text": "toward", "role": "preposition", "primary": true },
+      { "text": "to protect", "role": "verb", "primary": false },
+      { "text": "shepherd", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "מ",
+    "name": "Mem",
+    "paleoUnicode": "𐤌",
+    "pictograph": "Water/waves",
+    "gematria": 40,
+    "meanings": [
+      { "text": "water", "role": "noun", "primary": true },
+      { "text": "sea", "role": "noun", "primary": true },
+      { "text": "chaos", "role": "noun", "primary": true },
+      { "text": "mighty", "role": "adjective", "primary": true },
+      { "text": "blood", "role": "noun", "primary": false },
+      { "text": "nations", "role": "noun", "primary": false },
+      { "text": "massive", "role": "adjective", "primary": false },
+      { "text": "the unknown", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "נ",
+    "name": "Nun",
+    "paleoUnicode": "𐤍",
+    "pictograph": "Sprouting seed/fish/serpent",
+    "gematria": 50,
+    "meanings": [
+      { "text": "seed", "role": "noun", "primary": true },
+      { "text": "fish", "role": "noun", "primary": true },
+      { "text": "offspring", "role": "noun", "primary": true },
+      { "text": "to continue", "role": "verb", "primary": true },
+      { "text": "heir", "role": "noun", "primary": true },
+      { "text": "life", "role": "noun", "primary": false },
+      { "text": "activity", "role": "noun", "primary": false },
+      { "text": "serpent", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "ס",
+    "name": "Samekh",
+    "paleoUnicode": "𐤎",
+    "pictograph": "Thorn/shield/prop",
+    "gematria": 60,
+    "meanings": [
+      { "text": "thorn", "role": "noun", "primary": true },
+      { "text": "shield", "role": "noun", "primary": true },
+      { "text": "to support", "role": "verb", "primary": true },
+      { "text": "to protect", "role": "verb", "primary": true },
+      { "text": "to grab", "role": "verb", "primary": false },
+      { "text": "to turn", "role": "verb", "primary": false },
+      { "text": "sharp", "role": "adjective", "primary": false },
+      { "text": "to hate", "role": "verb", "primary": false }
+    ]
+  },
+  {
+    "letter": "ע",
+    "name": "Ayin",
+    "paleoUnicode": "𐤏",
+    "pictograph": "Eye",
+    "gematria": 70,
+    "meanings": [
+      { "text": "eye", "role": "noun", "primary": true },
+      { "text": "to see", "role": "verb", "primary": true },
+      { "text": "to watch", "role": "verb", "primary": true },
+      { "text": "to know", "role": "verb", "primary": true },
+      { "text": "fountain", "role": "noun", "primary": true },
+      { "text": "spring", "role": "noun", "primary": false },
+      { "text": "shade", "role": "noun", "primary": false },
+      { "text": "experience", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "פ",
+    "name": "Pey",
+    "paleoUnicode": "𐤐",
+    "pictograph": "Mouth",
+    "gematria": 80,
+    "meanings": [
+      { "text": "mouth", "role": "noun", "primary": true },
+      { "text": "to speak", "role": "verb", "primary": true },
+      { "text": "word", "role": "noun", "primary": true },
+      { "text": "edge", "role": "noun", "primary": true },
+      { "text": "to open", "role": "verb", "primary": false },
+      { "text": "to blow", "role": "verb", "primary": false },
+      { "text": "breath", "role": "noun", "primary": false },
+      { "text": "to scatter", "role": "verb", "primary": false }
+    ]
+  },
+  {
+    "letter": "צ",
+    "name": "Tsade",
+    "paleoUnicode": "𐤑",
+    "pictograph": "Man on his side/fishhook",
+    "gematria": 90,
+    "meanings": [
+      { "text": "to hunt", "role": "verb", "primary": true },
+      { "text": "to catch", "role": "verb", "primary": true },
+      { "text": "righteous", "role": "adjective", "primary": true },
+      { "text": "journey", "role": "noun", "primary": true },
+      { "text": "side", "role": "noun", "primary": false },
+      { "text": "trail", "role": "noun", "primary": false },
+      { "text": "desire", "role": "noun", "primary": false },
+      { "text": "need", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "ק",
+    "name": "Qof",
+    "paleoUnicode": "𐤒",
+    "pictograph": "Back of head/sun on horizon",
+    "gematria": 100,
+    "meanings": [
+      { "text": "back of head", "role": "noun", "primary": true },
+      { "text": "horizon", "role": "noun", "primary": true },
+      { "text": "to circle", "role": "verb", "primary": true },
+      { "text": "time", "role": "noun", "primary": true },
+      { "text": "behind", "role": "preposition", "primary": false },
+      { "text": "last", "role": "adjective", "primary": false },
+      { "text": "least", "role": "adjective", "primary": false },
+      { "text": "condense", "role": "verb", "primary": false }
+    ]
+  },
+  {
+    "letter": "ר",
+    "name": "Resh",
+    "paleoUnicode": "𐤓",
+    "pictograph": "Head of a man",
+    "gematria": 200,
+    "meanings": [
+      { "text": "head", "role": "noun", "primary": true },
+      { "text": "person", "role": "noun", "primary": true },
+      { "text": "top", "role": "noun", "primary": true },
+      { "text": "beginning", "role": "noun", "primary": true },
+      { "text": "first", "role": "adjective", "primary": true },
+      { "text": "chief", "role": "noun", "primary": false },
+      { "text": "highest", "role": "adjective", "primary": false },
+      { "text": "ruler", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "ש",
+    "name": "Shin",
+    "paleoUnicode": "𐤔",
+    "pictograph": "Two front teeth",
+    "gematria": 300,
+    "meanings": [
+      { "text": "teeth", "role": "noun", "primary": true },
+      { "text": "to consume", "role": "verb", "primary": true },
+      { "text": "to destroy", "role": "verb", "primary": true },
+      { "text": "fire", "role": "noun", "primary": true },
+      { "text": "sharp", "role": "adjective", "primary": true },
+      { "text": "to press", "role": "verb", "primary": false },
+      { "text": "to eat", "role": "verb", "primary": false },
+      { "text": "two", "role": "noun", "primary": false },
+      { "text": "to change", "role": "verb", "primary": false },
+      { "text": "year", "role": "noun", "primary": false }
+    ]
+  },
+  {
+    "letter": "ת",
+    "name": "Tav",
+    "paleoUnicode": "𐤕",
+    "pictograph": "Cross/mark/sign",
+    "gematria": 400,
+    "meanings": [
+      { "text": "mark", "role": "noun", "primary": true },
+      { "text": "sign", "role": "noun", "primary": true },
+      { "text": "cross", "role": "noun", "primary": true },
+      { "text": "covenant", "role": "noun", "primary": true },
+      { "text": "to seal", "role": "verb", "primary": true },
+      { "text": "truth", "role": "noun", "primary": false },
+      { "text": "to complete", "role": "verb", "primary": false }
+    ]
+  }
+]

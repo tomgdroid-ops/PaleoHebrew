@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+:root {
+  --background: #faf9f6;
+  --foreground: #1a1a2e;
+  --primary: #2d3a8c;
+  --primary-light: #4a5ab8;
+  --accent: #c4a35a;
+  --accent-light: #e8d5a3;
+  --surface: #ffffff;
+  --surface-hover: #f0eeeb;
+  --border: #d4d0c8;
+  --muted: #6b6b7b;
+  --decode-bg: #f5f3ef;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-decode-bg: var(--decode-bg);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0f0f1a;
+    --foreground: #e8e6e1;
+    --primary: #7b8cdb;
+    --primary-light: #9aa5e8;
+    --accent: #c4a35a;
+    --accent-light: #8a7340;
+    --surface: #1a1a2e;
+    --surface-hover: #252540;
+    --border: #333355;
+    --muted: #9090a0;
+    --decode-bg: #151525;
+  }
+}
+
+/* Paleo-Hebrew font */
+@font-face {
+  font-family: 'NotoSansPhoenician';
+  src: url('/fonts/NotoSansPhoenician-Regular.ttf') format('truetype');
+  font-display: swap;
+  unicode-range: U+10900-U+1091F;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Hebrew text styling */
+.hebrew-text {
+  font-family: 'SBL Hebrew', 'Noto Sans Hebrew', 'Frank Ruehl CLM', 'David CLM', 'Ezra SIL', serif;
+  direction: rtl;
+  unicode-bidi: bidi-override;
+  line-height: 2;
+}
+
+/* Paleo-Hebrew glyph styling */
+.paleo-glyph {
+  font-family: 'NotoSansPhoenician', 'Noto Sans Phoenician', serif;
+  font-size: 2rem;
+  direction: rtl;
+}
+
+.paleo-glyph-large {
+  font-family: 'NotoSansPhoenician', 'Noto Sans Phoenician', serif;
+  font-size: 3.5rem;
+  direction: rtl;
+}
+
+/* Clickable Hebrew word */
+.hebrew-word {
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  display: inline-block;
+}
+
+.hebrew-word:hover {
+  background-color: var(--accent-light);
+}
+
+.hebrew-word.selected {
+  background-color: var(--accent);
+  color: white;
+}
+
+/* Score badge colors */
+.score-high { color: #2d8c3a; }
+.score-medium { color: #8c7a2d; }
+.score-low { color: #8c4a2d; }
+
+/* Scrollbar styling for decode panel */
+.decode-panel::-webkit-scrollbar {
+  width: 6px;
+}
+.decode-panel::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+.decode-panel::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
