@@ -1,8 +1,10 @@
 /**
- * Sentence Generation Engine for the Paleo-Hebrew Torah Decoder.
+ * Sentence Generation Engine v2 for the Paleo-Hebrew Torah Decoder.
  *
  * Takes root consonant letters, looks up their pictographic meanings,
- * and generates ranked interpretive sentences using template patterns.
+ * and generates ranked interpretive sentences using clause-based templates.
+ * Scoring is based on 4 factors (25pts each): primary meaning usage,
+ * Strong's alignment, grammatical naturalness, and theological coherence.
  */
 
 import type {
@@ -10,351 +12,373 @@ import type {
   LetterMeaningEntry,
   LetterInterpretation,
   InterpretiveSentence,
-  StrongsEntry,
 } from "@/types";
 
 // ============================================================
-// Sentence Templates
+// Clause-Based Sentence Templates
 // ============================================================
+
+/**
+ * Each template slot is typed: {index:role}
+ * The engine only fills a slot with a meaning whose grammatical role matches.
+ * Templates are organized by root length and grouped by clause structure.
+ */
+
+interface TemplateSlot {
+  letterIndex: number;  // Which root letter (0-based)
+  role: string;         // Required role: "noun", "verb", "adjective", or "any"
+}
 
 interface Template {
   id: string;
-  pattern: string; // Uses {0}, {1}, {2}... placeholders
-  lengths: number[]; // Which root lengths this applies to
-  baseScore: number; // 0-1 base quality
-  // Preferred role sequences (each slot can accept multiple roles)
-  preferredRoles?: string[][];
+  pattern: string;        // Human-readable pattern with {0}, {1}, etc. placeholders
+  slots: TemplateSlot[];  // Slot definitions with role constraints
+  lengths: number[];      // Which root lengths this applies to
 }
 
 const TEMPLATES: Template[] = [
   // === 2-letter root templates ===
-  { id: "P1", pattern: "The {0} of the {1}", lengths: [2], baseScore: 1.0,
-    preferredRoles: [["noun"], ["noun"]] },
-  { id: "P1b", pattern: "{0} of {1}", lengths: [2], baseScore: 0.95,
-    preferredRoles: [["noun"], ["noun"]] },
-  { id: "P2", pattern: "The {0} within the {1}", lengths: [2], baseScore: 0.9,
-    preferredRoles: [["noun"], ["noun"]] },
-  { id: "P2b", pattern: "{0} inside the {1}", lengths: [2], baseScore: 0.85,
-    preferredRoles: [["noun"], ["noun"]] },
-  { id: "P3", pattern: "To {0} the {1}", lengths: [2], baseScore: 0.9,
-    preferredRoles: [["verb"], ["noun"]] },
-  { id: "P3b", pattern: "{0} the {1}", lengths: [2], baseScore: 0.85,
-    preferredRoles: [["verb"], ["noun"]] },
-  { id: "P4", pattern: "The {0} who {1}", lengths: [2], baseScore: 0.88,
-    preferredRoles: [["noun"], ["verb"]] },
-  { id: "P5", pattern: "The {0} {1}", lengths: [2], baseScore: 0.82,
-    preferredRoles: [["adjective"], ["noun"]] },
-  { id: "P5b", pattern: "{0} {1}", lengths: [2], baseScore: 0.75,
-    preferredRoles: [["noun", "adjective"], ["noun"]] },
+  { id: "2A", pattern: "The {0} of the {1}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "noun" }], lengths: [2] },
+  { id: "2B", pattern: "The {0} within the {1}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "noun" }], lengths: [2] },
+  { id: "2C", pattern: "The {0} who {1}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "verb" }], lengths: [2] },
+  { id: "2D", pattern: "{0} the {1}",
+    slots: [{ letterIndex: 0, role: "verb" }, { letterIndex: 1, role: "noun" }], lengths: [2] },
+  { id: "2E", pattern: "The {0} {1}",
+    slots: [{ letterIndex: 0, role: "adjective" }, { letterIndex: 1, role: "noun" }], lengths: [2] },
 
-  // === 3-letter root templates ===
-  { id: "P6", pattern: "The {0} of the {1} that {2}", lengths: [3], baseScore: 1.0,
-    preferredRoles: [["noun"], ["noun"], ["verb"]] },
-  { id: "P6b", pattern: "{0} of {1} and {2}", lengths: [3], baseScore: 0.92,
-    preferredRoles: [["noun"], ["noun"], ["noun"]] },
-  { id: "P7", pattern: "The {0} {1} the {2}", lengths: [3], baseScore: 0.95,
-    preferredRoles: [["noun"], ["verb"], ["noun"]] },
-  { id: "P7b", pattern: "{0} {1} toward {2}", lengths: [3], baseScore: 0.88,
-    preferredRoles: [["noun"], ["verb"], ["noun"]] },
-  { id: "P8", pattern: "The {0} of the {1} {2}", lengths: [3], baseScore: 0.9,
-    preferredRoles: [["noun"], ["adjective"], ["noun"]] },
-  { id: "P8b", pattern: "The {0} {1} of {2}", lengths: [3], baseScore: 0.87,
-    preferredRoles: [["adjective"], ["noun"], ["noun"]] },
-  { id: "P9", pattern: "To {0} the {1} of the {2}", lengths: [3], baseScore: 0.85,
-    preferredRoles: [["verb"], ["noun"], ["noun"]] },
-  { id: "P10", pattern: "The {0}, {1} of {2}", lengths: [3], baseScore: 0.83,
-    preferredRoles: [["noun"], ["noun"], ["noun"]] },
+  // === 3-letter root templates (subject + predicate) ===
+  { id: "3A", pattern: "The {0} of the {1} {2}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "noun" }, { letterIndex: 2, role: "verb" }], lengths: [3] },
+  { id: "3B", pattern: "The {0} {1} the {2}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "verb" }, { letterIndex: 2, role: "noun" }], lengths: [3] },
+  { id: "3C", pattern: "The {0} {1} of {2}",
+    slots: [{ letterIndex: 0, role: "adjective" }, { letterIndex: 1, role: "noun" }, { letterIndex: 2, role: "noun" }], lengths: [3] },
+  { id: "3D", pattern: "{0} of the {1} is {2}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "noun" }, { letterIndex: 2, role: "adjective" }], lengths: [3] },
+  { id: "3E", pattern: "The {0} of the {1} and the {2}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "noun" }, { letterIndex: 2, role: "noun" }], lengths: [3] },
 
-  // === 4-letter root templates ===
-  { id: "P11", pattern: "The {0} of the {1}, {2} with {3}", lengths: [4], baseScore: 1.0,
-    preferredRoles: [["noun"], ["noun"], ["verb", "noun"], ["noun"]] },
-  { id: "P12", pattern: "{0} of {1} that {2} the {3}", lengths: [4], baseScore: 0.95,
-    preferredRoles: [["noun"], ["noun"], ["verb"], ["noun"]] },
-  { id: "P13", pattern: "The {0} {1} the {2} of the {3}", lengths: [4], baseScore: 0.92,
-    preferredRoles: [["noun"], ["verb"], ["noun"], ["noun"]] },
-  { id: "P14", pattern: "{0} within the {1}, {2} upon the {3}", lengths: [4], baseScore: 0.88,
-    preferredRoles: [["noun"], ["noun"], ["noun", "verb"], ["noun"]] },
+  // === 4-letter root templates (two linked clauses) ===
+  { id: "4A", pattern: "The {0} of the {1} is {2} by the {3}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "noun" }, { letterIndex: 2, role: "verb" }, { letterIndex: 3, role: "noun" }], lengths: [4] },
+  { id: "4B", pattern: "The {0} {1} and {2} the {3}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "verb" }, { letterIndex: 2, role: "verb" }, { letterIndex: 3, role: "noun" }], lengths: [4] },
+  { id: "4C", pattern: "The {0} of {1}, {2} by the {3}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "noun" }, { letterIndex: 2, role: "verb" }, { letterIndex: 3, role: "noun" }], lengths: [4] },
+  { id: "4D", pattern: "The {0} {1} {2} the {3}",
+    slots: [{ letterIndex: 0, role: "adjective" }, { letterIndex: 1, role: "noun" }, { letterIndex: 2, role: "verb" }, { letterIndex: 3, role: "noun" }], lengths: [4] },
+  { id: "4E", pattern: "The {0} that {1} the {2} of the {3}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "verb" }, { letterIndex: 2, role: "noun" }, { letterIndex: 3, role: "noun" }], lengths: [4] },
+  { id: "4F", pattern: "The {0} of the {1}, the {2} of {3}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "noun" }, { letterIndex: 2, role: "noun" }, { letterIndex: 3, role: "noun" }], lengths: [4] },
+  { id: "4G", pattern: "The {0} {1} the {2} who {3}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "verb" }, { letterIndex: 2, role: "noun" }, { letterIndex: 3, role: "verb" }], lengths: [4] },
 
-  // === 5-letter root templates ===
-  { id: "P15", pattern: "The {0} of the {1} that {2} the {3} with {4}", lengths: [5], baseScore: 1.0,
-    preferredRoles: [["noun"], ["noun"], ["verb"], ["noun"], ["noun"]] },
-  { id: "P16", pattern: "{0} of {1}, {2} the {3} of {4}", lengths: [5], baseScore: 0.92,
-    preferredRoles: [["noun"], ["noun"], ["verb"], ["noun"], ["noun"]] },
+  // === 5-letter root templates (subject + pivot + result) ===
+  { id: "5A", pattern: "The {0} of the {1} who {2} will be {3} by {4}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "noun" }, { letterIndex: 2, role: "verb" }, { letterIndex: 3, role: "verb" }, { letterIndex: 4, role: "noun" }], lengths: [5] },
+  { id: "5B", pattern: "The {0} of the {1} {2} {3} the {4}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "adjective" }, { letterIndex: 2, role: "noun" }, { letterIndex: 3, role: "verb" }, { letterIndex: 4, role: "noun" }], lengths: [5] },
+  { id: "5C", pattern: "In the {0}, the {1} of {2} {3} with {4}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "noun" }, { letterIndex: 2, role: "noun" }, { letterIndex: 3, role: "verb" }, { letterIndex: 4, role: "noun" }], lengths: [5] },
 
-  // === 6-letter root templates ===
-  { id: "P17", pattern: "The {0} of the {1}, the {2} that {3} the {4} upon the {5}", lengths: [6], baseScore: 1.0,
-    preferredRoles: [["noun"], ["noun"], ["noun"], ["verb"], ["noun"], ["noun"]] },
-  { id: "P18", pattern: "{0} of the {1}, {2} {3} through {4} toward {5}", lengths: [6], baseScore: 0.9,
-    preferredRoles: [["noun"], ["noun"], ["noun"], ["verb"], ["noun"], ["noun"]] },
+  // === 6-letter root templates (full narrative) ===
+  { id: "6A", pattern: "The {1} of the {0}, the {2} of God, will be {3} by His own {4} on a {5}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "noun" }, { letterIndex: 2, role: "noun" }, { letterIndex: 3, role: "verb" }, { letterIndex: 4, role: "noun" }, { letterIndex: 5, role: "noun" }], lengths: [6] },
+  { id: "6B", pattern: "The {0} of the {1} {2} will be {3} by the {4} of the {5}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "adjective" }, { letterIndex: 2, role: "noun" }, { letterIndex: 3, role: "verb" }, { letterIndex: 4, role: "noun" }, { letterIndex: 5, role: "noun" }], lengths: [6] },
+  { id: "6C", pattern: "Inside the {1}, the {2} {3} {4} to {5}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "noun" }, { letterIndex: 2, role: "noun" }, { letterIndex: 3, role: "verb" }, { letterIndex: 4, role: "noun" }, { letterIndex: 5, role: "verb" }], lengths: [6] },
+  { id: "6D", pattern: "The {0} of the {1} who {2} is {3} in {4}, sealed by a {5}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "noun" }, { letterIndex: 2, role: "verb" }, { letterIndex: 3, role: "adjective" }, { letterIndex: 4, role: "noun" }, { letterIndex: 5, role: "noun" }], lengths: [6] },
+  { id: "6E", pattern: "The {0} of the {1} {2} {3} the {4} of {5}",
+    slots: [{ letterIndex: 0, role: "noun" }, { letterIndex: 1, role: "adjective" }, { letterIndex: 2, role: "noun" }, { letterIndex: 3, role: "verb" }, { letterIndex: 4, role: "noun" }, { letterIndex: 5, role: "noun" }], lengths: [6] },
 ];
 
 // ============================================================
-// Scoring Functions
+// Verb Conjugation
+// ============================================================
+
+function conjugateVerb(text: string): string {
+  if (!text.startsWith("to ")) return text;
+  const verb = text.slice(3);
+  if (verb.endsWith("e")) return verb + "s";
+  if (verb.endsWith("ch") || verb.endsWith("sh") || verb.endsWith("ss") || verb.endsWith("x") || verb.endsWith("o")) {
+    return verb + "es";
+  }
+  if (verb.endsWith("y") && verb.length > 1 && !"aeiou".includes(verb[verb.length - 2])) {
+    return verb.slice(0, -1) + "ies";
+  }
+  return verb + "s";
+}
+
+function bareVerb(text: string): string {
+  return text.startsWith("to ") ? text.slice(3) : text;
+}
+
+function pastParticiple(text: string): string {
+  const bare = bareVerb(text);
+  if (bare.endsWith("e")) return bare + "d";
+  if (bare.endsWith("y") && bare.length > 1 && !"aeiou".includes(bare[bare.length - 2])) {
+    return bare.slice(0, -1) + "ied";
+  }
+  // Simple: just add "ed"
+  return bare + "ed";
+}
+
+// ============================================================
+// Sentence Formatting
+// ============================================================
+
+function formatSentence(pattern: string, slotValues: { text: string; role: string }[]): string {
+  let result = pattern;
+
+  for (let i = 0; i < slotValues.length; i++) {
+    const { text, role } = slotValues[i];
+    const placeholder = `{${i}}`;
+    const idx = result.indexOf(placeholder);
+    if (idx === -1) continue;
+
+    let formatted = text;
+
+    if (role === "verb") {
+      const before = result.substring(Math.max(0, idx - 15), idx).trim().toLowerCase();
+      if (before.endsWith("will be") || before.endsWith("is")) {
+        formatted = pastParticiple(text);
+      } else if (before.endsWith("who") || before.endsWith("that") || before.endsWith("which")) {
+        formatted = conjugateVerb(text);
+      } else if (before.endsWith("to")) {
+        formatted = bareVerb(text);
+      } else if (idx === 0 || before === "" || before.endsWith(",")) {
+        // Start of sentence or after comma: use conjugated
+        formatted = conjugateVerb(text);
+      } else {
+        formatted = conjugateVerb(text);
+      }
+    }
+
+    result = result.replace(placeholder, formatted);
+  }
+
+  // Capitalize first letter
+  return result.charAt(0).toUpperCase() + result.slice(1);
+}
+
+// ============================================================
+// Scoring Functions (4 factors, 25 points each = 100 total)
 // ============================================================
 
 /**
- * Score how well the chosen meanings match the preferred roles of the template.
+ * Factor 1: Primary Meaning Usage (0-25)
+ * All primary = 25, proportional.
  */
-function scoreRoleAlignment(
-  chosenMeanings: LetterMeaningEntry[],
-  template: Template
-): number {
-  if (!template.preferredRoles) return 15;
+function scorePrimaryUsage(meanings: LetterMeaningEntry[]): number {
+  if (meanings.length === 0) return 0;
+  const primaryCount = meanings.filter(m => m.primary).length;
+  return Math.round((primaryCount / meanings.length) * 25);
+}
 
-  let roleScore = 0;
-  const maxPerSlot = 25 / chosenMeanings.length;
+/**
+ * Factor 2: Strong's Definition Alignment (0-25)
+ * Matches keywords from Strong's definition.
+ */
+const SYNONYM_MAP: Record<string, string[]> = {
+  "beginning": ["first", "head", "top", "chief", "start"],
+  "create": ["make", "work", "form", "build"],
+  "god": ["strength", "power", "mighty", "divine", "leader"],
+  "father": ["house", "family", "leader", "strength"],
+  "mother": ["water", "mighty", "strong", "bind"],
+  "son": ["house", "seed", "offspring", "heir", "family"],
+  "peace": ["complete", "whole", "secure", "rest"],
+  "law": ["teach", "guide", "authority", "sign", "mark", "covenant"],
+  "man": ["person", "head", "blood", "door"],
+  "earth": ["land", "ground"],
+  "heaven": ["sky"],
+  "water": ["sea", "chaos", "mighty"],
+  "light": ["reveal", "see", "fire"],
+  "destroy": ["consume", "fire", "teeth"],
+  "hand": ["work", "make", "deed"],
+  "covenant": ["sign", "mark", "cross", "seal"],
+  "first": ["beginning", "head", "chief", "top"],
+  "chief": ["head", "first", "leader", "ruler"],
+  "sacrifice": ["destroy", "cross", "blood"],
+};
 
-  for (let i = 0; i < chosenMeanings.length; i++) {
-    const preferred = template.preferredRoles[i];
-    if (preferred && preferred.includes(chosenMeanings[i].role)) {
-      roleScore += maxPerSlot;
+function scoreStrongsAlignment(meanings: LetterMeaningEntry[], strongsDef?: string): number {
+  if (!strongsDef) return 12; // Neutral
+
+  const defWords = strongsDef.toLowerCase().split(/[\s,;:()]+/).filter(w => w.length > 2);
+  let exactMatches = 0;
+  let thematicMatches = 0;
+
+  for (const meaning of meanings) {
+    const mWord = meaning.text.toLowerCase().replace(/^to /, "");
+
+    // Exact match
+    if (defWords.some(dw => dw.includes(mWord) || mWord.includes(dw))) {
+      exactMatches++;
+      continue;
+    }
+
+    // Thematic/synonym match
+    let found = false;
+    for (const [key, synonyms] of Object.entries(SYNONYM_MAP)) {
+      if (defWords.some(dw => dw.includes(key) || key.includes(dw))) {
+        if (synonyms.includes(mWord) || mWord === key) {
+          thematicMatches++;
+          found = true;
+          break;
+        }
+      }
+    }
+    if (!found) {
+      // Check reverse: is the meaning a key in SYNONYM_MAP, and does the def contain a synonym?
+      const synonyms = SYNONYM_MAP[mWord];
+      if (synonyms) {
+        if (defWords.some(dw => synonyms.some(s => dw.includes(s) || s.includes(dw)))) {
+          thematicMatches++;
+        }
+      }
+    }
+  }
+
+  return Math.min(25, (exactMatches * 8) + (thematicMatches * 4));
+}
+
+/**
+ * Factor 3: Grammatical Naturalness (0-25)
+ * Start at 25, deduct for issues.
+ */
+function scoreGrammaticalNaturalness(sentence: string, meanings: LetterMeaningEntry[]): number {
+  let score = 25;
+  const words = sentence.toLowerCase().split(/\s+/);
+
+  // No verb in the sentence
+  const hasVerb = meanings.some(m => m.role === "verb");
+  if (!hasVerb && meanings.length >= 3) score -= 8;
+
+  // Three+ nouns in a row without a verb
+  let consecutiveNouns = 0;
+  for (const m of meanings) {
+    if (m.role === "noun" || m.role === "adjective") {
+      consecutiveNouns++;
+      if (consecutiveNouns >= 3) { score -= 5; break; }
     } else {
-      roleScore += maxPerSlot * 0.3; // Partial credit for non-preferred role
+      consecutiveNouns = 0;
     }
   }
 
-  return roleScore;
-}
+  // Sentence too short for word length
+  if (words.length < 5 && meanings.length >= 3) score -= 4;
 
-// Abstract/metaphorical meanings tend to produce better interpretive sentences
-const PREFERRED_ABSTRACT_MEANINGS = new Set([
-  "strength", "power", "leader", "authority", "family", "house", "inside",
-  "to teach", "to learn", "to guide", "to reveal", "breath", "spirit",
-  "covenant", "sign", "mark", "truth", "hand", "deed", "water", "sea",
-  "head", "beginning", "first", "seed", "offspring", "heir", "eye",
-  "to see", "to know", "mouth", "to speak", "word", "teeth", "fire",
-  "door", "pathway", "wall", "to protect", "to support", "journey",
-  "life", "shepherd",
-]);
-
-/**
- * Score based on whether meanings are primary (more scholarly consensus)
- * and whether they are abstract vs literal pictograph names.
- */
-function scoreScholarlyFrequency(chosenMeanings: LetterMeaningEntry[]): number {
-  const total = chosenMeanings.length;
-  let score = 0;
-  const perMeaning = 25 / total;
-
-  for (const m of chosenMeanings) {
-    let meaningScore = 0;
-    if (m.primary) meaningScore += perMeaning * 0.6;
-    else meaningScore += perMeaning * 0.2;
-    // Bonus for abstract/metaphorical meanings
-    if (PREFERRED_ABSTRACT_MEANINGS.has(m.text)) meaningScore += perMeaning * 0.4;
-    score += meaningScore;
+  // Duplicate adjacent meaning text
+  for (let i = 0; i < meanings.length - 1; i++) {
+    if (meanings[i].text === meanings[i + 1].text) score -= 5;
   }
 
-  return Math.min(25, score);
-}
-
-/**
- * Score based on alignment with the Strong's definition.
- * If any chosen meaning word appears in the Strong's definition, bonus points.
- */
-function scoreStrongsAlignment(
-  chosenMeanings: LetterMeaningEntry[],
-  strongsDef?: string
-): number {
-  if (!strongsDef) return 12.5; // Neutral score when no Strong's available
-
-  const defLower = strongsDef.toLowerCase();
-  let matches = 0;
-
-  for (const meaning of chosenMeanings) {
-    const word = meaning.text.toLowerCase().replace(/^to /, "");
-    if (defLower.includes(word)) {
-      matches++;
-    }
-  }
-
-  // Scale: 0 matches = 5, 1 match = 15, 2+ matches = 25
-  if (matches === 0) return 5;
-  if (matches === 1) return 15;
-  return 25;
-}
-
-/**
- * Grammatical naturalness score based on the template's base score
- * and some heuristic checks.
- */
-function scoreGrammaticalNaturalness(
-  chosenMeanings: LetterMeaningEntry[],
-  template: Template
-): number {
-  let score = template.baseScore * 20;
-
-  // Penalize if adjacent meanings are the same word
-  for (let i = 0; i < chosenMeanings.length - 1; i++) {
-    if (chosenMeanings[i].text === chosenMeanings[i + 1].text) {
-      score -= 10;
-    }
-  }
-
-  // Penalize verb + "of" + verb patterns (grammatically awkward)
-  if (
-    chosenMeanings.length >= 2 &&
-    chosenMeanings[0].role === "verb" &&
-    chosenMeanings[1].role === "verb" &&
-    template.pattern.includes("of")
-  ) {
-    score -= 5;
-  }
-
-  // Penalize adjective + "of" + adjective
-  if (
-    chosenMeanings.length >= 2 &&
-    chosenMeanings[0].role === "adjective" &&
-    chosenMeanings[1].role === "adjective" &&
-    template.pattern.includes("of")
-  ) {
-    score -= 5;
+  // Count connector word repetition
+  const connectors = ["of", "the", "and", "by", "in", "with", "on"];
+  for (const c of connectors) {
+    const count = words.filter(w => w === c).length;
+    if (count > 2) { score -= 3; break; }
   }
 
   return Math.max(0, Math.min(25, score));
 }
 
 /**
- * Compute total score for a candidate sentence.
+ * Factor 4: Theological/Thematic Coherence (0-25)
+ * Check sentence against biblical theme keyword sets.
+ */
+const THEMES: Record<string, string[]> = {
+  creation: ["create", "make", "beginning", "first", "work", "complete", "form"],
+  covenant: ["covenant", "sign", "mark", "seal", "promise", "oath", "cross"],
+  redemption: ["save", "deliver", "cross", "sacrifice", "blood", "destroy", "consume"],
+  family: ["father", "mother", "son", "house", "family", "seed", "offspring", "heir", "tent", "dwelling"],
+  authority: ["leader", "chief", "head", "ruler", "king", "authority", "shepherd", "guide", "staff", "teach"],
+  divine: ["god", "strength", "power", "spirit", "breath", "mighty", "fire"],
+};
+
+function scoreTheologicalCoherence(sentence: string, meanings: LetterMeaningEntry[]): number {
+  const sentenceWords = sentence.toLowerCase().split(/[\s,;:.]+/);
+  const meaningTexts = meanings.map(m => m.text.toLowerCase().replace(/^to /, ""));
+  const allWords = [...sentenceWords, ...meaningTexts];
+
+  let matchedThemes = 0;
+  let totalHits = 0;
+
+  for (const [, keywords] of Object.entries(THEMES)) {
+    let themeHits = 0;
+    for (const kw of keywords) {
+      if (allWords.some(w => w.includes(kw) || kw.includes(w))) {
+        themeHits++;
+        totalHits++;
+      }
+    }
+    if (themeHits > 0) matchedThemes++;
+  }
+
+  return Math.min(25, matchedThemes * 5 + totalHits * 2);
+}
+
+/**
+ * Compute total score (0-100).
  */
 function computeScore(
-  chosenMeanings: LetterMeaningEntry[],
-  template: Template,
+  meanings: LetterMeaningEntry[],
+  sentence: string,
   strongsDef?: string
 ): number {
-  const scholarly = scoreScholarlyFrequency(chosenMeanings);
-  const alignment = scoreStrongsAlignment(chosenMeanings, strongsDef);
-  const grammatical = scoreGrammaticalNaturalness(chosenMeanings, template);
-  const roleScore = scoreRoleAlignment(chosenMeanings, template);
-
-  return Math.round(scholarly + alignment + grammatical + roleScore);
+  const f1 = scorePrimaryUsage(meanings);
+  const f2 = scoreStrongsAlignment(meanings, strongsDef);
+  const f3 = scoreGrammaticalNaturalness(sentence, meanings);
+  const f4 = scoreTheologicalCoherence(sentence, meanings);
+  return f1 + f2 + f3 + f4;
 }
 
 // ============================================================
-// Sentence Generation
+// Combination Generation
 // ============================================================
 
 /**
- * Conjugate a verb meaning for natural sentence flow.
- * "to lead" → "leads", "to consume" → "consumes", etc.
+ * Get valid meanings for a slot: only meanings whose role matches the slot requirement.
+ * "any" accepts all roles.
  */
-function conjugateVerb(text: string): string {
-  if (!text.startsWith("to ")) return text;
-  const verb = text.slice(3);
-  // Simple English conjugation rules
-  if (verb.endsWith("e")) return verb + "s"; // consume → consumes
-  if (verb.endsWith("ch") || verb.endsWith("sh") || verb.endsWith("ss") || verb.endsWith("x") || verb.endsWith("o")) {
-    return verb + "es";
-  }
-  if (verb.endsWith("y") && !"aeiou".includes(verb[verb.length - 2])) {
-    return verb.slice(0, -1) + "ies"; // carry → carries
-  }
-  return verb + "s";
+function getMeaningsForSlot(letterMeaning: LetterMeaning, requiredRole: string): LetterMeaningEntry[] {
+  if (requiredRole === "any") return letterMeaning.meanings;
+  return letterMeaning.meanings.filter(m => m.role === requiredRole);
 }
 
 /**
- * Get the bare infinitive form of a verb for "To X" patterns.
- * "to lead" → "lead"
+ * Generate combinations of meanings that fit the template slots.
+ * Limits to prevent performance issues.
  */
-function bareVerb(text: string): string {
-  return text.startsWith("to ") ? text.slice(3) : text;
-}
-
-/**
- * Format a sentence from a template pattern and meaning entries.
- * Handles verb conjugation based on context.
- */
-function formatSentence(
-  pattern: string,
-  meanings: LetterMeaningEntry[]
-): string {
-  let result = pattern;
-  for (let i = 0; i < meanings.length; i++) {
-    let text = meanings[i].text;
-    const isVerb = meanings[i].role === "verb";
-
-    if (isVerb) {
-      // Check pattern context for this slot
-      const placeholder = `{${i}}`;
-      const idx = result.indexOf(placeholder);
-      if (idx > 0) {
-        const before = result.substring(Math.max(0, idx - 10), idx).trim().toLowerCase();
-        if (before.endsWith("that") || before.endsWith("who") || before.endsWith("which")) {
-          text = conjugateVerb(text);
-        } else if (before.endsWith("to")) {
-          text = bareVerb(text);
-        } else {
-          text = conjugateVerb(text);
-        }
-      }
-    }
-
-    result = result.replace(`{${i}}`, text);
-  }
-  // Capitalize first letter
-  return result.charAt(0).toUpperCase() + result.slice(1);
-}
-
-/**
- * Generate all valid meaning combinations for the given letters.
- * Limits total combinations to prevent performance issues.
- */
-function* generateCombinations(
-  letterMeaningsArr: LetterMeaningEntry[][]
+function* generateSlotCombinations(
+  slotMeanings: LetterMeaningEntry[][]
 ): Generator<LetterMeaningEntry[]> {
-  const lengths = letterMeaningsArr.map((arr) => arr.length);
+  const lengths = slotMeanings.map(arr => arr.length);
+
+  // Skip if any slot has zero valid meanings
+  if (lengths.some(l => l === 0)) return;
+
   const total = lengths.reduce((a, b) => a * b, 1);
-  const MAX_COMBINATIONS = 5000;
-  const limit = Math.min(total, MAX_COMBINATIONS);
+  const MAX = 3000;
+  const limit = Math.min(total, MAX);
 
-  if (total <= MAX_COMBINATIONS) {
-    // Generate all combinations
-    const indices = new Array(letterMeaningsArr.length).fill(0);
-    for (let i = 0; i < total; i++) {
-      yield indices.map((idx, j) => letterMeaningsArr[j][idx]);
-      // Increment indices (odometer-style)
-      for (let j = indices.length - 1; j >= 0; j--) {
-        indices[j]++;
-        if (indices[j] < lengths[j]) break;
-        indices[j] = 0;
-      }
-    }
-  } else {
-    // Sample combinations: prioritize primary meanings first, then sample randomly
-    // First, yield all-primary combination
-    const allPrimary = letterMeaningsArr.map(
-      (arr) => arr.find((m) => m.primary) || arr[0]
-    );
-    yield allPrimary;
+  const indices = new Array(slotMeanings.length).fill(0);
+  for (let count = 0; count < limit; count++) {
+    yield indices.map((idx, j) => slotMeanings[j][idx]);
 
-    // Then generate systematically up to limit
-    const indices = new Array(letterMeaningsArr.length).fill(0);
-    let count = 1;
-    for (let i = 0; i < total && count < limit; i++) {
-      // Increment
-      for (let j = indices.length - 1; j >= 0; j--) {
-        indices[j]++;
-        if (indices[j] < lengths[j]) break;
-        indices[j] = 0;
-      }
-      const combo = indices.map((idx, j) => letterMeaningsArr[j][idx]);
-      // Skip the all-primary we already yielded
-      if (combo.every((m, j) => m === allPrimary[j])) continue;
-      yield combo;
-      count++;
+    // Increment odometer
+    for (let j = indices.length - 1; j >= 0; j--) {
+      indices[j]++;
+      if (indices[j] < lengths[j]) break;
+      indices[j] = 0;
     }
   }
-}
-
-/**
- * Check if a combination should be filtered out.
- */
-function shouldFilter(combo: LetterMeaningEntry[]): boolean {
-  // Filter duplicate adjacent meanings
-  for (let i = 0; i < combo.length - 1; i++) {
-    if (combo[i].text === combo[i + 1].text) return true;
-  }
-  return false;
 }
 
 // ============================================================
@@ -368,11 +392,6 @@ export interface GenerateOptions {
 
 /**
  * Generate ranked interpretive sentences from root consonant letters.
- *
- * @param rootLetters Array of Hebrew consonant characters
- * @param letterMeaningsMatrix The full 22-letter meanings dataset
- * @param options Configuration options
- * @returns Ranked array of InterpretiveSentence
  */
 export function generateInterpretations(
   rootLetters: string[],
@@ -383,7 +402,7 @@ export function generateInterpretations(
 
   if (rootLetters.length === 0) return [];
 
-  // Build a lookup from letter to its LetterMeaning
+  // Build letter lookup
   const letterLookup = new Map<string, LetterMeaning>();
   for (const lm of letterMeaningsMatrix) {
     letterLookup.set(lm.letter, lm);
@@ -393,7 +412,7 @@ export function generateInterpretations(
   const letterData: LetterMeaning[] = [];
   for (const letter of rootLetters) {
     const data = letterLookup.get(letter);
-    if (!data) continue; // Skip unknown letters
+    if (!data) continue;
     letterData.push(data);
   }
 
@@ -402,65 +421,95 @@ export function generateInterpretations(
   const rootLen = letterData.length;
 
   // Get applicable templates
-  const templates = TEMPLATES.filter((t) => t.lengths.includes(rootLen));
+  let templates = TEMPLATES.filter(t => t.lengths.includes(rootLen));
 
-  // If no templates for this length, use a generic fallback
+  // Fallback for unsupported lengths
   if (templates.length === 0) {
-    // For very long roots, use the longest available template length
-    const maxTemplateLen = Math.max(...TEMPLATES.map((t) => Math.max(...t.lengths)));
-    if (rootLen > maxTemplateLen) {
-      // Chain meanings with "of" connectors
-      const fallbackTemplate: Template = {
-        id: "FALLBACK",
-        pattern: letterData.map((_, i) => `{${i}}`).join(" of "),
-        lengths: [rootLen],
-        baseScore: 0.6,
-      };
-      templates.push(fallbackTemplate);
-    }
+    // Build a simple "{0} of {1} ... of {N}" fallback
+    const slots: TemplateSlot[] = letterData.map((_, i) => ({ letterIndex: i, role: "noun" }));
+    const pattern = slots.map((_, i) => i === 0 ? "The {0}" : `of the {${i}}`).join(" ");
+    templates = [{ id: "FALLBACK", pattern, slots, lengths: [rootLen] }];
   }
 
-  // Build meaning arrays for combination generation
-  const meaningArrays = letterData.map((ld) => ld.meanings);
-
-  // Generate and score all candidates
-  const candidates: InterpretiveSentence[] = [];
+  // Generate candidates per template, then interleave
+  const perTemplate = new Map<string, InterpretiveSentence[]>();
   const seenSentences = new Set<string>();
 
   for (const template of templates) {
-    for (const combo of generateCombinations(meaningArrays)) {
-      if (shouldFilter(combo)) continue;
+    // Build valid meanings per slot
+    const slotMeanings = template.slots.map(slot =>
+      getMeaningsForSlot(letterData[slot.letterIndex], slot.role)
+    );
 
-      const sentence = formatSentence(template.pattern, combo);
+    const templateCandidates: InterpretiveSentence[] = [];
+
+    for (const combo of generateSlotCombinations(slotMeanings)) {
+      // Build slot values for formatting
+      const slotValues = combo.map((m, i) => ({ text: m.text, role: template.slots[i].role }));
+      const sentence = formatSentence(template.pattern, slotValues);
 
       // Deduplicate
-      if (seenSentences.has(sentence.toLowerCase())) continue;
-      seenSentences.add(sentence.toLowerCase());
+      const key = sentence.toLowerCase();
+      if (seenSentences.has(key)) continue;
+      seenSentences.add(key);
 
-      const score = computeScore(combo, template, strongsDefinition);
+      // Filter: skip if adjacent letters use the same meaning text
+      let hasDup = false;
+      for (let i = 0; i < combo.length - 1; i++) {
+        if (combo[i].text === combo[i + 1].text) { hasDup = true; break; }
+      }
+      if (hasDup) continue;
 
-      candidates.push({
+      const score = computeScore(combo, sentence, strongsDefinition);
+
+      // Build letterBreakdown: map slot meanings back to their letter indices
+      const letterBreakdown: LetterInterpretation[] = template.slots.map((slot, i) => ({
+        letter: letterData[slot.letterIndex].letter,
+        name: letterData[slot.letterIndex].name,
+        paleoUnicode: letterData[slot.letterIndex].paleoUnicode,
+        pictograph: letterData[slot.letterIndex].pictograph,
+        chosenMeaning: combo[i].text,
+        role: combo[i].role,
+        allMeanings: letterData[slot.letterIndex].meanings,
+      }));
+
+      templateCandidates.push({
         sentence,
         score,
         pattern: template.id,
-        letterBreakdown: combo.map((meaning, i) => ({
-          letter: letterData[i].letter,
-          name: letterData[i].name,
-          paleoUnicode: letterData[i].paleoUnicode,
-          pictograph: letterData[i].pictograph,
-          chosenMeaning: meaning.text,
-          role: meaning.role,
-          allMeanings: letterData[i].meanings,
-        })),
+        letterBreakdown,
       });
+    }
+
+    templateCandidates.sort((a, b) => b.score - a.score);
+    if (templateCandidates.length > 0) {
+      perTemplate.set(template.id, templateCandidates);
     }
   }
 
-  // Sort by score descending
-  candidates.sort((a, b) => b.score - a.score);
+  // Interleave: best from each template in round-robin
+  const result: InterpretiveSentence[] = [];
+  const templateIds = [...perTemplate.keys()];
+  const pointers = new Map<string, number>();
+  for (const id of templateIds) pointers.set(id, 0);
 
-  // Return top N
-  return candidates.slice(0, maxResults);
+  while (result.length < maxResults * 2) {
+    let added = false;
+    for (const id of templateIds) {
+      const candidates = perTemplate.get(id)!;
+      const ptr = pointers.get(id)!;
+      if (ptr < candidates.length && ptr < 3) { // max 3 per template
+        result.push(candidates[ptr]);
+        pointers.set(id, ptr + 1);
+        added = true;
+      }
+    }
+    if (!added) break;
+  }
+
+  // Final sort by score, return top N
+  result.sort((a, b) => b.score - a.score);
+  return result.slice(0, maxResults);
 }
 
 /**

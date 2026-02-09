@@ -1,16 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { TorahChapter, TorahWord, BookMeta, LetterMeaning } from "@/types";
 import NavigationBar from "@/components/torah/NavigationBar";
 import VerseDisplay from "@/components/torah/VerseDisplay";
 import DecodePanel from "@/components/decode/DecodePanel";
+import { setGlossData } from "@/lib/word-lookup";
 
 interface ChapterViewProps {
   chapter: TorahChapter;
   books: BookMeta[];
   bookSlug: string;
   letterMeanings: LetterMeaning[];
+  wordGlosses: Record<string, unknown>;
 }
 
 export default function ChapterView({
@@ -18,9 +20,16 @@ export default function ChapterView({
   books,
   bookSlug,
   letterMeanings,
+  wordGlosses,
 }: ChapterViewProps) {
   const [selectedWord, setSelectedWord] = useState<TorahWord | null>(null);
   const [showPanel, setShowPanel] = useState(false);
+
+  // Initialize gloss lookup on mount
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setGlossData(wordGlosses as any);
+  }, [wordGlosses]);
 
   const handleWordClick = (word: TorahWord) => {
     setSelectedWord(word);

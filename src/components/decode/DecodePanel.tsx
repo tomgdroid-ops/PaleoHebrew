@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import type { TorahWord, LetterMeaning, InterpretiveSentence } from "@/types";
-import { splitToLetters, toPaleoHebrew, calculateGematria } from "@/lib/hebrew";
+import { splitToLetters, toPaleoHebrew, calculateGematria, transliterate } from "@/lib/hebrew";
 import { generateInterpretations, getLetterDetails } from "@/lib/sentence-engine";
 import LetterCard from "./LetterCard";
 import SentenceList from "./SentenceList";
@@ -22,12 +22,13 @@ export default function DecodePanel({ word, letterMeanings, onClose }: DecodePan
     const rootLetters = splitToLetters(word.text);
     const paleoHebrew = toPaleoHebrew(word.text);
     const gematria = calculateGematria(word.text);
+    const translit = transliterate(word.textNiqqud || word.text);
     const letterDetails = getLetterDetails(rootLetters, letterMeanings);
     const interpretations = generateInterpretations(rootLetters, letterMeanings, {
       maxResults: 10,
     });
 
-    return { rootLetters, paleoHebrew, gematria, letterDetails, interpretations };
+    return { rootLetters, paleoHebrew, gematria, translit, letterDetails, interpretations };
   }, [word, letterMeanings]);
 
   if (!word || !decoded) {
@@ -71,6 +72,9 @@ export default function DecodePanel({ word, letterMeanings, onClose }: DecodePan
         <div className="paleo-glyph-large text-primary mt-2" dir="rtl">
           {decoded.paleoHebrew}
         </div>
+        <p className="text-lg tracking-wide text-foreground mt-1 font-medium">
+          {decoded.translit}
+        </p>
         {word.lemma && (
           <p className="text-xs text-muted mt-2">
             Strong&apos;s: {word.lemma}

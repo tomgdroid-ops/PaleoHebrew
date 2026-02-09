@@ -81,7 +81,121 @@ body {
   direction: rtl;
 }
 
-/* Clickable Hebrew word */
+/* ============================================
+   Interlinear Verse Layout
+   ============================================ */
+
+/* Verse block container */
+.verse-block {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+}
+
+.verse-block:last-child {
+  border-bottom: none;
+}
+
+.verse-ref {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+/* Row of interlinear word columns, RTL flow */
+.interlinear-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: flex-start;
+}
+
+/* Each word: vertical stack of paleo / hebrew / translit / english */
+.interlinear-word {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.375rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  min-width: 56px;
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.interlinear-word:hover {
+  background-color: var(--surface-hover);
+  border-color: var(--border);
+}
+
+.interlinear-word.selected {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.interlinear-word.selected .interlinear-english,
+.interlinear-word.selected .interlinear-translit,
+.interlinear-word.selected .interlinear-strongs,
+.interlinear-word.selected .interlinear-hebrew,
+.interlinear-word.selected .interlinear-paleo {
+  color: white;
+}
+
+/* Row 1: Paleo-Hebrew */
+.interlinear-paleo {
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: var(--primary);
+}
+
+/* Row 2: Hebrew + Strong's number inline */
+.interlinear-hebrew-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-top: 0.125rem;
+}
+
+.interlinear-hebrew {
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: var(--foreground);
+}
+
+.interlinear-strongs {
+  font-size: 0.6rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+/* Row 3: Transliteration */
+.interlinear-translit {
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  margin-top: 0.125rem;
+  direction: ltr;
+}
+
+/* Row 4: English gloss (bold, like the reference image) */
+.interlinear-english {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-top: 0.125rem;
+  direction: ltr;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================
+   Legacy clickable word (decode panel, etc.)
+   ============================================ */
 .hebrew-word {
   cursor: pointer;
   padding: 2px 4px;

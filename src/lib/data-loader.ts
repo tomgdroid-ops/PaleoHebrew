@@ -108,3 +108,19 @@ export function getStrongsEntry(id: string): StrongsEntry | null {
   const dict = getStrongsDictionary();
   return dict[id] || null;
 }
+
+// Word glosses cache
+let _wordGlosses: Record<string, unknown> | null = null;
+
+/**
+ * Load the condensed word-glosses map for interlinear display.
+ */
+export function getWordGlosses(): Record<string, unknown> {
+  if (_wordGlosses) return _wordGlosses;
+
+  const filePath = path.join(DATA_DIR, "word-glosses.json");
+  if (!fs.existsSync(filePath)) return {};
+
+  _wordGlosses = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  return _wordGlosses!;
+}

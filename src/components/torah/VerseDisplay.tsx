@@ -15,36 +15,27 @@ export default function VerseDisplay({
   onWordClick,
 }: VerseDisplayProps) {
   return (
-    <div className="py-3 border-b border-border/50 last:border-b-0">
+    <div className="verse-block">
       {/* Verse reference */}
-      <span className="text-xs text-muted font-mono mr-2">
+      <div className="verse-ref">
         {verse.chapter}:{verse.verse}
-      </span>
-
-      {/* Hebrew text with clickable words */}
-      <div className="mt-1" dir="rtl" lang="he">
-        <span className="inline-flex flex-wrap gap-1 justify-end">
-          {verse.words.map((word, idx) => (
-            <ClickableWord
-              key={idx}
-              word={word}
-              isSelected={
-                selectedWord !== null &&
-                selectedWord.position === word.position &&
-                selectedWord.text === word.text
-              }
-              onClick={onWordClick}
-            />
-          ))}
-        </span>
       </div>
 
-      {/* English translation */}
-      {verse.english && (
-        <p className="text-sm text-muted mt-1 leading-relaxed">
-          {verse.english}
-        </p>
-      )}
+      {/* Interlinear word columns, right-to-left */}
+      <div className="interlinear-row" dir="rtl">
+        {verse.words.map((word, idx) => (
+          <ClickableWord
+            key={idx}
+            word={word}
+            isSelected={
+              selectedWord !== null &&
+              selectedWord.position === word.position &&
+              selectedWord.text === word.text
+            }
+            onClick={onWordClick}
+          />
+        ))}
+      </div>
     </div>
   );
 }

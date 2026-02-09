@@ -152,6 +152,153 @@ export function extractStrongsNumber(lemma: string): string | null {
   return `H${String(num).padStart(4, "0")}`;
 }
 
+/**
+ * Transliterate a Hebrew word into English characters.
+ * Uses a simplified academic transliteration scheme.
+ */
+const TRANSLITERATION: Record<string, string> = {
+  "א": "'",  "ב": "b",  "ג": "g",  "ד": "d",  "ה": "h",
+  "ו": "v",  "ז": "z",  "ח": "ch", "ט": "t",  "י": "y",
+  "כ": "k",  "ל": "l",  "מ": "m",  "נ": "n",  "ס": "s",
+  "ע": "'",  "פ": "p",  "צ": "ts", "ק": "q",  "ר": "r",
+  "ש": "sh", "ת": "t",
+  // Final forms
+  "ך": "k",  "ם": "m",  "ן": "n",  "ף": "p",  "ץ": "ts",
+};
+
+// Common nikkud to vowel mappings
+const VOWEL_MAP: Record<number, string> = {
+  0x05B0: "e",   // shva
+  0x05B1: "e",   // hataf segol
+  0x05B2: "a",   // hataf patach
+  0x05B3: "o",   // hataf qamats
+  0x05B4: "i",   // hiriq
+  0x05B5: "e",   // tsere
+  0x05B6: "e",   // segol
+  0x05B7: "a",   // patach
+  0x05B8: "a",   // qamats
+  0x05B9: "o",   // holam
+  0x05BA: "o",   // holam haser
+  0x05BB: "u",   // qubuts
+  0x05BC: "",    // dagesh (not a vowel, skip)
+  0x05C1: "",    // shin dot
+  0x05C2: "",    // sin dot
+};
+
+export function transliterate(hebrewText: string): string {
+  // First pass: build an array of { type, value } tokens
+  const chars = [...hebrewText];
+  const tokens: { type: "consonant" | "vowel" | "skip" | "other"; value: string }[] = [];
+
+  for (const ch of chars) {
+    const code = ch.codePointAt(0) || 0;
+
+    // Cantillation marks — skip entirely
+    if (code >= 0x0591 && code <= 0x05AF) continue;
+
+    // Shin dot (05C1) — skip (shin is already "sh" by default)
+    if (code === 0x05C1) continue;
+
+    // Sin dot (05C2) — change most recent shin "sh" to "s"
+    if (code === 0x05C2) {
+      for (let j = tokens.length - 1; j >= 0; j--) {
+        if (tokens[j].type === "consonant" && tokens[j].value === "sh") {
+          tokens[j].value = "s";
+          break;
+        }
+      }
+      continue;
+    }
+
+    // Dagesh (05BC): when on vav, it's shuruk (vowel "u"); otherwise skip
+    if (code === 0x05BC) {
+      // Check if previous token is vav consonant
+      const prevTok = tokens.length > 0 ? tokens[tokens.length - 1] : null;
+      if (prevTok && prevTok.type === "consonant" && prevTok.value === "v") {
+        // Convert the vav to a vowel "u" (shuruk)
+        prevTok.type = "vowel";
+        prevTok.value = "u";
+      }
+      continue;
+    }
+
+    // Vowel points
+    if (code >= 0x05B0 && code <= 0x05BB) {
+      const vowel = VOWEL_MAP[code];
+      if (vowel) tokens.push({ type: "vowel", value: vowel });
+      continue;
+    }
+
+    // Hebrew consonants
+    const translit = TRANSLITERATION[ch];
+    if (translit !== undefined) {
+      tokens.push({ type: "consonant", value: translit });
+      continue;
+    }
+
+    // Maqaf
+    if (ch === "\u05BE") { tokens.push({ type: "other", value: "-" }); continue; }
+    if (ch === " ") { tokens.push({ type: "other", value: " " }); continue; }
+  }
+
+  // Second pass: build result, handling matres lectionis (vowel letters)
+  let result = "";
+  for (let i = 0; i < tokens.length; i++) {
+    const tok = tokens[i];
+
+    if (tok.type === "consonant") {
+      const isAlephAyin = tok.value === "'";
+
+      // Check if next token is a vowel
+      const nextIsVowel = i + 1 < tokens.length && tokens[i + 1].type === "vowel";
+      // Check what the last character in result is
+      const lastChar = result.length > 0 ? result[result.length - 1] : "";
+      const prevIsResultVowel = lastChar !== "" && "aeiou".includes(lastChar);
+      const prevIsResultConsonant = lastChar !== "" && !"aeiou -".includes(lastChar);
+
+      if (isAlephAyin) {
+        // Skip aleph/ayin glyph — just let its vowel appear
+        continue;
+      }
+
+      // Vav as vowel letter (mater lectionis):
+      // וֹ = holam male (o), וּ = shuruk (u)
+      if (tok.value === "v" && nextIsVowel) {
+        const nextVowel = tokens[i + 1].value;
+        if (nextVowel === "o" || nextVowel === "u") {
+          result += nextVowel;
+          i++; // skip the vowel token
+          continue;
+        }
+      }
+
+      // Yod as vowel letter (hiriq male):
+      // יִ after a vowel = just extends to "i", not "yi"
+      if (tok.value === "y" && nextIsVowel && tokens[i + 1].value === "i") {
+        if (prevIsResultVowel) {
+          result += "i";
+          i++; // skip vowel
+          continue;
+        }
+      }
+
+      result += tok.value;
+    } else if (tok.type === "vowel") {
+      result += tok.value;
+    } else if (tok.type === "other") {
+      result += tok.value;
+    }
+  }
+
+  // Clean up
+  result = result.replace(/iy(?=[mt]|$)/g, "i");   // -iyt → -it, -iym → -im, -iy$ → -i
+  result = result.replace(/([aeiou])\1+/g, "$1");  // collapse repeated vowels
+  result = result.replace(/(ch|h)a$/, "a$1");      // furtive patach: -cha → -ach, -ha → -ah
+  result = result.replace(/eh$/, "e");              // trailing silent heh: -eh → -e
+
+  return result;
+}
+
 // Common Hebrew prefixes (for basic root extraction when OSHB data unavailable)
 export const COMMON_PREFIXES = ["ב", "כ", "ל", "מ", "ש", "ה", "ו"];
 

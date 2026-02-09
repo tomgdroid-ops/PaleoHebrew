@@ -1,6 +1,8 @@
 "use client";
 
 import type { TorahWord } from "@/types";
+import { toPaleoHebrew, transliterate } from "@/lib/hebrew";
+import { lookupWord } from "@/lib/word-lookup";
 
 interface ClickableWordProps {
   word: TorahWord;
@@ -9,17 +11,43 @@ interface ClickableWordProps {
 }
 
 export default function ClickableWord({ word, isSelected, onClick }: ClickableWordProps) {
+  const paleo = toPaleoHebrew(word.text);
+  const translit = transliterate(word.textNiqqud || word.text);
+  const gloss = lookupWord(word.text);
+
   return (
     <button
       type="button"
-      className={`hebrew-word hebrew-text text-2xl ${isSelected ? "selected" : ""}`}
+      className={`interlinear-word ${isSelected ? "selected" : ""}`}
       onClick={() => onClick(word)}
-      lang="he"
-      dir="rtl"
-      aria-label={`Hebrew word: ${word.textNiqqud || word.text}`}
-      title={word.textNiqqud || word.text}
+      aria-label={`Hebrew word: ${word.textNiqqud || word.text} - ${gloss?.gloss || ""}`}
     >
-      {word.textNiqqud || word.text}
+      {/* Row 1: Paleo-Hebrew */}
+      <span className="paleo-glyph interlinear-paleo" dir="rtl">
+        {paleo}
+      </span>
+
+      {/* Row 2: Modern Hebrew + Strong's number */}
+      <span className="interlinear-hebrew-row">
+        {gloss && (
+          <span className="interlinear-strongs">
+            {gloss.id.replace("H0", "").replace("H", "")}
+          </span>
+        )}
+        <span className="hebrew-text interlinear-hebrew" lang="he" dir="rtl">
+          {word.textNiqqud || word.text}
+        </span>
+      </span>
+
+      {/* Row 3: Transliteration */}
+      <span className="interlinear-translit">
+        {translit}
+      </span>
+
+      {/* Row 4: English gloss */}
+      <span className="interlinear-english">
+        {gloss?.gloss || "—"}
+      </span>
     </button>
   );
 }

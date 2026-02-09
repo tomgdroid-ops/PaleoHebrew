@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getBooksMeta, getChapter, getLetterMeanings } from "@/lib/data-loader";
+import { getBooksMeta, getChapter, getLetterMeanings, getWordGlosses } from "@/lib/data-loader";
 import type { Metadata } from "next";
 import ChapterView from "./ChapterView";
 
@@ -36,6 +36,7 @@ export default async function TorahChapterPage({ params }: PageProps) {
   if (!chapterData) notFound();
 
   const letterMeanings = getLetterMeanings();
+  const wordGlosses = getWordGlosses();
 
   return (
     <ChapterView
@@ -43,6 +44,7 @@ export default async function TorahChapterPage({ params }: PageProps) {
       books={books}
       bookSlug={bookSlug}
       letterMeanings={letterMeanings}
+      wordGlosses={wordGlosses}
     />
   );
 }
