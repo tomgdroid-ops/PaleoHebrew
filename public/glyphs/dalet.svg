@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Dalet - Door: tent door hanging from top beam, triangular flap -->
+  <!-- Top beam / lintel -->
+  <line x1="20" y1="18" x2="80" y2="18" />
+  <!-- Door flap hanging from center, slightly open -->
+  <path d="M50 18 L50 82" />
+  <!-- Left doorpost -->
+  <line x1="25" y1="18" x2="25" y2="88" />
+  <!-- Right doorpost -->
+  <line x1="75" y1="18" x2="75" y2="88" />
+  <!-- Threshold -->
+  <line x1="25" y1="88" x2="75" y2="88" />
+</svg>

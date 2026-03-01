@@ -28,6 +28,12 @@ export default function HeaderNav() {
             Read Torah
           </Link>
           <Link
+            href="/alphabet"
+            className="text-muted hover:text-foreground transition-colors hidden sm:inline"
+          >
+            Alphabet
+          </Link>
+          <Link
             href="/guide"
             className="text-muted hover:text-foreground transition-colors hidden sm:inline"
           >

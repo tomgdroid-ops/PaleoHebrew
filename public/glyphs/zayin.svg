@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Zayin - Weapon/sword: a dagger or sword with handle and blade -->
+  <!-- Blade -->
+  <path d="M50 10 L42 55 Q50 60 58 55 Z" />
+  <!-- Guard/crosspiece -->
+  <line x1="32" y1="58" x2="68" y2="58" />
+  <!-- Handle/grip -->
+  <line x1="50" y1="58" x2="50" y2="82" />
+  <!-- Pommel -->
+  <circle cx="50" cy="86" r="5" />
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Kaf - Open palm: cupped open hand, palm facing up -->
+  <!-- Palm base curve -->
+  <path d="M20 55 Q20 80 50 85 Q80 80 80 55" />
+  <!-- Fingers -->
+  <line x1="24" y1="55" x2="20" y2="25" />
+  <line x1="37" y1="50" x2="35" y2="15" />
+  <line x1="50" y1="48" x2="50" y2="12" />
+  <line x1="63" y1="50" x2="65" y2="15" />
+  <!-- Thumb -->
+  <path d="M76 55 Q85 48 82 35" />
+</svg>

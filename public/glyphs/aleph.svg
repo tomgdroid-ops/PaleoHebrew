@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Aleph - Ox head: front-facing bull head with two horns curving outward -->
+  <!-- Left horn -->
+  <path d="M25 15 Q30 35 42 45" />
+  <!-- Right horn -->
+  <path d="M75 15 Q70 35 58 45" />
+  <!-- Head outline - oval/triangular face -->
+  <path d="M42 45 Q42 38 50 33 Q58 38 58 45 Q58 65 50 75 Q42 65 42 45Z" />
+  <!-- Left ear -->
+  <path d="M42 42 L32 38 L38 45" />
+  <!-- Right ear -->
+  <path d="M58 42 L68 38 L62 45" />
+  <!-- Left eye -->
+  <circle cx="46" cy="50" r="2.5" fill="currentColor" stroke="none" />
+  <!-- Right eye -->
+  <circle cx="54" cy="50" r="2.5" fill="currentColor" stroke="none" />
+  <!-- Nostrils -->
+  <circle cx="48" cy="63" r="1.5" fill="currentColor" stroke="none" />
+  <circle cx="52" cy="63" r="1.5" fill="currentColor" stroke="none" />
+</svg>

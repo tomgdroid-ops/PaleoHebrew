@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Nun - Sprouting seed / fish: a small fish darting through water -->
+  <!-- Fish body -->
+  <path d="M25 50 Q40 35 60 38 Q78 40 82 50 Q78 60 60 62 Q40 65 25 50Z" />
+  <!-- Tail fin -->
+  <path d="M25 50 L12 35" />
+  <path d="M25 50 L12 65" />
+  <!-- Eye -->
+  <circle cx="68" cy="48" r="3" fill="currentColor" stroke="none" />
+</svg>

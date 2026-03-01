@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Bet - Tent/house floor plan: rectangular enclosure with doorway opening at bottom -->
+  <!-- Walls with gap for door -->
+  <path d="M38 80 L20 80 L20 20 L80 20 L80 80 L54 80" />
+  <!-- Interior divider (two rooms) -->
+  <line x1="20" y1="55" x2="80" y2="55" />
+</svg>

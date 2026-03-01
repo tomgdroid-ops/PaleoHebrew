@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Resh - Head of a person: profile view of a human head facing right -->
+  <!-- Head/skull outline (profile) -->
+  <path d="M40 85 L40 55 Q40 15 60 15 Q80 15 80 35 Q80 50 68 55" />
+  <!-- Nose -->
+  <path d="M68 55 L75 62 L68 65" />
+  <!-- Chin -->
+  <path d="M68 65 Q65 78 55 82 L40 85" />
+  <!-- Eye -->
+  <circle cx="60" cy="38" r="3" fill="currentColor" stroke="none" />
+  <!-- Mouth line -->
+  <line x1="65" y1="72" x2="72" y2="72" />
+</svg>

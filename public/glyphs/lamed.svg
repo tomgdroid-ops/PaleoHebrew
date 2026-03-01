@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Lamed - Shepherd's staff / ox goad: tall staff with curved crook at top -->
+  <!-- Staff shaft -->
+  <line x1="50" y1="40" x2="50" y2="92" />
+  <!-- Curved crook/hook at top -->
+  <path d="M50 40 Q50 10 30 10 Q15 10 15 25" />
+</svg>

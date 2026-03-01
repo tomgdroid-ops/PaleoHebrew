@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Shin - Two front teeth: two pointed teeth side by side -->
+  <!-- Gum line -->
+  <path d="M15 25 L85 25" />
+  <!-- Left tooth -->
+  <path d="M28 25 L28 45 Q28 78 40 78 Q50 78 50 50 L50 25" />
+  <!-- Right tooth -->
+  <path d="M50 25 L50 50 Q50 78 60 78 Q72 78 72 45 L72 25" />
+  <!-- Root lines for texture -->
+  <line x1="39" y1="55" x2="39" y2="68" />
+  <line x1="61" y1="55" x2="61" y2="68" />
+</svg>

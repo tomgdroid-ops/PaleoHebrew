@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Gimel - Foot: side profile of a foot walking, heel at left, toes at right -->
+  <!-- Leg coming down -->
+  <line x1="40" y1="15" x2="40" y2="55" />
+  <!-- Heel curve -->
+  <path d="M40 55 Q35 70 38 78 Q42 85 55 85" />
+  <!-- Sole of foot -->
+  <line x1="55" y1="85" x2="72" y2="85" />
+  <!-- Toes curving up -->
+  <path d="M72 85 Q78 84 78 78 Q78 72 73 70" />
+</svg>

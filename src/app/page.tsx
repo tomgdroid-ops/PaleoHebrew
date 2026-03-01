@@ -51,12 +51,20 @@ export default function HomePage() {
           &ldquo;strength.&rdquo; Bet was a house floor plan meaning &ldquo;family.&rdquo;
           Click any word in the Torah to see the ancient pictures that form it.
         </p>
-        <Link
-          href="/torah/genesis/1"
-          className="inline-block mt-6 px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary-light transition-colors"
-        >
-          Start Reading Genesis 1:1
-        </Link>
+        <div className="flex flex-wrap justify-center gap-3 mt-6">
+          <Link
+            href="/torah/genesis/1"
+            className="inline-block px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary-light transition-colors"
+          >
+            Start Reading Genesis 1:1
+          </Link>
+          <Link
+            href="/alphabet"
+            className="inline-block px-6 py-3 border-2 border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-white transition-colors"
+          >
+            View the Alphabet
+          </Link>
+        </div>
       </div>
 
       {/* Sample word cards */}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Tet - Basket/snake coil: a coiled snake or round woven basket -->
+  <!-- Outer coil -->
+  <path d="M75 50 Q75 20 50 20 Q25 20 25 50 Q25 78 50 78 Q65 78 70 65" />
+  <!-- Inner spiral -->
+  <path d="M60 50 Q60 35 50 35 Q40 35 40 50 Q40 60 50 62" />
+  <!-- Snake head -->
+  <circle cx="50" cy="65" r="4" fill="currentColor" stroke="none" />
+</svg>
