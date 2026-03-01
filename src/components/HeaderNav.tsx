@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { href: "/torah/genesis/1", label: "Read Torah" },
   { href: "/alphabet", label: "Alphabet" },
   { href: "/guide", label: "How It Works" },
+  { href: "/stone-to-script", label: "Stone to Script" },
   { href: "/aleph-tav", label: "Aleph Tav" },
   { href: "/about", label: "About" },
 ];

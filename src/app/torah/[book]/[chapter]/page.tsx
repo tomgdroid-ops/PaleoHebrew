@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getBooksMeta, getChapter, getLetterMeanings, getWordGlosses, getCuratedSentences } from "@/lib/data-loader";
 import type { Metadata } from "next";
 import ChapterView from "./ChapterView";
+import BookHero from "@/components/BookHero";
 
 interface PageProps {
   params: Promise<{ book: string; chapter: string }>;
@@ -40,13 +41,16 @@ export default async function TorahChapterPage({ params }: PageProps) {
   const curatedSentences = getCuratedSentences();
 
   return (
-    <ChapterView
-      chapter={chapterData}
-      books={books}
-      bookSlug={bookSlug}
-      letterMeanings={letterMeanings}
-      wordGlosses={wordGlosses}
-      curatedSentences={curatedSentences}
-    />
+    <>
+      <BookHero bookSlug={bookSlug} variant="chapter" />
+      <ChapterView
+        chapter={chapterData}
+        books={books}
+        bookSlug={bookSlug}
+        letterMeanings={letterMeanings}
+        wordGlosses={wordGlosses}
+        curatedSentences={curatedSentences}
+      />
+    </>
   );
 }

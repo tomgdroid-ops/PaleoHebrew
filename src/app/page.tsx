@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BookHero from "@/components/BookHero";
 
 const SAMPLE_WORDS = [
   {
@@ -113,22 +114,25 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Book links */}
+      {/* Book links with hero images */}
       <div className="mb-16">
         <h3 className="text-xl font-semibold text-center mb-6">
           Browse the Torah
         </h3>
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {BOOKS.map((book) => (
             <Link
               key={book.slug}
               href={`/torah/${book.slug}/1`}
-              className="flex flex-col items-center px-6 py-4 rounded-xl border border-border bg-surface hover:bg-surface-hover transition-colors"
+              className="book-card-hero"
             >
-              <span className="hebrew-text text-xl" lang="he" dir="rtl">
-                {book.nameHe}
-              </span>
-              <span className="text-sm text-muted mt-1">{book.name}</span>
+              <BookHero bookSlug={book.slug} variant="card" />
+              <div className="card-content">
+                <div className="hebrew-name hebrew-text" lang="he" dir="rtl">
+                  {book.nameHe}
+                </div>
+                <div className="english-name">{book.name}</div>
+              </div>
             </Link>
           ))}
         </div>
@@ -181,7 +185,7 @@ export default function HomePage() {
           <a href="https://hb.openscriptures.org" className="underline" target="_blank" rel="noopener noreferrer">
             OSHB
           </a>
-          , and OSHB.
+          .
         </p>
       </div>
     </div>
