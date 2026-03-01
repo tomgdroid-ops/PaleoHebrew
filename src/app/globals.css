@@ -461,7 +461,7 @@ body {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  opacity: 0.5;
+  opacity: 0.75;
 }
 
 .chapter-hero-banner::after {
@@ -477,7 +477,7 @@ body {
 }
 
 [data-theme="dark"] .chapter-hero-banner img {
-  opacity: 0.35;
+  opacity: 0.55;
 }
 
 /* Mobile adjustments */
