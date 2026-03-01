@@ -451,9 +451,9 @@ body {
   position: relative;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
-  height: 200px;
+  height: 180px;
   overflow: hidden;
-  margin-bottom: -2rem;
+  margin-bottom: 0;
 }
 
 .chapter-hero-banner img {
