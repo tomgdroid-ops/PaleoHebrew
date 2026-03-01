@@ -73,6 +73,15 @@ export default function HomePage() {
               The Journey of the Hebrew Alphabet
             </span>
           </Link>
+          <Link
+            href="/aleph-tav"
+            className="inline-block px-6 py-3 border-2 border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-white transition-colors text-center"
+          >
+            <span className="block">The Aleph Tav (את) Study</span>
+            <span className="block text-xs font-normal opacity-75 mt-0.5">
+              Covenant Marker in Scripture
+            </span>
+          </Link>
         </div>
       </div>
 
