@@ -269,6 +269,11 @@ body {
   color: var(--primary);
 }
 
+/* SVG pictographs loaded via <img> can't inherit CSS color, so use filter in dark mode */
+[data-theme="dark"] img.paleo-svg {
+  filter: invert(0.85) sepia(0.2) saturate(0.5) brightness(1.2);
+}
+
 .paleo-svg svg {
   width: 100%;
   height: 100%;
