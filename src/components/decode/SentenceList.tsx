@@ -3,24 +3,45 @@
 import { useState } from "react";
 import type { InterpretiveSentence } from "@/types";
 
+// Theme detection: check which themes a sentence's meanings match
+const THEMES: Record<string, string[]> = {
+  creation: ["create", "make", "beginning", "first", "work", "complete"],
+  covenant: ["covenant", "sign", "mark", "seal", "promise", "oath", "cross"],
+  redemption: ["save", "deliver", "cross", "sacrifice", "blood", "destroy", "consume"],
+  family: ["father", "mother", "son", "house", "family", "seed", "offspring", "heir"],
+  authority: ["leader", "chief", "head", "ruler", "king", "authority", "shepherd", "guide"],
+  divine: ["god", "strength", "power", "spirit", "breath", "mighty", "fire"],
+};
+
+function detectThemes(sentence: InterpretiveSentence): string[] {
+  const words = [
+    ...sentence.sentence.toLowerCase().split(/[\s,;:.]+/),
+    ...sentence.letterBreakdown.map(lb => lb.chosenMeaning.toLowerCase().replace(/^to /, "")),
+  ];
+
+  const matched: string[] = [];
+  for (const [theme, keywords] of Object.entries(THEMES)) {
+    for (const kw of keywords) {
+      if (words.some(w => w.includes(kw) || kw.includes(w))) {
+        matched.push(theme);
+        break;
+      }
+    }
+  }
+  return matched;
+}
+
+function getScoreBadgeClass(score: number): string {
+  if (score >= 70) return "score-badge score-badge-high";
+  if (score >= 45) return "score-badge score-badge-medium";
+  return "score-badge score-badge-low";
+}
+
 interface SentenceListProps {
   sentences: InterpretiveSentence[];
-  onSentenceHover?: (sentence: InterpretiveSentence | null) => void;
 }
 
-function getScoreClass(score: number): string {
-  if (score >= 70) return "score-high";
-  if (score >= 45) return "score-medium";
-  return "score-low";
-}
-
-function getScoreLabel(score: number): string {
-  if (score >= 70) return "Strong";
-  if (score >= 45) return "Moderate";
-  return "Exploratory";
-}
-
-export default function SentenceList({ sentences, onSentenceHover }: SentenceListProps) {
+export default function SentenceList({ sentences }: SentenceListProps) {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
 
   if (sentences.length === 0) {
@@ -32,68 +53,107 @@ export default function SentenceList({ sentences, onSentenceHover }: SentenceLis
   }
 
   return (
-    <div className="space-y-2">
-      <h3 className="text-sm font-semibold text-muted uppercase tracking-wide">
+    <div>
+      <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-3">
         Pictographic Interpretations
       </h3>
 
-      {sentences.map((sentence, idx) => (
-        <div
-          key={idx}
-          className="rounded-lg border border-border bg-surface p-3 cursor-pointer hover:border-primary/30 transition-colors"
-          onMouseEnter={() => onSentenceHover?.(sentence)}
-          onMouseLeave={() => onSentenceHover?.(null)}
-          onClick={() => setExpandedIdx(expandedIdx === idx ? null : idx)}
-        >
-          <div className="flex items-start gap-3">
-            {/* Rank number */}
-            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-semibold">
-              {idx + 1}
-            </span>
-
-            {/* Sentence */}
-            <div className="flex-1">
-              <p className="text-foreground font-medium leading-relaxed">
-                {sentence.sentence}
-              </p>
-
-              {/* Score badge */}
-              <div className="flex items-center gap-2 mt-1">
-                <span className={`text-xs font-medium ${getScoreClass(sentence.score)}`}>
-                  {getScoreLabel(sentence.score)}
+      <div className="sentence-list space-y-2">
+        {sentences.map((sentence, idx) => {
+          // Use curated themes if available, otherwise detect algorithmically
+          const themes = sentence.themes && sentence.themes.length > 0
+            ? sentence.themes
+            : detectThemes(sentence);
+          return (
+            <div
+              key={idx}
+              className={`rounded-lg border p-3 cursor-pointer hover:border-primary/30 transition-colors ${
+                sentence.curated
+                  ? "border-primary/20 bg-surface"
+                  : "border-border bg-surface"
+              }`}
+              onClick={() => setExpandedIdx(expandedIdx === idx ? null : idx)}
+            >
+              <div className="flex items-start gap-3">
+                {/* Score badge (colored circle) */}
+                <span className={getScoreBadgeClass(sentence.score)}>
+                  {sentence.score}
                 </span>
-                <span className="text-xs text-muted">
-                  Score: {sentence.score}/100
-                </span>
-              </div>
-            </div>
-          </div>
 
-          {/* Expanded letter breakdown */}
-          {expandedIdx === idx && (
-            <div className="mt-3 pt-3 border-t border-border">
-              <p className="text-xs text-muted mb-2">Letter meanings used:</p>
-              <div className="flex flex-wrap gap-2" dir="rtl">
-                {sentence.letterBreakdown.map((lb, lbIdx) => (
-                  <span
-                    key={lbIdx}
-                    className="inline-flex items-center gap-1 text-xs bg-decode-bg rounded px-2 py-1"
-                  >
-                    <span className="hebrew-text font-semibold" lang="he">
-                      {lb.letter}
-                    </span>
-                    <span className="text-muted">=</span>
-                    <span className="text-primary font-medium">
-                      {lb.chosenMeaning}
-                    </span>
-                    <span className="text-muted">({lb.role})</span>
-                  </span>
-                ))}
+                {/* Sentence content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="text-foreground leading-relaxed" style={{ fontSize: "16px" }}>
+                      {sentence.sentence}
+                    </p>
+                    {sentence.curated && (
+                      <span className="inline-flex items-center text-[10px] font-semibold uppercase tracking-wider bg-primary/10 text-primary rounded px-1.5 py-0.5 shrink-0">
+                        curated
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Letter meaning tags: letter=meaning */}
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {sentence.letterBreakdown.map((lb, lbIdx) => (
+                      <span
+                        key={lbIdx}
+                        className="inline-flex items-center gap-0.5 text-xs bg-decode-bg rounded px-1.5 py-0.5"
+                      >
+                        <span className="hebrew-text font-semibold" lang="he">
+                          {lb.letter}
+                        </span>
+                        <span className="text-muted">=</span>
+                        <span className="text-primary font-medium">
+                          {lb.chosenMeaning}
+                        </span>
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Theme pills */}
+                  {themes.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-1.5">
+                      {themes.map((theme) => (
+                        <span key={theme} className="theme-pill">
+                          {theme}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
+
+              {/* Expanded details */}
+              {expandedIdx === idx && (
+                <div className="mt-3 pt-3 border-t border-border">
+                  <p className="text-xs text-muted mb-2">Detailed letter meanings used:</p>
+                  <div className="flex flex-wrap gap-2" dir="rtl">
+                    {sentence.letterBreakdown.map((lb, lbIdx) => (
+                      <span
+                        key={lbIdx}
+                        className="inline-flex items-center gap-1 text-xs bg-decode-bg rounded px-2 py-1"
+                      >
+                        <span className="hebrew-text font-semibold" lang="he">
+                          {lb.letter}
+                        </span>
+                        <span className="text-muted">=</span>
+                        <span className="text-primary font-medium">
+                          {lb.chosenMeaning}
+                        </span>
+                        <span className="text-muted">({lb.role})</span>
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted mt-2">
+                    Source: {sentence.curated ? "Hand-crafted reading" : `Template ${sentence.pattern}`}
+                  </p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      ))}
+          );
+        })}
+      </div>
     </div>
   );
 }

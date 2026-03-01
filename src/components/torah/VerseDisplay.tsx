@@ -21,8 +21,8 @@ export default function VerseDisplay({
         {verse.chapter}:{verse.verse}
       </div>
 
-      {/* Interlinear word columns, right-to-left */}
-      <div className="interlinear-row" dir="rtl">
+      {/* Interlinear word stacks: LTR for English readers, wrapping */}
+      <div className="verse-container">
         {verse.words.map((word, idx) => (
           <ClickableWord
             key={idx}

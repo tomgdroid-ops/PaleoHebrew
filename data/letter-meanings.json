@@ -13,6 +13,7 @@
       { "text": "leader", "role": "noun", "primary": true },
       { "text": "chief", "role": "noun", "primary": false },
       { "text": "first", "role": "adjective", "primary": true },
+      { "text": "God", "role": "noun", "primary": true },
       { "text": "to lead", "role": "verb", "primary": true },
       { "text": "to teach", "role": "verb", "primary": false },
       { "text": "to yoke", "role": "verb", "primary": false }

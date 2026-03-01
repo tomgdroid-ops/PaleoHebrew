@@ -25,8 +25,8 @@ export function setGlossData(data: GlossData) {
  * Common Hebrew prefixes to strip when looking up root words.
  */
 const PREFIXES_TO_STRIP = [
-  "וב", "וה", "וכ", "ול", "ומ", "וש",  // vav + prefix
-  "ב", "ה", "ו", "כ", "ל", "מ", "ש",   // single prefixes
+  "ב", "ה", "ו", "כ", "ל", "מ", "ש",   // single prefixes first
+  "וב", "וה", "וכ", "ול", "ומ", "וש",  // vav + prefix second
 ];
 
 /**

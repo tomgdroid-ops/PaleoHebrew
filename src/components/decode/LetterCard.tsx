@@ -9,9 +9,10 @@ interface LetterCardProps {
 }
 
 export default function LetterCard({ detail, highlightedMeaning }: LetterCardProps) {
+  // Find gematria from allMeanings parent data - we store it on the letter data
   return (
-    <div className="flex flex-col items-center p-3 rounded-lg bg-surface border border-border min-w-[100px]">
-      {/* Paleo-Hebrew glyph */}
+    <div className="flex flex-col items-center p-3 rounded-lg bg-surface border border-border min-w-[100px] max-w-[130px]">
+      {/* Paleo-Hebrew SVG glyph */}
       <PaleoGlyph
         paleoChar={detail.paleoUnicode}
         letterName={detail.name}
@@ -29,13 +30,13 @@ export default function LetterCard({ detail, highlightedMeaning }: LetterCardPro
       </span>
 
       {/* Pictograph description */}
-      <span className="text-xs text-muted italic">
+      <span className="text-xs text-muted italic text-center">
         {detail.pictograph}
       </span>
 
-      {/* Meanings */}
+      {/* Meaning tags (top 4) */}
       <div className="mt-2 flex flex-wrap gap-1 justify-center">
-        {detail.allMeanings.slice(0, 6).map((meaning) => (
+        {detail.allMeanings.slice(0, 4).map((meaning) => (
           <span
             key={meaning.text}
             className={`text-xs px-1.5 py-0.5 rounded ${

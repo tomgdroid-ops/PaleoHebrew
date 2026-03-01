@@ -65,6 +65,29 @@ export interface InterpretiveSentence {
   score: number; // 0-100
   letterBreakdown: LetterInterpretation[];
   pattern: string; // Which template pattern was used
+  themes?: string[]; // Thematic tags (for curated sentences)
+  curated?: boolean; // True if from curated-sentences.json
+}
+
+// === Curated Sentences Types ===
+
+export interface CuratedMeaningUsed {
+  letter: string;
+  meaning: string;
+  primary: boolean;
+}
+
+export interface CuratedSentence {
+  sentence: string;
+  score: number;
+  themes: string[];
+  meanings_used: CuratedMeaningUsed[];
+}
+
+export interface CuratedWordEntry {
+  word: string;
+  strongsId: string;
+  sentences: CuratedSentence[];
 }
 
 export interface DecodedWord {

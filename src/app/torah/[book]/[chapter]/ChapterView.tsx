@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import type { TorahChapter, TorahWord, BookMeta, LetterMeaning } from "@/types";
+import { useState, useRef } from "react";
+import type { TorahChapter, TorahWord, BookMeta, LetterMeaning, CuratedWordEntry } from "@/types";
 import NavigationBar from "@/components/torah/NavigationBar";
 import VerseDisplay from "@/components/torah/VerseDisplay";
 import DecodePanel from "@/components/decode/DecodePanel";
@@ -13,6 +13,14 @@ interface ChapterViewProps {
   bookSlug: string;
   letterMeanings: LetterMeaning[];
   wordGlosses: Record<string, unknown>;
+  curatedSentences: Record<string, CuratedWordEntry>;
+}
+
+export interface VerseRef {
+  book: string;
+  bookHe: string;
+  chapter: number;
+  verse: number;
 }
 
 export default function ChapterView({
@@ -21,28 +29,27 @@ export default function ChapterView({
   bookSlug,
   letterMeanings,
   wordGlosses,
+  curatedSentences,
 }: ChapterViewProps) {
   const [selectedWord, setSelectedWord] = useState<TorahWord | null>(null);
-  const [showPanel, setShowPanel] = useState(false);
+  const [selectedVerseRef, setSelectedVerseRef] = useState<VerseRef | null>(null);
+  const decodePanelRef = useRef<HTMLDivElement>(null);
 
-  // Initialize gloss lookup on mount
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setGlossData(wordGlosses as any);
-  }, [wordGlosses]);
+  // Set gloss data synchronously so it's available during render of child components
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setGlossData(wordGlosses as any);
 
-  const handleWordClick = (word: TorahWord) => {
+  const handleWordClick = (word: TorahWord, verseRef?: VerseRef) => {
     setSelectedWord(word);
-    setShowPanel(true);
+    if (verseRef) setSelectedVerseRef(verseRef);
   };
 
   const handleClosePanel = () => {
-    setShowPanel(false);
     setSelectedWord(null);
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-4">
+    <div className="max-w-[1600px] mx-auto px-4 py-4">
       {/* Navigation */}
       <NavigationBar
         books={books}
@@ -51,7 +58,7 @@ export default function ChapterView({
       />
 
       {/* Chapter header */}
-      <div className="mt-4 mb-6">
+      <div className="mt-4 mb-2">
         <h2 className="text-2xl font-semibold">
           {chapter.book} {chapter.chapter}
         </h2>
@@ -60,20 +67,25 @@ export default function ChapterView({
         </p>
       </div>
 
-      {/* Main content: verses + decode panel */}
-      <div className="flex gap-6">
-        {/* Verses column */}
-        <div className={`flex-1 min-w-0 ${showPanel ? "lg:max-w-[60%]" : ""}`}>
-          <div className="space-y-1">
-            {chapter.verses.map((verse) => (
-              <VerseDisplay
-                key={verse.verse}
-                verse={verse}
-                selectedWord={selectedWord}
-                onWordClick={handleWordClick}
-              />
-            ))}
-          </div>
+      {/* Two-column layout: Verses (left, scrollable) | Decode Panel (right, sticky) */}
+      <div className="flex flex-col lg:flex-row gap-4">
+        {/* Left: Verse Display Area */}
+        <div className={`${selectedWord ? "lg:w-[55%]" : "w-full"} transition-all duration-300`}>
+          {chapter.verses.map((verse) => (
+            <VerseDisplay
+              key={verse.verse}
+              verse={verse}
+              selectedWord={selectedWord}
+              onWordClick={(word) =>
+                handleWordClick(word, {
+                  book: chapter.book,
+                  bookHe: chapter.bookHe,
+                  chapter: chapter.chapter,
+                  verse: verse.verse,
+                })
+              }
+            />
+          ))}
 
           {chapter.verses.length === 0 && (
             <p className="text-muted text-center py-12">
@@ -84,41 +96,22 @@ export default function ChapterView({
           )}
         </div>
 
-        {/* Decode panel - desktop sidebar */}
-        <div
-          className={`hidden lg:block w-[400px] flex-shrink-0 transition-all duration-300 ${
-            showPanel ? "opacity-100" : "opacity-50"
-          }`}
-        >
-          <div className="sticky top-4 bg-decode-bg rounded-xl border border-border max-h-[calc(100vh-6rem)] overflow-hidden">
-            <DecodePanel
-              word={selectedWord}
-              letterMeanings={letterMeanings}
-              onClose={handleClosePanel}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Decode panel - mobile bottom sheet */}
-      {showPanel && selectedWord && (
-        <div className="lg:hidden fixed inset-0 z-50">
-          {/* Backdrop */}
+        {/* Right: Sticky Decode Panel */}
+        {selectedWord && (
           <div
-            className="absolute inset-0 bg-black/40"
-            onClick={handleClosePanel}
-          />
-          {/* Panel */}
-          <div className="absolute bottom-0 left-0 right-0 max-h-[80vh] bg-decode-bg rounded-t-2xl border-t border-border overflow-hidden">
-            <div className="w-12 h-1 bg-border rounded-full mx-auto mt-2" />
+            ref={decodePanelRef}
+            className="lg:w-[45%] lg:sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto rounded-xl border border-border bg-decode-bg decode-panel"
+          >
             <DecodePanel
               word={selectedWord}
+              verseRef={selectedVerseRef}
               letterMeanings={letterMeanings}
+              curatedSentences={curatedSentences}
               onClose={handleClosePanel}
             />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

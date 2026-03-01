@@ -12,6 +12,26 @@
   --border: #d4d0c8;
   --muted: #6b6b7b;
   --decode-bg: #f5f3ef;
+  --score-high: #2d8c3a;
+  --score-medium: #8c7a2d;
+  --score-low: #8c4a2d;
+}
+
+[data-theme="dark"] {
+  --background: #0f0f1a;
+  --foreground: #e8e6e1;
+  --primary: #7b8cdb;
+  --primary-light: #9aa5e8;
+  --accent: #c4a35a;
+  --accent-light: #8a7340;
+  --surface: #1a1a2e;
+  --surface-hover: #252540;
+  --border: #333355;
+  --muted: #9090a0;
+  --decode-bg: #151525;
+  --score-high: #4ade80;
+  --score-medium: #fbbf24;
+  --score-low: #f87171;
 }
 
 @theme inline {
@@ -28,22 +48,6 @@
   --color-decode-bg: var(--decode-bg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f0f1a;
-    --foreground: #e8e6e1;
-    --primary: #7b8cdb;
-    --primary-light: #9aa5e8;
-    --accent: #c4a35a;
-    --accent-light: #8a7340;
-    --surface: #1a1a2e;
-    --surface-hover: #252540;
-    --border: #333355;
-    --muted: #9090a0;
-    --decode-bg: #151525;
-  }
 }
 
 /* Paleo-Hebrew font */
@@ -68,7 +72,7 @@ body {
   line-height: 2;
 }
 
-/* Paleo-Hebrew glyph styling */
+/* Paleo-Hebrew Unicode glyph styling (fallback) */
 .paleo-glyph {
   font-family: 'NotoSansPhoenician', 'Noto Sans Phoenician', serif;
   font-size: 2rem;
@@ -82,10 +86,9 @@ body {
 }
 
 /* ============================================
-   Interlinear Verse Layout
+   Interlinear Verse Layout (per spec Section 3.3)
    ============================================ */
 
-/* Verse block container */
 .verse-block {
   padding: 0.75rem 0;
   border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
@@ -103,129 +106,206 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* Row of interlinear word columns, RTL flow */
-.interlinear-row {
+/* Verse container: LTR flex-wrap for English readers, no horizontal scroll */
+.verse-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem;
-  align-items: flex-start;
+  direction: ltr;
+  justify-content: flex-start;
+  gap: 16px 24px;
+  padding: 24px;
+  overflow-x: hidden;
 }
 
-/* Each word: vertical stack of paleo / hebrew / translit / english */
+/* Each word stack */
 .interlinear-word {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 0.375rem 0.5rem;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-  min-width: 56px;
+  transition: background-color 0.2s;
+  min-width: 60px;
+  max-width: 160px;
   background: transparent;
   border: 1px solid transparent;
 }
 
 .interlinear-word:hover {
-  background-color: var(--surface-hover);
-  border-color: var(--border);
+  background-color: rgba(196, 163, 90, 0.1);
 }
 
 .interlinear-word.selected {
-  background-color: var(--accent);
-  border-color: var(--accent);
+  background-color: rgba(196, 163, 90, 0.2);
+  border: 1px solid rgba(196, 163, 90, 0.5);
 }
 
-.interlinear-word.selected .interlinear-english,
-.interlinear-word.selected .interlinear-translit,
-.interlinear-word.selected .interlinear-strongs,
-.interlinear-word.selected .interlinear-hebrew,
-.interlinear-word.selected .interlinear-paleo {
-  color: white;
-}
-
-/* Row 1: Paleo-Hebrew */
+/* Row 1: Paleo-Hebrew (top) */
 .interlinear-paleo {
-  font-size: 1.15rem;
+  display: flex;
+  gap: 1px;
+  direction: rtl;
   line-height: 1.3;
   color: var(--primary);
+  min-height: 28px;
+  align-items: center;
 }
 
-/* Row 2: Hebrew + Strong's number inline */
-.interlinear-hebrew-row {
+/* Row 2: Modern Hebrew + Strong's number (same line) */
+.interlinear-hebrew-line {
   display: flex;
   align-items: baseline;
-  gap: 0.25rem;
-  margin-top: 0.125rem;
+  gap: 4px;
+  direction: rtl;
+  margin-top: 2px;
 }
 
 .interlinear-hebrew {
-  font-size: 1.05rem;
-  line-height: 1.3;
+  font-size: 1.15rem;
+  line-height: 1.4;
   color: var(--foreground);
 }
 
 .interlinear-strongs {
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   color: var(--muted);
   font-family: var(--font-mono);
+  opacity: 0.8;
+  direction: ltr;
 }
 
 /* Row 3: Transliteration */
 .interlinear-translit {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--muted);
   letter-spacing: 0.02em;
-  margin-top: 0.125rem;
+  margin-top: 2px;
   direction: ltr;
+  font-style: italic;
 }
 
-/* Row 4: English gloss (bold, like the reference image) */
+/* Row 4: English gloss (bold, bottom — like a traditional interlinear Bible) */
 .interlinear-english {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 700;
   color: var(--foreground);
-  margin-top: 0.125rem;
+  margin-top: 2px;
   direction: ltr;
-  max-width: 110px;
+  max-width: 140px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 /* ============================================
-   Legacy clickable word (decode panel, etc.)
+   Decode Panel (per spec Section 3.4)
    ============================================ */
-.hebrew-word {
-  cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 4px;
-  transition: background-color 0.15s ease, color 0.15s ease;
+
+.sentence-list {
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* Score badge (colored circle) */
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.score-badge-high {
+  background-color: rgba(45, 140, 58, 0.15);
+  color: var(--score-high);
+}
+
+.score-badge-medium {
+  background-color: rgba(140, 122, 45, 0.15);
+  color: var(--score-medium);
+}
+
+.score-badge-low {
+  background-color: rgba(140, 74, 45, 0.15);
+  color: var(--score-low);
+}
+
+/* Theme pills */
+.theme-pill {
   display: inline-block;
+  font-size: 0.625rem;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  background-color: var(--surface-hover);
+  color: var(--muted);
+  text-transform: lowercase;
 }
 
-.hebrew-word:hover {
-  background-color: var(--accent-light);
-}
-
-.hebrew-word.selected {
-  background-color: var(--accent);
-  color: white;
-}
-
-/* Score badge colors */
-.score-high { color: #2d8c3a; }
-.score-medium { color: #8c7a2d; }
-.score-low { color: #8c4a2d; }
-
-/* Scrollbar styling for decode panel */
+/* Scrollbar styling */
+.sentence-list::-webkit-scrollbar,
 .decode-panel::-webkit-scrollbar {
   width: 6px;
 }
+.sentence-list::-webkit-scrollbar-track,
 .decode-panel::-webkit-scrollbar-track {
   background: var(--surface);
 }
+.sentence-list::-webkit-scrollbar-thumb,
 .decode-panel::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 3px;
+}
+
+/* Paleo SVG inline — inherits currentColor for dark mode support */
+.paleo-svg {
+  display: inline-block;
+  vertical-align: middle;
+  color: var(--primary);
+}
+
+.paleo-svg svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+}
+
+/* Report page: always light mode regardless of theme */
+.report-page {
+  background: #fff !important;
+  color: #1a1a1a !important;
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  .verse-container {
+    gap: 8px 12px;
+    padding: 12px;
+  }
+
+  .interlinear-word {
+    padding: 4px 8px;
+    min-width: 50px;
+  }
+
+  .interlinear-hebrew {
+    font-size: 0.95rem;
+  }
+
+  .interlinear-english {
+    font-size: 0.7rem;
+  }
+
+  .interlinear-translit {
+    font-size: 0.65rem;
+  }
+
+  .sentence-list {
+    max-height: 60vh;
+  }
 }

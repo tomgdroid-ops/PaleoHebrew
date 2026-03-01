@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getLetterMeanings, getStrongsEntry } from "@/lib/data-loader";
+import { getLetterMeanings, getStrongsEntry, getCuratedSentences } from "@/lib/data-loader";
 import { splitToLetters, toPaleoHebrew, toConsonantal } from "@/lib/hebrew";
 import { generateInterpretations, getLetterDetails } from "@/lib/sentence-engine";
 
@@ -47,9 +47,12 @@ export async function GET(request: Request) {
 
   const paleoHebrew = toPaleoHebrew(consonantal);
   const letterDetails = getLetterDetails(rootLetters, letterMeanings);
+  const curatedSentences = getCuratedSentences();
+  const curatedData = curatedSentences[consonantal] || undefined;
   const interpretations = generateInterpretations(rootLetters, letterMeanings, {
     maxResults: 10,
     strongsDefinition: strongsDef,
+    curatedData,
   });
 
   return NextResponse.json({

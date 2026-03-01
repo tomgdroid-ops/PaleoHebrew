@@ -1,0 +1,320 @@
+{
+  "בראשית": {
+    "word": "בראשית",
+    "strongsId": "H7225",
+    "sentences": [
+      {
+        "sentence": "The Son of God is destroyed by His own hand on a cross",
+        "score": 97,
+        "themes": ["redemption", "covenant", "divine"],
+        "meanings_used": [
+          { "letter": "ב", "meaning": "house", "primary": true },
+          { "letter": "ר", "meaning": "head", "primary": true },
+          { "letter": "א", "meaning": "God", "primary": true },
+          { "letter": "ש", "meaning": "to destroy", "primary": true },
+          { "letter": "י", "meaning": "hand", "primary": true },
+          { "letter": "ת", "meaning": "cross", "primary": true }
+        ]
+      },
+      {
+        "sentence": "In the beginning, the first of God's work was finished by the sign of the covenant",
+        "score": 92,
+        "themes": ["creation", "covenant", "divine"],
+        "meanings_used": [
+          { "letter": "ב", "meaning": "inside", "primary": false },
+          { "letter": "ר", "meaning": "first", "primary": true },
+          { "letter": "א", "meaning": "God", "primary": true },
+          { "letter": "ש", "meaning": "to consume", "primary": false },
+          { "letter": "י", "meaning": "work", "primary": false },
+          { "letter": "ת", "meaning": "sign", "primary": false }
+        ]
+      },
+      {
+        "sentence": "The house of the head, God consumes by His own hand and mark",
+        "score": 85,
+        "themes": ["divine", "authority"],
+        "meanings_used": [
+          { "letter": "ב", "meaning": "house", "primary": true },
+          { "letter": "ר", "meaning": "head", "primary": true },
+          { "letter": "א", "meaning": "God", "primary": true },
+          { "letter": "ש", "meaning": "to consume", "primary": false },
+          { "letter": "י", "meaning": "hand", "primary": true },
+          { "letter": "ת", "meaning": "mark", "primary": false }
+        ]
+      }
+    ]
+  },
+  "אב": {
+    "word": "אב",
+    "strongsId": "H1",
+    "sentences": [
+      {
+        "sentence": "The strength of the house",
+        "score": 95,
+        "themes": ["family", "authority"],
+        "meanings_used": [
+          { "letter": "א", "meaning": "strength", "primary": true },
+          { "letter": "ב", "meaning": "house", "primary": true }
+        ]
+      },
+      {
+        "sentence": "The leader of the family",
+        "score": 90,
+        "themes": ["family", "authority"],
+        "meanings_used": [
+          { "letter": "א", "meaning": "leader", "primary": false },
+          { "letter": "ב", "meaning": "family", "primary": false }
+        ]
+      },
+      {
+        "sentence": "The ox who shelters",
+        "score": 78,
+        "themes": ["family"],
+        "meanings_used": [
+          { "letter": "א", "meaning": "ox", "primary": true },
+          { "letter": "ב", "meaning": "tent", "primary": false }
+        ]
+      }
+    ]
+  },
+  "אם": {
+    "word": "אם",
+    "strongsId": "H517",
+    "sentences": [
+      {
+        "sentence": "The strength of the water — the one who binds the family together",
+        "score": 94,
+        "themes": ["family", "divine"],
+        "meanings_used": [
+          { "letter": "א", "meaning": "strength", "primary": true },
+          { "letter": "מ", "meaning": "water", "primary": true }
+        ]
+      },
+      {
+        "sentence": "The mighty one who nourishes",
+        "score": 88,
+        "themes": ["family", "divine"],
+        "meanings_used": [
+          { "letter": "א", "meaning": "God", "primary": true },
+          { "letter": "מ", "meaning": "mighty", "primary": false }
+        ]
+      }
+    ]
+  },
+  "בן": {
+    "word": "בן",
+    "strongsId": "H1121",
+    "sentences": [
+      {
+        "sentence": "The house continues — the heir of the family",
+        "score": 95,
+        "themes": ["family"],
+        "meanings_used": [
+          { "letter": "ב", "meaning": "house", "primary": true },
+          { "letter": "נ", "meaning": "seed", "primary": true }
+        ]
+      },
+      {
+        "sentence": "The tent that brings forth life",
+        "score": 87,
+        "themes": ["family", "creation"],
+        "meanings_used": [
+          { "letter": "ב", "meaning": "tent", "primary": false },
+          { "letter": "נ", "meaning": "life", "primary": false }
+        ]
+      }
+    ]
+  },
+  "שלום": {
+    "word": "שלום",
+    "strongsId": "H7965",
+    "sentences": [
+      {
+        "sentence": "To destroy the authority of the chaos, binding it with a yoke of order",
+        "score": 93,
+        "themes": ["redemption", "authority"],
+        "meanings_used": [
+          { "letter": "ש", "meaning": "to destroy", "primary": true },
+          { "letter": "ל", "meaning": "authority", "primary": true },
+          { "letter": "ו", "meaning": "nail", "primary": true },
+          { "letter": "מ", "meaning": "chaos", "primary": false }
+        ]
+      },
+      {
+        "sentence": "The consuming fire of the shepherd, secured by the might of the waters",
+        "score": 86,
+        "themes": ["divine", "authority"],
+        "meanings_used": [
+          { "letter": "ש", "meaning": "fire", "primary": false },
+          { "letter": "ל", "meaning": "shepherd", "primary": false },
+          { "letter": "ו", "meaning": "secure", "primary": false },
+          { "letter": "מ", "meaning": "water", "primary": true }
+        ]
+      }
+    ]
+  },
+  "ברא": {
+    "word": "ברא",
+    "strongsId": "H1254",
+    "sentences": [
+      {
+        "sentence": "The house of the head of God — the family of the Most High",
+        "score": 94,
+        "themes": ["creation", "divine", "family"],
+        "meanings_used": [
+          { "letter": "ב", "meaning": "house", "primary": true },
+          { "letter": "ר", "meaning": "head", "primary": true },
+          { "letter": "א", "meaning": "God", "primary": true }
+        ]
+      },
+      {
+        "sentence": "The beginning built by the strength of God",
+        "score": 89,
+        "themes": ["creation", "divine"],
+        "meanings_used": [
+          { "letter": "ב", "meaning": "to build", "primary": false },
+          { "letter": "ר", "meaning": "first", "primary": true },
+          { "letter": "א", "meaning": "strength", "primary": true }
+        ]
+      }
+    ]
+  },
+  "אלהים": {
+    "word": "אלהים",
+    "strongsId": "H430",
+    "sentences": [
+      {
+        "sentence": "The strong one who leads and reveals with His hand and mighty waters",
+        "score": 96,
+        "themes": ["divine", "authority", "creation"],
+        "meanings_used": [
+          { "letter": "א", "meaning": "strength", "primary": true },
+          { "letter": "ל", "meaning": "to lead", "primary": true },
+          { "letter": "ה", "meaning": "to reveal", "primary": true },
+          { "letter": "י", "meaning": "hand", "primary": true },
+          { "letter": "מ", "meaning": "mighty", "primary": false }
+        ]
+      },
+      {
+        "sentence": "The God who shepherds, behold, His work from the waters of creation",
+        "score": 90,
+        "themes": ["divine", "creation", "authority"],
+        "meanings_used": [
+          { "letter": "א", "meaning": "God", "primary": true },
+          { "letter": "ל", "meaning": "shepherd", "primary": false },
+          { "letter": "ה", "meaning": "behold", "primary": false },
+          { "letter": "י", "meaning": "work", "primary": false },
+          { "letter": "מ", "meaning": "water", "primary": true }
+        ]
+      }
+    ]
+  },
+  "אדם": {
+    "word": "אדם",
+    "strongsId": "H120",
+    "sentences": [
+      {
+        "sentence": "The strength at the door of the blood — the mighty one who enters through sacrifice",
+        "score": 94,
+        "themes": ["redemption", "divine"],
+        "meanings_used": [
+          { "letter": "א", "meaning": "strength", "primary": true },
+          { "letter": "ד", "meaning": "door", "primary": true },
+          { "letter": "מ", "meaning": "blood", "primary": false }
+        ]
+      },
+      {
+        "sentence": "The ox who moves through the waters — the first man from the earth",
+        "score": 87,
+        "themes": ["creation", "family"],
+        "meanings_used": [
+          { "letter": "א", "meaning": "ox", "primary": true },
+          { "letter": "ד", "meaning": "to move", "primary": false },
+          { "letter": "מ", "meaning": "water", "primary": true }
+        ]
+      }
+    ]
+  },
+  "תורה": {
+    "word": "תורה",
+    "strongsId": "H8451",
+    "sentences": [
+      {
+        "sentence": "The covenant sign that secures the head, revealing God's authority",
+        "score": 95,
+        "themes": ["covenant", "divine", "authority"],
+        "meanings_used": [
+          { "letter": "ת", "meaning": "sign", "primary": false },
+          { "letter": "ו", "meaning": "to secure", "primary": false },
+          { "letter": "ר", "meaning": "head", "primary": true },
+          { "letter": "ה", "meaning": "to reveal", "primary": true }
+        ]
+      },
+      {
+        "sentence": "The mark of the nail, the head who reveals — the cross that binds the chief to His people",
+        "score": 91,
+        "themes": ["covenant", "redemption", "authority"],
+        "meanings_used": [
+          { "letter": "ת", "meaning": "cross", "primary": true },
+          { "letter": "ו", "meaning": "nail", "primary": true },
+          { "letter": "ר", "meaning": "chief", "primary": false },
+          { "letter": "ה", "meaning": "to reveal", "primary": true }
+        ]
+      }
+    ]
+  },
+  "חוה": {
+    "word": "חוה",
+    "strongsId": "H2332",
+    "sentences": [
+      {
+        "sentence": "The wall that secures and reveals — the one who protects life",
+        "score": 93,
+        "themes": ["family", "creation"],
+        "meanings_used": [
+          { "letter": "ח", "meaning": "wall", "primary": true },
+          { "letter": "ו", "meaning": "to secure", "primary": false },
+          { "letter": "ה", "meaning": "to reveal", "primary": true }
+        ]
+      },
+      {
+        "sentence": "The fence of the nail that reveals — the binding together of life",
+        "score": 85,
+        "themes": ["family", "covenant"],
+        "meanings_used": [
+          { "letter": "ח", "meaning": "fence", "primary": false },
+          { "letter": "ו", "meaning": "nail", "primary": true },
+          { "letter": "ה", "meaning": "to reveal", "primary": true }
+        ]
+      }
+    ]
+  },
+  "יהוה": {
+    "word": "יהוה",
+    "strongsId": "H3068",
+    "sentences": [
+      {
+        "sentence": "The hand revealed, the nail revealed — behold, His work made manifest",
+        "score": 97,
+        "themes": ["divine", "redemption", "covenant"],
+        "meanings_used": [
+          { "letter": "י", "meaning": "hand", "primary": true },
+          { "letter": "ה", "meaning": "to reveal", "primary": true },
+          { "letter": "ו", "meaning": "nail", "primary": true },
+          { "letter": "ה", "meaning": "to reveal", "primary": true }
+        ]
+      },
+      {
+        "sentence": "His hand reveals, His nail reveals — the work of God made known through the sign",
+        "score": 93,
+        "themes": ["divine", "covenant", "redemption"],
+        "meanings_used": [
+          { "letter": "י", "meaning": "hand", "primary": true },
+          { "letter": "ה", "meaning": "to reveal", "primary": true },
+          { "letter": "ו", "meaning": "nail", "primary": true },
+          { "letter": "ה", "meaning": "to reveal", "primary": true }
+        ]
+      }
+    ]
+  }
+}

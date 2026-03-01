@@ -1,8 +1,9 @@
 "use client";
 
 import type { TorahWord } from "@/types";
-import { toPaleoHebrew, transliterate } from "@/lib/hebrew";
-import { lookupWord } from "@/lib/word-lookup";
+import { transliterate } from "@/lib/hebrew";
+import { lookupWord, lookupById } from "@/lib/word-lookup";
+import { PaleoWordGlyphs } from "@/components/decode/PaleoGlyph";
 
 interface ClickableWordProps {
   word: TorahWord;
@@ -11,9 +12,9 @@ interface ClickableWordProps {
 }
 
 export default function ClickableWord({ word, isSelected, onClick }: ClickableWordProps) {
-  const paleo = toPaleoHebrew(word.text);
   const translit = transliterate(word.textNiqqud || word.text);
-  const gloss = lookupWord(word.text);
+  // Try Strong's ID lookup first (from OSHB data), fall back to consonantal lookup
+  const gloss = (word.lemma ? lookupById(word.lemma) : null) || lookupWord(word.text);
 
   return (
     <button
@@ -22,19 +23,15 @@ export default function ClickableWord({ word, isSelected, onClick }: ClickableWo
       onClick={() => onClick(word)}
       aria-label={`Hebrew word: ${word.textNiqqud || word.text} - ${gloss?.gloss || ""}`}
     >
-      {/* Row 1: Paleo-Hebrew */}
-      <span className="paleo-glyph interlinear-paleo" dir="rtl">
-        {paleo}
-      </span>
+      {/* Row 1: Paleo-Hebrew (SVG images) */}
+      <PaleoWordGlyphs hebrewWord={word.text} size="sm" />
 
-      {/* Row 2: Modern Hebrew + Strong's number */}
-      <span className="interlinear-hebrew-row">
-        {gloss && (
-          <span className="interlinear-strongs">
-            {gloss.id.replace("H0", "").replace("H", "")}
-          </span>
-        )}
-        <span className="hebrew-text interlinear-hebrew" lang="he" dir="rtl">
+      {/* Row 2: Modern Hebrew + Strong's number (same line) */}
+      <span className="interlinear-hebrew-line" dir="rtl">
+        <span className="interlinear-strongs">
+          {(word.lemma || gloss?.id || "").replace("H0", "").replace("H", "")}
+        </span>
+        <span className="hebrew-text interlinear-hebrew" lang="he">
           {word.textNiqqud || word.text}
         </span>
       </span>
@@ -44,9 +41,9 @@ export default function ClickableWord({ word, isSelected, onClick }: ClickableWo
         {translit}
       </span>
 
-      {/* Row 4: English gloss */}
+      {/* Row 4: English gloss (bold, bottom) */}
       <span className="interlinear-english">
-        {gloss?.gloss || "—"}
+        {gloss?.gloss || "\u2014"}
       </span>
     </button>
   );

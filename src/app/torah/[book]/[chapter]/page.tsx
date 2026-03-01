@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getBooksMeta, getChapter, getLetterMeanings, getWordGlosses } from "@/lib/data-loader";
+import { getBooksMeta, getChapter, getLetterMeanings, getWordGlosses, getCuratedSentences } from "@/lib/data-loader";
 import type { Metadata } from "next";
 import ChapterView from "./ChapterView";
 
@@ -37,6 +37,7 @@ export default async function TorahChapterPage({ params }: PageProps) {
 
   const letterMeanings = getLetterMeanings();
   const wordGlosses = getWordGlosses();
+  const curatedSentences = getCuratedSentences();
 
   return (
     <ChapterView
@@ -45,6 +46,7 @@ export default async function TorahChapterPage({ params }: PageProps) {
       bookSlug={bookSlug}
       letterMeanings={letterMeanings}
       wordGlosses={wordGlosses}
+      curatedSentences={curatedSentences}
     />
   );
 }

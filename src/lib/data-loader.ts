@@ -13,6 +13,7 @@ import type {
   TorahVerse,
   LetterMeaning,
   StrongsEntry,
+  CuratedWordEntry,
 } from "@/types";
 
 const DATA_DIR = path.resolve(process.cwd(), "data");
@@ -107,6 +108,22 @@ export function getStrongsDictionary(): Record<string, StrongsEntry> {
 export function getStrongsEntry(id: string): StrongsEntry | null {
   const dict = getStrongsDictionary();
   return dict[id] || null;
+}
+
+// Curated sentences cache
+let _curatedSentences: Record<string, CuratedWordEntry> | null = null;
+
+/**
+ * Load the curated sentences database.
+ */
+export function getCuratedSentences(): Record<string, CuratedWordEntry> {
+  if (_curatedSentences) return _curatedSentences;
+
+  const filePath = path.join(DATA_DIR, "curated-sentences.json");
+  if (!fs.existsSync(filePath)) return {};
+
+  _curatedSentences = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  return _curatedSentences!;
 }
 
 // Word glosses cache
