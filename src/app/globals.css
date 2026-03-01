@@ -286,6 +286,44 @@ body {
   color: #1a1a1a !important;
 }
 
+/* Decode panel: desktop = sticky sidebar */
+.decode-modal-backdrop {
+  display: none;
+}
+
+.decode-modal-panel {
+  width: 45%;
+  position: sticky;
+  top: 1rem;
+  align-self: flex-start;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+/* Decode panel: mobile = bottom-sheet modal */
+@media (max-width: 1023px) {
+  .decode-modal-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+  }
+
+  .decode-modal-panel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 3.5rem;
+    width: 100%;
+    z-index: 50;
+    overflow-y: auto;
+    max-height: none;
+    border-radius: 1rem 1rem 0 0;
+  }
+}
+
 /* Mobile adjustments */
 @media (max-width: 767px) {
   .verse-container {

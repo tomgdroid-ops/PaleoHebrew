@@ -96,20 +96,28 @@ export default function ChapterView({
           )}
         </div>
 
-        {/* Right: Sticky Decode Panel */}
+        {/* Decode Panel: modal on mobile, sticky sidebar on desktop */}
         {selectedWord && (
-          <div
-            ref={decodePanelRef}
-            className="lg:w-[45%] lg:sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto rounded-xl border border-border bg-decode-bg decode-panel"
-          >
-            <DecodePanel
-              word={selectedWord}
-              verseRef={selectedVerseRef}
-              letterMeanings={letterMeanings}
-              curatedSentences={curatedSentences}
-              onClose={handleClosePanel}
+          <>
+            {/* Mobile backdrop overlay */}
+            <div
+              className="decode-modal-backdrop"
+              onClick={handleClosePanel}
+              aria-hidden="true"
             />
-          </div>
+            <div
+              ref={decodePanelRef}
+              className="decode-modal-panel rounded-xl border border-border bg-decode-bg decode-panel"
+            >
+              <DecodePanel
+                word={selectedWord}
+                verseRef={selectedVerseRef}
+                letterMeanings={letterMeanings}
+                curatedSentences={curatedSentences}
+                onClose={handleClosePanel}
+              />
+            </div>
+          </>
         )}
       </div>
     </div>
