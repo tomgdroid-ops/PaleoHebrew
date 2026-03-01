@@ -41,6 +41,21 @@ export default function AlphabetPage() {
         </p>
       </div>
 
+      {/* Legend header box */}
+      <div className="rounded-xl border border-border bg-surface p-4 sm:p-5 flex flex-col sm:flex-row gap-4 sm:gap-6 items-start mb-4">
+        <div className="flex sm:flex-col items-center gap-4 sm:gap-2 shrink-0 sm:w-[160px]">
+          <span className="text-sm font-semibold text-primary text-center">Paleo-Hebrew</span>
+          <span className="text-sm font-semibold text-center">Modern Hebrew</span>
+          <span className="text-sm font-semibold text-accent text-center">Gematria</span>
+        </div>
+        <div className="flex sm:flex-col items-center gap-2 shrink-0 sm:w-[100px]">
+          <span className="text-sm font-semibold text-center">Pictograph</span>
+        </div>
+        <div className="flex-1 min-w-0">
+          <span className="text-sm font-semibold">Name &amp; Meanings</span>
+        </div>
+      </div>
+
       <div className="flex flex-col gap-4">
         {letterMeanings.map((entry) => {
           const svgName = SVG_NAME_MAP[entry.letter];
@@ -65,7 +80,8 @@ export default function AlphabetPage() {
 
                 {/* Modern Hebrew */}
                 <span
-                  className="hebrew-text text-3xl font-semibold"
+                  className="hebrew-text font-semibold"
+                  style={{ fontSize: 40 }}
                   lang="he"
                   title={`Modern Hebrew ${entry.name}`}
                 >
@@ -73,7 +89,7 @@ export default function AlphabetPage() {
                 </span>
 
                 {/* Gematria value */}
-                <span className="text-lg font-mono font-bold text-accent">
+                <span className="font-mono font-bold text-accent" style={{ fontSize: 26 }}>
                   {entry.gematria}
                 </span>
               </div>
