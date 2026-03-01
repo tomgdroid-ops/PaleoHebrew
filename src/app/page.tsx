@@ -64,6 +64,15 @@ export default function HomePage() {
           >
             View the Alphabet
           </Link>
+          <Link
+            href="/stone-to-script"
+            className="inline-block px-6 py-3 border-2 border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-white transition-colors text-center"
+          >
+            <span className="block">From Stone to Script</span>
+            <span className="block text-xs font-normal opacity-75 mt-0.5">
+              The Journey of the Hebrew Alphabet
+            </span>
+          </Link>
         </div>
       </div>
 
@@ -163,7 +172,7 @@ export default function HomePage() {
           <a href="https://hb.openscriptures.org" className="underline" target="_blank" rel="noopener noreferrer">
             OSHB
           </a>
-          , and Strong&apos;s Concordance.
+          , and OSHB.
         </p>
       </div>
     </div>

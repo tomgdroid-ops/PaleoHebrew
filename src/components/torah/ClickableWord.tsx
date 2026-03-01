@@ -26,14 +26,9 @@ export default function ClickableWord({ word, isSelected, onClick }: ClickableWo
       {/* Row 1: Paleo-Hebrew (SVG images) */}
       <PaleoWordGlyphs hebrewWord={word.text} size="sm" />
 
-      {/* Row 2: Modern Hebrew + Strong's number (same line) */}
-      <span className="interlinear-hebrew-line" dir="rtl">
-        <span className="interlinear-strongs">
-          {(word.lemma || gloss?.id || "").replace("H0", "").replace("H", "")}
-        </span>
-        <span className="hebrew-text interlinear-hebrew" lang="he">
-          {word.textNiqqud || word.text}
-        </span>
+      {/* Row 2: Modern Hebrew */}
+      <span className="hebrew-text interlinear-hebrew" lang="he" dir="rtl">
+        {word.textNiqqud || word.text}
       </span>
 
       {/* Row 3: Transliteration */}

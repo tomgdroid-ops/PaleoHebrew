@@ -96,7 +96,6 @@ export default function DecodePanel({ word, verseRef, letterMeanings, curatedSen
             </p>
           )}
           <div className="flex items-center justify-center gap-4 mt-1 text-xs text-muted">
-            {word.lemma && <span>Strong&apos;s: {word.lemma}</span>}
             <span>Gematria: {decoded.gematria}</span>
           </div>
           {/* Generate Report button */}

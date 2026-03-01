@@ -153,50 +153,46 @@ body {
   align-items: center;
 }
 
-/* Row 2: Modern Hebrew + Strong's number (same line) */
-.interlinear-hebrew-line {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  direction: rtl;
+/* Row 2: Modern Hebrew — soft blue (light) / light blue (dark) */
+.interlinear-hebrew {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  color: #3b5998;
   margin-top: 2px;
 }
 
-.interlinear-hebrew {
-  font-size: 1.15rem;
-  line-height: 1.4;
-  color: var(--foreground);
-}
-
-.interlinear-strongs {
-  font-size: 0.65rem;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  opacity: 0.8;
-  direction: ltr;
-}
-
-/* Row 3: Transliteration */
+/* Row 3: Transliteration — warm brown (light) / warm tan (dark) */
 .interlinear-translit {
-  font-size: 0.75rem;
-  color: var(--muted);
+  font-size: 1.25rem;
+  color: #8b6914;
   letter-spacing: 0.02em;
   margin-top: 2px;
   direction: ltr;
   font-style: italic;
 }
 
-/* Row 4: English gloss (bold, bottom — like a traditional interlinear Bible) */
+/* Row 4: English gloss — teal (light) / soft green (dark) */
 .interlinear-english {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--foreground);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d8c5a;
   margin-top: 2px;
   direction: ltr;
-  max-width: 140px;
+  max-width: 180px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Dark mode: light colors for readability on dark background */
+[data-theme="dark"] .interlinear-hebrew {
+  color: #b8c4e0;
+}
+[data-theme="dark"] .interlinear-translit {
+  color: #d4b896;
+}
+[data-theme="dark"] .interlinear-english {
+  color: #a8e6cf;
 }
 
 /* ============================================
@@ -337,15 +333,15 @@ body {
   }
 
   .interlinear-hebrew {
-    font-size: 0.95rem;
+    font-size: 1.05rem;
   }
 
   .interlinear-english {
-    font-size: 0.7rem;
+    font-size: 1.05rem;
   }
 
   .interlinear-translit {
-    font-size: 0.65rem;
+    font-size: 1.05rem;
   }
 
   .sentence-list {

@@ -60,7 +60,7 @@ export default function GuidePage() {
               אָב
             </span>
             <p className="text-sm text-muted mt-1">
-              &ldquo;Ab&rdquo; &mdash; Father (Strong&apos;s H1)
+              &ldquo;Ab&rdquo; &mdash; Father
             </p>
           </div>
           <div className="flex justify-center gap-8">
@@ -168,7 +168,7 @@ export default function GuidePage() {
               </p>
               <ul className="text-muted text-sm mt-2 space-y-1">
                 <li><strong>Paleo-Hebrew</strong> &mdash; The ancient pictographic letter forms</li>
-                <li><strong>Modern Hebrew + Strong&apos;s Number</strong> &mdash; The pointed Hebrew text with its concordance reference</li>
+                <li><strong>Modern Hebrew</strong> &mdash; The pointed Hebrew text</li>
                 <li><strong>Transliteration</strong> &mdash; How to pronounce the word in English letters</li>
                 <li><strong>English</strong> &mdash; A short KJV-aligned translation</li>
               </ul>

@@ -70,7 +70,7 @@ export default function AboutPage() {
               Open Scriptures Hebrew Bible (OSHB)
             </h4>
             <p className="text-sm text-muted">
-              Word-level morphological data with Strong&apos;s number
+              Word-level morphological data with lexical
               annotations. Licensed CC BY 4.0.
             </p>
             <a
@@ -83,11 +83,10 @@ export default function AboutPage() {
             </a>
           </div>
           <div className="p-4 rounded-lg border border-border bg-surface">
-            <h4 className="font-semibold">Strong&apos;s Concordance</h4>
+            <h4 className="font-semibold">Hebrew Lexicon</h4>
             <p className="text-sm text-muted">
-              Hebrew dictionary mapping Strong&apos;s numbers to definitions,
-              transliterations, and parts of speech. Public domain (originally
-              published 1890).
+              Hebrew dictionary mapping words to definitions,
+              transliterations, and parts of speech.
             </p>
           </div>
           <div className="p-4 rounded-lg border border-border bg-surface">
