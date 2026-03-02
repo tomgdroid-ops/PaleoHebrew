@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import BookHero from "@/components/BookHero";
 
 const SECTION_CARDS = [
@@ -121,6 +122,17 @@ export default function HomePage() {
     <div>
       {/* ===== HERO SECTION ===== */}
       <section className="homepage-hero">
+        <div className="homepage-hero-bg">
+          <Image
+            src="/images/homepage-hero.png"
+            alt="Ancient study with Torah scrolls and golden light"
+            fill
+            priority
+            sizes="100vw"
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+        <div className="homepage-hero-overlay" />
         <div className="homepage-hero-inner">
           {/* Decorative Aleph Tav watermark */}
           <span
