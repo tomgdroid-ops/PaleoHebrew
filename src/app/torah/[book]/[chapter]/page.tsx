@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const bookName = bookMeta?.name || book;
 
   return {
-    title: `${bookName} ${chapter} - Paleo-Hebrew Torah Decoder`,
+    title: `${bookName} ${chapter} - Torah Decoder`,
     description: `Explore the pictographic meanings of Hebrew words in ${bookName} chapter ${chapter}. Click any word to see its Paleo-Hebrew letter breakdown and interpretive sentences.`,
   };
 }

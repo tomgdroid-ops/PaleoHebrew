@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "From Stone to Script: The Journey of the Hebrew Alphabet",
+  title: "Stone to Script",
   description:
     "Explore the fascinating journey from Paleo-Hebrew pictographs to Modern Hebrew square script. Interactive alphabet comparison, word studies, archaeological evidence, and timeline.",
 };

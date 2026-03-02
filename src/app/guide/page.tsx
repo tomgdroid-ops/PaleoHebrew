@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "How It Works - Paleo-Hebrew Torah Decoder",
+  title: "Getting Started",
   description:
-    "Learn how ancient Hebrew letters were originally pictures, and how the Torah Decoder reveals the pictographic meaning hidden in every word of Scripture.",
+    "Learn how ancient Hebrew letters were originally pictures, and how The Aleph Tav Project reveals the pictographic meaning hidden in every word of Scripture.",
 };
 
 export default function GuidePage() {
@@ -12,12 +12,12 @@ export default function GuidePage() {
     <div className="max-w-3xl mx-auto px-4 py-12">
       {/* Hero */}
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold mb-3">
-          The Pictures Hidden in Scripture
-        </h2>
-        <p className="text-lg text-muted">
-          Every Hebrew word in the Bible is made of letters that were once pictures.
-          This tool helps you see them.
+        <h2 className="text-3xl font-bold mb-3">Getting Started</h2>
+        <p className="text-lg text-muted max-w-2xl mx-auto">
+          The Aleph Tav Project offers several tools and studies for exploring
+          the Hebrew Scriptures. Here is how to get started with the Torah
+          Decoder, the interactive word analysis tool at the heart of the
+          project.
         </p>
       </div>
 
@@ -29,9 +29,9 @@ export default function GuidePage() {
         <p className="leading-relaxed mb-4">
           Long before Hebrew looked like the script we see in Bibles today, each
           letter was a simple picture. The letter <strong>Aleph</strong> was drawn
-          as an <strong>ox head</strong> &mdash; representing strength, power, and
-          leadership. <strong>Bet</strong> was a <strong>house floor plan</strong>
-          &mdash; representing family, dwelling, and what is inside.
+          as an <strong>ox head</strong>, representing strength, power, and
+          leadership. <strong>Bet</strong> was a <strong>house floor plan</strong>,
+          representing family, dwelling, and what is inside.
           <strong> Dalet</strong> was a <strong>door</strong>. <strong>Mem</strong>
           was <strong>water</strong>. Every one of the 22 Hebrew letters started as
           a recognizable picture from everyday life in the ancient world.
@@ -39,12 +39,12 @@ export default function GuidePage() {
         <p className="leading-relaxed mb-4">
           Over thousands of years, these pictures gradually became more abstract,
           evolving through Phoenician script into the square Hebrew letters used
-          today. But the original pictographic meanings never fully disappeared
-          &mdash; they are woven into the very fabric of the Hebrew language.
+          today. But the original pictographic meanings never fully disappeared;
+          they are woven into the very fabric of the Hebrew language.
         </p>
         <p className="leading-relaxed">
           When you read a Hebrew word and understand the pictures behind each
-          letter, a deeper layer of meaning emerges &mdash; one that the original
+          letter, a deeper layer of meaning emerges, one that the original
           authors and readers of Scripture would have recognized.
         </p>
       </section>
@@ -60,7 +60,7 @@ export default function GuidePage() {
               אָב
             </span>
             <p className="text-sm text-muted mt-1">
-              &ldquo;Ab&rdquo; &mdash; Father
+              &ldquo;Ab&rdquo;: Father
             </p>
           </div>
           <div className="flex justify-center gap-8">
@@ -83,7 +83,7 @@ export default function GuidePage() {
         <p className="leading-relaxed">
           The Hebrew word for <strong>Father</strong> is made of just two letters:
           Aleph (strength/leader) and Bet (house/family). Read pictographically,
-          a father is <em>&ldquo;the strength of the house&rdquo;</em> &mdash; the
+          a father is <em>&ldquo;the strength of the house&rdquo;</em>, the
           one who leads, protects, and provides for the family. This isn&apos;t
           just a coincidence. It reveals how the ancient Hebrews understood the
           role of a father, encoded right into the word itself.
@@ -129,7 +129,7 @@ export default function GuidePage() {
         </ul>
         <p className="leading-relaxed text-sm text-muted italic">
           Note: Pictographic analysis is one lens among many for studying
-          Scripture. It enriches and complements &mdash; but does not replace &mdash;
+          Scripture. It enriches and complements, but does not replace,
           standard Hebrew scholarship and traditional commentary.
         </p>
       </section>
@@ -167,10 +167,10 @@ export default function GuidePage() {
                 Each word is displayed with four layers from top to bottom:
               </p>
               <ul className="text-muted text-sm mt-2 space-y-1">
-                <li><strong>Paleo-Hebrew</strong> &mdash; The ancient pictographic letter forms</li>
-                <li><strong>Modern Hebrew</strong> &mdash; The pointed Hebrew text</li>
-                <li><strong>Transliteration</strong> &mdash; How to pronounce the word in English letters</li>
-                <li><strong>English</strong> &mdash; A short KJV-aligned translation</li>
+                <li><strong>Paleo-Hebrew:</strong> The ancient pictographic letter forms</li>
+                <li><strong>Modern Hebrew:</strong> The pointed Hebrew text</li>
+                <li><strong>Transliteration:</strong> How to pronounce the word in English letters</li>
+                <li><strong>English:</strong> A short KJV-aligned translation</li>
               </ul>
             </div>
           </div>
@@ -202,7 +202,7 @@ export default function GuidePage() {
               </p>
               <ul className="text-muted text-sm space-y-2">
                 <li>
-                  <strong>Interpretive Sentences</strong> &mdash; Multiple ways to
+                  <strong>Interpretive Sentences:</strong> Multiple ways to
                   read the word based on its pictographic letter meanings. Each
                   sentence combines the picture-meanings of the letters into a
                   natural English phrase. Sentences marked
@@ -210,12 +210,12 @@ export default function GuidePage() {
                   have been hand-crafted by researchers for accuracy.
                 </li>
                 <li>
-                  <strong>Score</strong> &mdash; The green number (0&ndash;100)
+                  <strong>Score:</strong> The green number (0&ndash;100)
                   indicates how well the sentence aligns with the word&apos;s
                   known scholarly meaning. Higher scores mean stronger alignment.
                 </li>
                 <li>
-                  <strong>Letter Breakdown</strong> &mdash; Each letter in the
+                  <strong>Letter Breakdown:</strong> Each letter in the
                   word is shown with its Paleo-Hebrew pictograph, its name
                   (Aleph, Bet, etc.), what the picture represents, and all of its
                   associated meanings.
@@ -232,7 +232,7 @@ export default function GuidePage() {
             <div>
               <h4 className="font-semibold mb-1">Keep Clicking</h4>
               <p className="text-muted leading-relaxed">
-                The panel stays open as you click different words &mdash; you
+                The panel stays open as you click different words, so you
                 don&apos;t have to scroll back up. Click word after word to build
                 a deeper picture of each verse. Try reading an entire verse
                 through its pictographic meanings and see what story emerges.
@@ -245,7 +245,7 @@ export default function GuidePage() {
       {/* Section 5: The 22 Letters at a Glance */}
       <section className="mb-10">
         <h3 className="text-xl font-semibold mb-4 text-primary">
-          The 22 Hebrew Letters &mdash; At a Glance
+          The 22 Hebrew Letters: At a Glance
         </h3>
         <p className="text-muted leading-relaxed mb-4">
           Here are all 22 letters with their ancient picture and core meaning.

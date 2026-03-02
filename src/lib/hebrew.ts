@@ -1,5 +1,5 @@
 /**
- * Hebrew text utility functions for the Paleo-Hebrew Torah Decoder.
+ * Hebrew text utility functions for The Aleph Tav Project.
  * Handles nikkud stripping, final form normalization, and Paleo-Hebrew mapping.
  */
 

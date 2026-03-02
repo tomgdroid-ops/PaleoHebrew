@@ -1,5 +1,5 @@
 /**
- * Sentence Generation Engine v3 for the Paleo-Hebrew Torah Decoder.
+ * Sentence Generation Engine v3 for The Aleph Tav Project.
  *
  * Takes root consonant letters, looks up their pictographic meanings,
  * and generates ranked interpretive sentences using clause-based templates.

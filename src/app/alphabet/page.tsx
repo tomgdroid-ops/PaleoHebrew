@@ -1,4 +1,9 @@
+import type { Metadata } from "next";
 import letterMeanings from "../../../data/letter-meanings.json";
+
+export const metadata: Metadata = {
+  title: "Hebrew Alphabet",
+};
 
 const SVG_NAME_MAP: Record<string, string> = {
   "א": "aleph", "ב": "bet", "ג": "gimel", "ד": "dalet",
@@ -7,6 +12,17 @@ const SVG_NAME_MAP: Record<string, string> = {
   "מ": "mem", "נ": "nun", "ס": "samekh", "ע": "ayin",
   "פ": "pey", "צ": "tsade", "ק": "qof", "ר": "resh",
   "ש": "shin", "ת": "tav",
+};
+
+const CARD_BG_MAP: Record<string, string> = {
+  "א": "aleph-ox.jpg", "ב": "bet-house.jpg", "ג": "gimel-camel.jpg",
+  "ד": "dalet-door.jpg", "ה": "hey-window.jpg", "ו": "vav-nail.jpg",
+  "ז": "zayin-sword.jpg", "ח": "chet-fence.jpg", "ט": "tet-serpent.jpg",
+  "י": "yod-hand.jpg", "כ": "kaf-palm.jpg", "ל": "lamed-staff.jpg",
+  "מ": "mem-water.jpg", "נ": "nun-seed.jpg", "ס": "samekh-shield.jpg",
+  "ע": "ayin-eye.jpg", "פ": "pey-mouth.jpg", "צ": "tsade-hook.jpg",
+  "ק": "qof-horizon.jpg", "ר": "resh-head.jpg", "ש": "shin-fire.jpg",
+  "ת": "tav-mark.jpg",
 };
 
 type Meaning = { text: string; role: string; primary: boolean };
@@ -60,11 +76,13 @@ export default function AlphabetPage() {
         {letterMeanings.map((entry) => {
           const svgName = SVG_NAME_MAP[entry.letter];
           const grouped = groupByRole(entry.meanings as Meaning[]);
+          const bgFile = CARD_BG_MAP[entry.letter];
 
           return (
             <div
               key={entry.letter}
-              className="rounded-xl border border-border bg-surface p-4 sm:p-5 flex flex-col sm:flex-row gap-4 sm:gap-6 items-start"
+              className="letter-card rounded-xl border border-border bg-surface p-4 sm:p-5 flex flex-col sm:flex-row gap-4 sm:gap-6 items-start"
+              style={bgFile ? { "--card-bg": `url('/images/alphabet/${bgFile}')` } as React.CSSProperties : undefined}
             >
               {/* Left: glyphs & value */}
               <div className="flex sm:flex-col items-center gap-4 sm:gap-2 shrink-0 sm:w-[160px]">
