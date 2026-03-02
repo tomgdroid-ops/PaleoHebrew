@@ -32,6 +32,7 @@ const NAV_ENTRIES: NavEntry[] = [
     items: [
       { href: "/research", label: "All Research" },
       { href: "/aleph-tav", label: "Aleph Tav Study" },
+      { href: "/prophecies", label: "Messianic Prophecies" },
       { href: "/research/beyond-ai", label: "Beyond the Reach of AI" },
     ],
   },

@@ -6,6 +6,7 @@ const FOOTER_LINKS = [
   { href: "/guide", label: "Getting Started" },
   { href: "/stone-to-script", label: "Stone to Script" },
   { href: "/aleph-tav", label: "Aleph Tav Study" },
+  { href: "/prophecies", label: "Prophecies" },
   { href: "/research", label: "Research" },
   { href: "/about", label: "About" },
 ];

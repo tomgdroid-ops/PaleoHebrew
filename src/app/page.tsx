@@ -35,6 +35,14 @@ const SECTION_CARDS = [
     gradientLight: "from-indigo-200/80 via-slate-100/60 to-amber-200/80",
   },
   {
+    title: "Messianic Prophecies",
+    description:
+      "37 Old Testament prophecies examined alongside their New Testament fulfillment and the historical evidence from the Dead Sea Scrolls, ancient codices, and archaeology.",
+    href: "/prophecies",
+    gradient: "from-purple-900/80 via-amber-900/60 to-stone-900/80",
+    gradientLight: "from-purple-200/80 via-amber-100/60 to-stone-200/80",
+  },
+  {
     title: "Beyond the Reach of AI",
     description:
       "Can artificial intelligence create Scripture? A computational analysis of the seven simultaneous constraint systems operating in the Hebrew text that no AI could reproduce.",
