@@ -6,6 +6,7 @@ import NavigationBar from "@/components/torah/NavigationBar";
 import VerseDisplay from "@/components/torah/VerseDisplay";
 import DecodePanel from "@/components/decode/DecodePanel";
 import { setGlossData } from "@/lib/word-lookup";
+import { getChapterNavLinks } from "@/lib/nav-utils";
 
 interface ChapterViewProps {
   chapter: TorahChapter;
@@ -38,6 +39,9 @@ export default function ChapterView({
   // Set gloss data synchronously so it's available during render of child components
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setGlossData(wordGlosses as any);
+
+  const bookMeta = books.find((b) => b.slug === bookSlug);
+  const { prev, next } = getChapterNavLinks(books, bookSlug, chapter.chapter);
 
   const handleWordClick = (word: TorahWord, verseRef?: VerseRef) => {
     setSelectedWord(word);
@@ -119,6 +123,38 @@ export default function ChapterView({
             </div>
           </>
         )}
+      </div>
+
+      {/* Bottom chapter navigation */}
+      <div className="mt-8 pt-6 border-t border-border">
+        <div className="flex justify-between items-center">
+          {prev ? (
+            <a
+              href={prev.href}
+              className="group flex flex-col text-left"
+            >
+              <span className="text-xs text-muted uppercase tracking-wide">&larr; Previous</span>
+              <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                {prev.label}
+              </span>
+            </a>
+          ) : (
+            <div />
+          )}
+          {next ? (
+            <a
+              href={next.href}
+              className="group flex flex-col text-right ml-auto"
+            >
+              <span className="text-xs text-muted uppercase tracking-wide">Next &rarr;</span>
+              <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                {next.label}
+              </span>
+            </a>
+          ) : (
+            <div />
+          )}
+        </div>
       </div>
     </div>
   );

@@ -64,6 +64,21 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* ============================================
+   Nav Dropdown: SSR-safe, CSS-first
+   ============================================ */
+
+@media (min-width: 1024px) {
+  .nav-dropdown-panel {
+    display: none;
+  }
+  .nav-dropdown:hover .nav-dropdown-panel,
+  .nav-dropdown:focus-within .nav-dropdown-panel,
+  .nav-dropdown-panel.nav-dropdown-open {
+    display: block;
+  }
+}
+
 /* Hebrew text styling */
 .hebrew-text {
   font-family: 'SBL Hebrew', 'Noto Sans Hebrew', 'Frank Ruehl CLM', 'David CLM', 'Ezra SIL', serif;

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Research",
@@ -55,6 +56,10 @@ export default function ResearchPage() {
           </p>
         </div>
       </section>
+
+      <div className="max-w-5xl mx-auto px-4 pt-8">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Research" }]} />
+      </div>
 
       {/* ===== CARDS GRID ===== */}
       <section className="max-w-5xl mx-auto px-4 pb-20">

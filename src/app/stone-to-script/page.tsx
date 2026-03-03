@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Stone to Script",
@@ -282,6 +283,8 @@ const NAV_ITEMS = [
 export default function StoneToScriptPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Stone to Script" }]} />
+
       {/* ============================================================ */}
       {/* SECTION 1 — HERO                                             */}
       {/* ============================================================ */}

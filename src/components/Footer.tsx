@@ -1,43 +1,80 @@
 import Link from "next/link";
 
-const FOOTER_LINKS = [
-  { href: "/torah/genesis/1", label: "Torah Decoder" },
-  { href: "/alphabet", label: "Hebrew Alphabet" },
-  { href: "/guide", label: "Getting Started" },
-  { href: "/stone-to-script", label: "Stone to Script" },
-  { href: "/aleph-tav", label: "Aleph Tav Study" },
-  { href: "/prophecies", label: "Prophecies" },
-  { href: "/research", label: "Research" },
-  { href: "/about", label: "About" },
+const FOOTER_COLUMNS = [
+  {
+    title: "Study Tools",
+    links: [
+      { href: "/torah/genesis/1", label: "Torah Decoder" },
+      { href: "/alphabet", label: "Hebrew Alphabet" },
+    ],
+  },
+  {
+    title: "Learn",
+    links: [
+      { href: "/stone-to-script", label: "Stone to Script" },
+      { href: "/guide", label: "Getting Started" },
+    ],
+  },
+  {
+    title: "Research",
+    links: [
+      { href: "/research", label: "All Research" },
+      { href: "/aleph-tav", label: "Aleph Tav Study" },
+      { href: "/prophecies", label: "Prophecies" },
+      { href: "/research/beyond-ai", label: "Beyond the Reach of AI" },
+    ],
+  },
 ];
 
 export default function Footer() {
   return (
     <footer className="border-t border-border bg-surface mt-16">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Brand */}
-        <div className="text-center mb-6">
-          <span className="paleo-glyph text-accent text-xl">𐤀𐤕</span>
-          <p className="text-sm font-semibold text-foreground mt-1">
-            The Aleph Tav Project
-          </p>
+      <div className="max-w-7xl mx-auto px-4 py-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+          {/* Brand column */}
+          <div>
+            <Link href="/" className="flex items-center gap-2 mb-2">
+              <span className="paleo-glyph text-accent text-xl">𐤀𐤕</span>
+              <span className="text-sm font-semibold text-foreground">
+                The Aleph Tav Project
+              </span>
+            </Link>
+            <p className="text-xs text-muted leading-relaxed">
+              Exploring the pictographic meanings hidden within the ancient
+              Hebrew words of the Torah.
+            </p>
+            <Link
+              href="/about"
+              className="inline-block mt-3 text-xs text-muted hover:text-foreground transition-colors"
+            >
+              About the Project
+            </Link>
+          </div>
+
+          {/* Link columns */}
+          {FOOTER_COLUMNS.map((col) => (
+            <div key={col.title}>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-3">
+                {col.title}
+              </h3>
+              <ul className="space-y-2">
+                {col.links.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-muted hover:text-foreground transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        {/* Nav links */}
-        <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted mb-6">
-          {FOOTER_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="hover:text-foreground transition-colors"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
         {/* Attribution + Copyright */}
-        <div className="text-center text-xs text-muted space-y-1">
+        <div className="text-center text-xs text-muted border-t border-border pt-6 space-y-1">
           <p>
             Data powered by{" "}
             <a

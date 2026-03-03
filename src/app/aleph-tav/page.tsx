@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import AlephTavStudy from "./AlephTavStudy";
 import JsonLd from "@/components/JsonLd";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Aleph Tav Study",
@@ -22,6 +23,9 @@ export default function AlephTavPage() {
   return (
     <>
       <JsonLd data={ARTICLE_JSONLD} />
+      <div className="max-w-4xl mx-auto px-4 pt-10">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Aleph Tav Study" }]} />
+      </div>
       <AlephTavStudy />
     </>
   );

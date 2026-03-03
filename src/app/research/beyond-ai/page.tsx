@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Beyond the Reach of AI",
@@ -94,6 +95,10 @@ export default function BeyondAIPage() {
           <div className="mt-6 h-px w-24 mx-auto bg-accent/50" />
         </div>
       </section>
+
+      <div className="max-w-5xl mx-auto px-4 pt-8">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Research", href: "/research" }, { label: "Beyond the Reach of AI" }]} />
+      </div>
 
       {/* ===== ARTICLE BODY ===== */}
       <article className="research-article">

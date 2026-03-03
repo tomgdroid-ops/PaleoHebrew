@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "About",
@@ -10,6 +11,8 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "About" }]} />
+
       <h2 className="text-3xl font-bold mb-10">About The Aleph Tav Project</h2>
 
       {/* Section 1: The Mission */}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { prophecies, CATEGORY_META } from "@/data/prophecies";
 import ProphecySection from "@/components/prophecies/ProphecySection";
 import ProphecyNav from "@/components/prophecies/ProphecyNav";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -40,15 +41,7 @@ export default async function ProphecyDetailPage({ params }: Props) {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
-      {/* Breadcrumb */}
-      <div className="mb-8">
-        <Link
-          href="/prophecies"
-          className="text-sm text-muted hover:text-foreground transition-colors"
-        >
-          &larr; Messianic Prophecies
-        </Link>
-      </div>
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Prophecies", href: "/prophecies" }, { label: prophecy.title }]} />
 
       {/* Header */}
       <header className="mb-10">

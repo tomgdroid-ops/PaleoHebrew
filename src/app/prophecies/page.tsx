@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ProphecyHero from "@/components/prophecies/ProphecyHero";
 import PropheciesGrid from "./PropheciesGrid";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Messianic Prophecies",
@@ -18,6 +19,9 @@ export default function PropheciesPage() {
   return (
     <div>
       <ProphecyHero />
+      <div className="max-w-5xl mx-auto px-4 pt-8">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Messianic Prophecies" }]} />
+      </div>
       <PropheciesGrid />
     </div>
   );

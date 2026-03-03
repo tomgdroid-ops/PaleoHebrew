@@ -3,6 +3,7 @@ import { getBooksMeta, getChapter, getLetterMeanings, getWordGlosses, getCurated
 import type { Metadata } from "next";
 import ChapterView from "./ChapterView";
 import BookHero from "@/components/BookHero";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface PageProps {
   params: Promise<{ book: string; chapter: string }>;
@@ -43,6 +44,15 @@ export default async function TorahChapterPage({ params }: PageProps) {
   return (
     <>
       <BookHero bookSlug={bookSlug} variant="chapter" />
+      <div className="max-w-[1600px] mx-auto px-4 pt-4">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: bookMeta!.name, href: `/torah/${bookSlug}/1` },
+            { label: `Chapter ${chapterNum}` },
+          ]}
+        />
+      </div>
       <ChapterView
         chapter={chapterData}
         books={books}

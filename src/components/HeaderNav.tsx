@@ -156,7 +156,7 @@ export default function HeaderNav() {
               return (
                 <div
                   key={entry.label}
-                  className="relative"
+                  className="nav-dropdown relative"
                   data-nav-dropdown
                   onMouseEnter={() => handleDropdownEnter(entry.label)}
                   onMouseLeave={handleDropdownLeave}
@@ -168,20 +168,23 @@ export default function HeaderNav() {
                     {entry.label}
                     <Chevron open={isOpen} />
                   </button>
-                  {isOpen && (
-                    <div className="absolute top-full left-0 mt-1 py-1 min-w-[180px] bg-surface border border-border rounded-lg shadow-lg z-50">
-                      {entry.items.map((item) => (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          className="block px-4 py-2 text-sm text-muted hover:text-foreground hover:bg-surface-hover transition-colors"
-                          onClick={() => setOpenDropdown(null)}
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+                  {/* Always rendered for SSR; visible via CSS :hover/:focus-within + JS */}
+                  <div
+                    className={`nav-dropdown-panel absolute top-full left-0 mt-1 py-1 min-w-[180px] bg-surface border border-border rounded-lg shadow-lg z-50 ${
+                      isOpen ? "nav-dropdown-open" : ""
+                    }`}
+                  >
+                    {entry.items.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block px-4 py-2 text-sm text-muted hover:text-foreground hover:bg-surface-hover transition-colors"
+                        onClick={() => setOpenDropdown(null)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               );
             })}
