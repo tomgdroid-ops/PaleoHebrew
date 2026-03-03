@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import ContinueExploring from "@/components/ContinueExploring";
 
 export const metadata: Metadata = {
   title: "Getting Started",
@@ -305,6 +306,13 @@ export default function GuidePage() {
           Start with Genesis 1:1
         </Link>
       </div>
+
+      <ContinueExploring
+        links={[
+          { title: "Torah Decoder", description: "Start exploring the Torah with our interactive Paleo-Hebrew decoder.", href: "/torah/genesis/1" },
+          { title: "The Ancient Alphabet", description: "Learn all 22 Hebrew letters and their pictographic origins.", href: "/alphabet" },
+        ]}
+      />
     </div>
   );
 }

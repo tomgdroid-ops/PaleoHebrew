@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import ContinueExploring from "@/components/ContinueExploring";
 
 export const metadata: Metadata = {
   title: "Beyond the Reach of AI",
@@ -231,6 +232,13 @@ export default function BeyondAIPage() {
           </Link>
         </div>
       </article>
+
+      <ContinueExploring
+        links={[
+          { title: "Aleph Tav Study", description: "See the covenant marker patterns referenced in this research.", href: "/aleph-tav" },
+          { title: "Torah Decoder", description: "Experience the pictographic encoding layer firsthand.", href: "/torah/genesis/1" },
+        ]}
+      />
     </div>
   );
 }

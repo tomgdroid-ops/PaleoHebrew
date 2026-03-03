@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import AlphabetContent from "./AlphabetContent";
+import ContinueExploring from "@/components/ContinueExploring";
 import letterMeanings from "../../../data/letter-meanings.json";
 
 export const metadata: Metadata = {
@@ -48,6 +49,15 @@ export default function AlphabetPage() {
         svgNameMap={SVG_NAME_MAP}
         cardBgMap={CARD_BG_MAP}
       />
+
+      <div className="max-w-6xl mx-auto px-4">
+        <ContinueExploring
+          links={[
+            { title: "From Stone to Script", description: "Trace the evolution of Hebrew writing from ancient pictographs to modern script.", href: "/stone-to-script" },
+            { title: "Torah Decoder", description: "Click any Hebrew word to see its Paleo-Hebrew letter breakdown.", href: "/torah/genesis/1" },
+          ]}
+        />
+      </div>
     </div>
   );
 }

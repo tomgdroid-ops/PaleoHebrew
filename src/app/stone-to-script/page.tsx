@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import ContinueExploring from "@/components/ContinueExploring";
 
 export const metadata: Metadata = {
   title: "Stone to Script",
@@ -922,6 +923,13 @@ export default function StoneToScriptPage() {
           including Frank Moore Cross and Christopher Rollston.
         </p>
       </div>
+
+      <ContinueExploring
+        links={[
+          { title: "The Ancient Alphabet", description: "See all 22 Hebrew letters with their pictographic meanings and origins.", href: "/alphabet" },
+          { title: "Getting Started Guide", description: "Learn the basics of Paleo-Hebrew pictographic interpretation.", href: "/guide" },
+        ]}
+      />
     </div>
     </>
   );

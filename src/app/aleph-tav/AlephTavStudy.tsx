@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import ContinueExploring from "@/components/ContinueExploring";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -602,10 +603,20 @@ export default function AlephTavStudy() {
         </Link>
       </nav>
 
+      <nav className="mb-12 p-5 rounded-xl border border-border bg-surface max-w-2xl mx-auto">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted mb-3">Contents</h3>
+        <ol className="space-y-1.5 text-sm">
+          <li><a href="#what-is-aleph-tav" className="text-primary hover:underline">What Is the Aleph Tav?</a></li>
+          <li><a href="#genesis-1-1" className="text-primary hover:underline">Genesis 1:1</a></li>
+          <li><a href="#case-studies" className="text-primary hover:underline">Case Studies</a></li>
+          <li><a href="#summary" className="text-primary hover:underline">Summary</a></li>
+        </ol>
+      </nav>
+
       {/* ============================================================ */}
       {/* LAYER 1: Educational Introduction                             */}
       {/* ============================================================ */}
-      <section className="mb-20">
+      <section className="mb-12">
         <div className="text-center mb-10">
           <p
             className="hebrew-text text-7xl sm:text-8xl text-accent mb-2 select-none"
@@ -617,7 +628,7 @@ export default function AlephTavStudy() {
           <p className="text-sm text-muted">Aleph Tav</p>
         </div>
 
-        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10">
+        <h2 id="what-is-aleph-tav" className="text-3xl sm:text-4xl font-bold text-center mb-10">
           What Is the Aleph Tav?
         </h2>
 
@@ -676,7 +687,7 @@ export default function AlephTavStudy() {
         </div>
 
         {/* Genesis 1:1 highlight */}
-        <div className="mt-10 p-6 rounded-xl border border-border bg-surface max-w-3xl mx-auto">
+        <div id="genesis-1-1" className="mt-10 p-6 rounded-xl border border-border bg-surface max-w-3xl mx-auto">
           <p
             className="hebrew-text text-xl sm:text-2xl leading-loose text-center"
             lang="he"
@@ -702,12 +713,12 @@ export default function AlephTavStudy() {
       </section>
 
       {/* Divider */}
-      <hr className="border-border mb-20" />
+      <hr className="border-border mb-12" />
 
       {/* ============================================================ */}
       {/* LAYER 2: Research Summary                                     */}
       {/* ============================================================ */}
-      <section className="mb-20">
+      <section className="mb-12">
         <h2 className="text-3xl font-bold text-center mb-10">What We Found</h2>
 
         <div className="space-y-6 max-w-3xl mx-auto">
@@ -829,13 +840,13 @@ export default function AlephTavStudy() {
       </section>
 
       {/* Divider */}
-      <hr className="border-border mb-20" />
+      <hr className="border-border mb-12" />
 
       {/* ============================================================ */}
       {/* LAYER 3: Interactive Name Explorer                            */}
       {/* ============================================================ */}
-      <section className="mb-16">
-        <h2 className="text-3xl font-bold text-center mb-3">
+      <section className="mb-10">
+        <h2 id="case-studies" className="text-3xl font-bold text-center mb-3">
           Explore the Names
         </h2>
         <p className="text-muted text-center mb-12">
@@ -1089,7 +1100,7 @@ export default function AlephTavStudy() {
       {/* ============================================================ */}
       {/* Closing Statement                                             */}
       {/* ============================================================ */}
-      <section className="pt-12 border-t border-border">
+      <section id="summary" className="pt-12 border-t border-border">
         <blockquote className="max-w-3xl mx-auto text-center mb-10">
           <p className="text-lg text-muted italic leading-relaxed">
             &ldquo;This is the gospel in the grammar. Ruth had nothing to
@@ -1119,6 +1130,11 @@ export default function AlephTavStudy() {
           Deuteronomy 29:29
         </p>
       </section>
+
+      <ContinueExploring links={[
+        { title: "Torah Decoder", description: "Click any Hebrew word to see its Paleo-Hebrew breakdown.", href: "/torah/genesis/1" },
+        { title: "Research Hub", description: "Explore more original research on Hebrew Scripture patterns.", href: "/research" },
+      ]} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import ContinueExploring from "@/components/ContinueExploring";
 
 export const metadata: Metadata = {
   title: "About",
@@ -216,7 +217,7 @@ export default function AboutPage() {
         <p className="leading-relaxed text-muted">
           This project is a labor of love and an ongoing work in progress. If
           you have feedback, corrections, or suggestions, feel free to reach
-          out.
+          out{" "}at{" "}<a href="mailto:feedback@alephtavproject.com" className="text-primary hover:underline">feedback@alephtavproject.com</a>.
         </p>
       </section>
 
@@ -228,6 +229,13 @@ export default function AboutPage() {
           Start Exploring
         </Link>
       </div>
+
+      <ContinueExploring
+        links={[
+          { title: "Getting Started Guide", description: "Learn how ancient Hebrew pictographs reveal hidden meanings.", href: "/guide" },
+          { title: "Research Hub", description: "Explore our original research on Hebrew Scripture patterns.", href: "/research" },
+        ]}
+      />
     </div>
   );
 }

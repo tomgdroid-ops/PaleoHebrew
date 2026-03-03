@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import ContinueExploring from "@/components/ContinueExploring";
 
 export const metadata: Metadata = {
   title: "Research",
@@ -17,6 +18,7 @@ type ResearchCard = {
   abstract: string;
   href: string;
   status: "Published" | "Coming Soon";
+  highlights: string[];
 };
 
 const RESEARCH_CARDS: ResearchCard[] = [
@@ -26,6 +28,7 @@ const RESEARCH_CARDS: ResearchCard[] = [
     abstract:
       "A comprehensive computational scan of the Westminster Leningrad Codex tracking the Aleph Tav grammatical marker across all 23,213 verses of the Hebrew Bible. The analysis reveals that the untranslated \u05D0\u05EA appears and disappears before personal names in direct correlation with covenant events.",
     href: "/aleph-tav",
+    highlights: ["23,213 verses analyzed", "11 names tracked", "3 covenant patterns"],
   },
   {
     title: "Beyond the Reach of AI: A Computational Case for Divine Authorship",
@@ -33,6 +36,7 @@ const RESEARCH_CARDS: ResearchCard[] = [
     abstract:
       "Can artificial intelligence create Scripture? An examination of seven simultaneous constraint systems operating in the Hebrew text, including pictographic encoding, Aleph Tav patterns, Equidistant Letter Sequences, chiastic structures, and mathematical encoding. Conservative probability analysis places the odds of all patterns co-occurring by chance at approximately 1 in 10\u00B3\u2078.",
     href: "/research/beyond-ai",
+    highlights: ["7 constraint systems", "12 case studies", "1 in 10\u00B3\u2078 probability"],
   },
 ];
 
@@ -61,16 +65,16 @@ export default function ResearchPage() {
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Research" }]} />
       </div>
 
-      {/* ===== CARDS GRID ===== */}
+      {/* ===== CARDS ===== */}
       <section className="max-w-5xl mx-auto px-4 pb-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="flex flex-col gap-6">
           {RESEARCH_CARDS.map((card) => (
             <Link
               key={card.title}
               href={card.href}
-              className="group block p-6 rounded-xl border border-border bg-surface hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+              className="group block p-8 rounded-xl border border-border bg-surface hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
             >
-              <div className="flex items-center gap-3 mb-3">
+              <div className="flex items-center gap-3 mb-4">
                 <span
                   className={`text-[0.65rem] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wide ${
                     card.status === "Published"
@@ -82,19 +86,36 @@ export default function ResearchPage() {
                   {card.status}
                 </span>
               </div>
-              <h2 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors mb-3">
+              <h2 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors mb-4">
                 {card.title}
               </h2>
-              <p className="text-sm text-muted leading-relaxed">
+              <p className="text-base text-muted leading-relaxed mb-4">
                 {card.abstract}
               </p>
-              <span className="inline-block mt-4 text-sm font-medium text-primary group-hover:underline">
+              <div className="flex flex-wrap gap-2 mb-4">
+                {card.highlights.map((h) => (
+                  <span
+                    key={h}
+                    className="text-xs font-medium px-2.5 py-1 rounded-full bg-accent/10 text-accent"
+                  >
+                    {h}
+                  </span>
+                ))}
+              </div>
+              <span className="inline-block text-sm font-medium text-primary group-hover:underline">
                 Read more &rarr;
               </span>
             </Link>
           ))}
         </div>
       </section>
+
+      <ContinueExploring
+        links={[
+          { title: "Aleph Tav Study", description: "Explore how the Aleph Tav covenant marker appears throughout Scripture.", href: "/aleph-tav" },
+          { title: "Messianic Prophecies", description: "37 Old Testament prophecies examined with manuscript and historical evidence.", href: "/prophecies" },
+        ]}
+      />
     </div>
   );
 }
