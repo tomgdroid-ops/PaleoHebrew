@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import BookHero from "@/components/BookHero";
+import FadeInSection from "@/components/FadeInSection";
 
 const SECTION_CARDS = [
   {
@@ -11,7 +11,7 @@ const SECTION_CARDS = [
       </svg>
     ),
     description:
-      "Navigate the five books of the Torah. Click any Hebrew word to see its Paleo-Hebrew pictographs, letter meanings, and generated interpretive sentences.",
+      'Before Hebrew was an alphabet, it was pictographs carved in stone. The word for "father" - aleph bet - reads "the strength of the house." The word for "son" - bet nun - reads "the house of the seed." Navigate the Torah word by word and see what the ancient letters reveal.',
     href: "/torah/genesis/1",
     gradient: "from-amber-900/80 via-amber-800/60 to-yellow-900/80",
     gradientLight: "from-amber-200/80 via-amber-100/60 to-yellow-200/80",
@@ -24,7 +24,7 @@ const SECTION_CARDS = [
       </svg>
     ),
     description:
-      "Explore all 22 letters of the Hebrew alphabet with their pictographic origins, meanings, gematria values, and how they evolved over 3,000 years.",
+      "All 22 letters of the Hebrew alphabet traced from their Proto-Sinaitic pictographic origins to the modern square script. See each letter's pictograph, name, meaning, gematria value, and how it evolved across 3,000 years.",
     href: "/alphabet",
     gradient: "from-stone-900/80 via-stone-800/60 to-amber-900/80",
     gradientLight: "from-stone-200/80 via-stone-100/60 to-amber-200/80",
@@ -37,20 +37,20 @@ const SECTION_CARDS = [
       </svg>
     ),
     description:
-      "Trace the journey of the Hebrew alphabet from Proto-Sinaitic carvings through the Babylonian Exile to the script used today.",
+      "Trace the evolution of all 22 Hebrew letters from Proto-Sinaitic inscriptions through Phoenician, Paleo-Hebrew, and Aramaic transitions to the modern square script - and understand why the letter forms changed but the meanings endured.",
     href: "/stone-to-script",
     gradient: "from-yellow-900/80 via-stone-800/60 to-stone-900/80",
     gradientLight: "from-yellow-200/80 via-stone-100/60 to-stone-200/80",
   },
   {
-    title: "The Aleph Tav (את) Study",
+    title: "The Aleph Tav (\u05D0\u05EA) Study",
     icon: (
       <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
     ),
     description:
-      "Discover how the untranslated Aleph Tav marker appears and disappears before names in the Hebrew Bible, tracking covenant standing across Scripture.",
+      "The Aleph Tav (\u05D0\u05EA) is not translated in any English Bible. Yet it appears and disappears before names across the Hebrew text in a pattern that tracks covenant standing with precision. When someone walks with God, the marker is present. When they fall away, it vanishes.",
     href: "/aleph-tav",
     gradient: "from-indigo-900/80 via-slate-800/60 to-amber-900/80",
     gradientLight: "from-indigo-200/80 via-slate-100/60 to-amber-200/80",
@@ -63,7 +63,7 @@ const SECTION_CARDS = [
       </svg>
     ),
     description:
-      "37 Old Testament prophecies examined alongside their New Testament fulfillment and the historical evidence from the Dead Sea Scrolls, ancient codices, and archaeology.",
+      "From the method of death described a thousand years before crucifixion existed to the birthplace named seven centuries in advance - each prophecy examined alongside its New Testament fulfillment and verified against the Dead Sea Scrolls, ancient codices, and archaeology.",
     href: "/prophecies",
     gradient: "from-purple-900/80 via-amber-900/60 to-stone-900/80",
     gradientLight: "from-purple-200/80 via-amber-100/60 to-stone-200/80",
@@ -76,7 +76,7 @@ const SECTION_CARDS = [
       </svg>
     ),
     description:
-      "Can artificial intelligence create Scripture? A computational analysis of the seven simultaneous constraint systems operating in the Hebrew text that no AI could reproduce.",
+      "The Torah operates under seven simultaneous constraint systems - equidistant letter sequences, pictographic root meanings, gematria relationships, chiastic literary structures, prophetic typology, covenant markers, and intertextual weaving. No AI, no human committee, and no editorial process could satisfy all seven at once.",
     href: "/research/beyond-ai",
     gradient: "from-slate-900/80 via-indigo-900/60 to-stone-900/80",
     gradientLight: "from-slate-200/80 via-indigo-100/60 to-stone-200/80",
@@ -85,22 +85,12 @@ const SECTION_CARDS = [
 
 const SAMPLE_WORDS = [
   {
-    modern: "\u05D0\u05D1",
-    paleo: "\uD802\uDD00\uD802\uDD01",
-    name: "Av (Father)",
-    meaning: "The strength of the house",
-  },
-  {
-    modern: "\u05D0\u05DD",
-    paleo: "\uD802\uDD00\uD802\uDD0C",
-    name: "Em (Mother)",
-    meaning: "The strength of the waters",
-  },
-  {
-    modern: "\u05D1\u05DF",
-    paleo: "\uD802\uDD01\uD802\uDD0D",
-    name: "Ben (Son)",
-    meaning: "The house of the seed",
+    modern: "\u05D1\u05E8\u05D0\u05E9\u05D9\u05EA",
+    paleo:
+      "\uD802\uDD01\uD802\uDD12\uD802\uDD00\uD802\uDD14\uD802\uDD09\uD802\uDD15",
+    name: "Bereshit (In the Beginning)",
+    meaning:
+      "The Son of the house, the Head of God, consumed by His own hand on a cross",
   },
   {
     modern: "\u05EA\u05D5\u05E8\u05D4",
@@ -109,27 +99,48 @@ const SAMPLE_WORDS = [
     meaning: "The sign secured by the head who reveals",
   },
   {
-    modern: "\u05D1\u05E8\u05D0\u05E9\u05D9\u05EA",
-    paleo: "\uD802\uDD01\uD802\uDD12\uD802\uDD00\uD802\uDD14\uD802\uDD09\uD802\uDD15",
-    name: "Bereshit (In the Beginning)",
-    meaning:
-      "The Son of the house, the Head of God, consumed by His own hand on a cross",
-    featured: true,
+    modern: "\u05D0\u05D1",
+    paleo: "\uD802\uDD00\uD802\uDD01",
+    name: "Av (Father)",
+    meaning: "The strength of the house",
   },
 ];
 
 const BOOKS = [
-  { name: "Genesis", nameHe: "\u05D1\u05E8\u05D0\u05E9\u05D9\u05EA", slug: "genesis" },
+  {
+    name: "Genesis",
+    nameHe: "\u05D1\u05E8\u05D0\u05E9\u05D9\u05EA",
+    slug: "genesis",
+  },
   { name: "Exodus", nameHe: "\u05E9\u05DE\u05D5\u05EA", slug: "exodus" },
-  { name: "Leviticus", nameHe: "\u05D5\u05D9\u05E7\u05E8\u05D0", slug: "leviticus" },
-  { name: "Numbers", nameHe: "\u05D1\u05DE\u05D3\u05D1\u05E8", slug: "numbers" },
-  { name: "Deuteronomy", nameHe: "\u05D3\u05D1\u05E8\u05D9\u05DD", slug: "deuteronomy" },
+  {
+    name: "Leviticus",
+    nameHe: "\u05D5\u05D9\u05E7\u05E8\u05D0",
+    slug: "leviticus",
+  },
+  {
+    name: "Numbers",
+    nameHe: "\u05D1\u05DE\u05D3\u05D1\u05E8",
+    slug: "numbers",
+  },
+  {
+    name: "Deuteronomy",
+    nameHe: "\u05D3\u05D1\u05E8\u05D9\u05DD",
+    slug: "deuteronomy",
+  },
+];
+
+const STATS = [
+  { number: "23,213", label: "Verses Analyzed for Aleph Tav Markers" },
+  { number: "37", label: "Messianic Prophecies Examined" },
+  { number: "7", label: "Simultaneous Constraint Systems" },
+  { number: "22", label: "Letters Traced Across 3,000 Years" },
 ];
 
 export default function HomePage() {
   return (
     <div>
-      {/* ===== HERO SECTION ===== */}
+      {/* ===== 1. HERO SECTION ===== */}
       <section className="homepage-hero">
         <div className="homepage-hero-bg">
           <Image
@@ -143,7 +154,6 @@ export default function HomePage() {
         </div>
         <div className="homepage-hero-overlay" />
         <div className="homepage-hero-inner">
-          {/* Decorative Aleph Tav watermark */}
           <span
             className="paleo-glyph homepage-hero-watermark"
             aria-hidden="true"
@@ -152,201 +162,212 @@ export default function HomePage() {
             {"\uD802\uDD00\uD802\uDD15"}
           </span>
 
-          <h1 className="homepage-hero-title">The Aleph Tav Project</h1>
-          <p className="homepage-hero-subtitle">
-            Exploring the Hebrew Scriptures Through Their Ancient Letters
+          <h1 className="homepage-hero-title font-display">
+            The Aleph Tav Project
+          </h1>
+          <p className="homepage-hero-tagline font-serif">
+            Uncovering the Divine Architecture of the Hebrew Scriptures
           </p>
           <p className="homepage-hero-desc">
-            From the pictographic meanings hidden in every Hebrew letter to the
-            covenant patterns woven through the Torah, we use interactive tools
-            and original research to uncover what has been there since the
-            beginning.
+            Covenant markers that track God&apos;s promises across 23,000
+            verses. Prophecies written centuries apart, fulfilled in one person.
+            Structural patterns no human author could have coordinated. Explore
+            the evidence through interactive study tools and original research.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 mt-8">
+            <Link href="/research" className="homepage-hero-cta-primary">
+              See the Evidence
+            </Link>
             <Link
               href="/torah/genesis/1"
-              className="homepage-hero-cta-primary"
-            >
-              Start Reading the Torah
-            </Link>
-            <Link
-              href="/research"
               className="homepage-hero-cta-secondary"
             >
-              Explore Our Research
+              Begin Exploring
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ===== SECTION CARDS ===== */}
-      <section className="max-w-6xl mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {SECTION_CARDS.map((card) => (
-            <Link
-              key={card.title}
-              href={card.href}
-              className="section-card group"
-            >
-              {/* Gradient background */}
-              <div
-                className={`section-card-bg bg-gradient-to-br ${card.gradient}`}
-                data-gradient-light={card.gradientLight}
-              />
-              <div className="section-card-content">
-                <div className="flex items-center gap-2 mb-3">
-                  {card.icon}
-                  <h3 className="text-xl font-bold">{card.title}</h3>
-                </div>
-                <p className="text-sm leading-relaxed opacity-90">
-                  {card.description}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/* ===== 2. THESIS STATEMENT ===== */}
+      <FadeInSection>
+        <section className="max-w-3xl mx-auto px-6 py-24 text-center">
+          <div className="thesis-divider mb-10" />
+          <p className="font-serif text-lg leading-relaxed text-foreground/70 italic">
+            The Hebrew Scriptures are not a single-layer text. Beneath the
+            narrative surface lie interlocking systems of evidence - linguistic,
+            structural, prophetic, and mathematical - that span thousands of
+            years and dozens of human authors, yet operate with a coherence that
+            points to a single divine hand. The Aleph Tav Project makes these
+            hidden layers visible and explorable.
+          </p>
+          <div className="thesis-divider mt-10" />
+        </section>
+      </FadeInSection>
 
-      {/* ===== READ THE TORAH ===== */}
-      <section className="max-w-4xl mx-auto px-4 pb-16">
-        <h2 className="text-xl font-semibold text-center mb-6">
-          Read the Torah
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-          {BOOKS.map((book) => (
-            <Link
-              key={book.slug}
-              href={`/torah/${book.slug}/1`}
-              className="book-card-hero"
-            >
-              <BookHero bookSlug={book.slug} variant="card" />
-              <div className="card-content">
-                <div className="hebrew-name hebrew-text" lang="he" dir="rtl">
-                  {book.nameHe}
-                </div>
-                <div className="english-name">{book.name}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== EXAMPLE WORD DECODINGS ===== */}
-      <section className="max-w-4xl mx-auto px-4 pb-16">
-        <h2 className="text-xl font-semibold text-center mb-6">
-          Example Word Decodings
-        </h2>
-
-        {/* Featured: Bereshit */}
-        {SAMPLE_WORDS.filter((w) => w.featured).map((word) => (
-          <div
-            key={word.modern}
-            className="p-6 rounded-xl border-2 border-accent/40 bg-surface mb-6 text-center"
-          >
-            <div className="flex items-center justify-center gap-6 mb-3">
-              <span
-                className="hebrew-text text-3xl font-semibold"
-                lang="he"
-                dir="rtl"
+      {/* ===== 3. SECTION CARDS ===== */}
+      <FadeInSection>
+        <section className="max-w-6xl mx-auto px-4 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {SECTION_CARDS.map((card) => (
+              <Link
+                key={card.title}
+                href={card.href}
+                className="section-card group"
               >
-                {word.modern}
-              </span>
-              <span className="paleo-glyph text-3xl text-primary" dir="rtl">
-                {word.paleo}
-              </span>
-            </div>
-            <p className="font-semibold text-base">{word.name}</p>
-            <p className="text-sm text-muted mt-1 italic max-w-lg mx-auto">
-              &ldquo;{word.meaning}&rdquo;
+                <div
+                  className={`section-card-bg bg-gradient-to-br ${card.gradient}`}
+                  data-gradient-light={card.gradientLight}
+                />
+                <div className="section-card-content">
+                  <div className="flex items-center gap-2 mb-3">
+                    {card.icon}
+                    <h3 className="text-xl font-bold">{card.title}</h3>
+                  </div>
+                  <p className="text-sm leading-relaxed opacity-90">
+                    {card.description}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </FadeInSection>
+
+      {/* ===== 4. EVIDENCE AT A GLANCE ===== */}
+      <FadeInSection>
+        <section className="stats-bar py-16">
+          <div className="max-w-5xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {STATS.map((stat) => (
+              <div key={stat.label}>
+                <div className="font-display text-4xl font-bold text-accent mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-xs uppercase tracking-[0.1em] text-muted">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </FadeInSection>
+
+      {/* ===== 5. WHAT THE ANCIENT LETTERS REVEAL ===== */}
+      <FadeInSection>
+        <section className="max-w-5xl mx-auto px-4 py-28">
+          <div className="text-center mb-12">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
+              Torah Decoder
+            </span>
+            <h2 className="text-3xl font-display font-bold mt-2">
+              What the Ancient Letters Reveal
+            </h2>
+            <p className="text-sm text-muted mt-3 max-w-xl mx-auto leading-relaxed">
+              Click any word in the Torah to decompose it into Paleo-Hebrew
+              pictographs and uncover the meaning embedded in each letter.
             </p>
           </div>
-        ))}
-
-        {/* Standard examples */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {SAMPLE_WORDS.filter((w) => !w.featured).map((word) => (
-            <div
-              key={word.modern}
-              className="p-5 rounded-xl border border-border bg-surface hover:shadow-md transition-shadow"
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {SAMPLE_WORDS.map((word) => (
+              <div
+                key={word.modern}
+                className="p-6 rounded-xl border border-border bg-surface text-center hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
+              >
+                <div className="flex items-center justify-center gap-4 mb-3">
+                  <span
+                    className="hebrew-text text-2xl font-semibold"
+                    lang="he"
+                    dir="rtl"
+                  >
+                    {word.modern}
+                  </span>
+                  <span className="paleo-glyph text-2xl text-accent" dir="rtl">
+                    {word.paleo}
+                  </span>
+                </div>
+                <p className="font-semibold text-sm">{word.name}</p>
+                <p className="font-serif text-sm text-muted mt-1 italic">
+                  &ldquo;{word.meaning}&rdquo;
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-10">
+            <Link
+              href="/torah/genesis/1"
+              className="inline-block px-6 py-3 border-2 border-accent/50 text-accent font-semibold rounded-lg hover:bg-accent/10 hover:border-accent transition-all duration-300"
             >
-              <div className="flex items-center justify-between mb-2">
-                <span
-                  className="hebrew-text text-2xl font-semibold"
+              Explore the Full Torah
+            </Link>
+          </div>
+        </section>
+      </FadeInSection>
+
+      {/* ===== 6. THE FIVE BOOKS ===== */}
+      <FadeInSection>
+        <section className="max-w-4xl mx-auto px-4 pb-28">
+          <div className="text-center mb-10">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
+              Read
+            </span>
+            <h2 className="text-3xl font-display font-bold mt-2">
+              The Five Books
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            {BOOKS.map((book) => (
+              <Link
+                key={book.slug}
+                href={`/torah/${book.slug}/1`}
+                className="book-strip-cell"
+              >
+                <div
+                  className="hebrew-text text-xl font-semibold"
                   lang="he"
                   dir="rtl"
                 >
-                  {word.modern}
-                </span>
-                <span className="paleo-glyph text-2xl text-primary" dir="rtl">
-                  {word.paleo}
-                </span>
-              </div>
-              <p className="font-medium text-sm">{word.name}</p>
-              <p className="text-sm text-muted mt-1 italic">
-                &ldquo;{word.meaning}&rdquo;
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== HOW THE TORAH DECODER WORKS ===== */}
-      <section className="max-w-4xl mx-auto px-4 pb-16">
-        <h2 className="text-xl font-semibold text-center mb-6">
-          How the Torah Decoder Works
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center relative">
-            <div className="w-14 h-14 rounded-full bg-accent/15 text-accent font-bold text-xl flex items-center justify-center mx-auto mb-4">
-              1
-            </div>
-            <h4 className="font-semibold mb-2">Navigate</h4>
-            <p className="text-sm text-muted leading-relaxed">
-              Browse any verse in the five books of the Torah
-            </p>
-            <div className="hidden md:block absolute top-7 left-[calc(50%+2rem)] right-[calc(-50%+2rem)] h-px bg-border" />
+                  {book.nameHe}
+                </div>
+                <div className="text-[0.7rem] uppercase tracking-[0.08em] text-muted mt-1">
+                  {book.name}
+                </div>
+              </Link>
+            ))}
           </div>
-          <div className="text-center relative">
-            <div className="w-14 h-14 rounded-full bg-accent/15 text-accent font-bold text-xl flex items-center justify-center mx-auto mb-4">
-              2
-            </div>
-            <h4 className="font-semibold mb-2">Click a Word</h4>
-            <p className="text-sm text-muted leading-relaxed">
-              Tap any Hebrew word to decompose it into its root consonants
-            </p>
-            <div className="hidden md:block absolute top-7 left-[calc(50%+2rem)] right-[calc(-50%+2rem)] h-px bg-border" />
-          </div>
-          <div className="text-center">
-            <div className="w-14 h-14 rounded-full bg-accent/15 text-accent font-bold text-xl flex items-center justify-center mx-auto mb-4">
-              3
-            </div>
-            <h4 className="font-semibold mb-2">Decode</h4>
-            <p className="text-sm text-muted leading-relaxed">
-              See Paleo-Hebrew pictographs, letter meanings, and generated
-              interpretive sentences
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
+      </FadeInSection>
 
-
-      {/* ===== NEW HERE CTA ===== */}
-      <section className="max-w-3xl mx-auto px-4 pb-16 text-center">
-        <div className="p-8 rounded-xl border border-accent/30 bg-surface">
-          <h2 className="text-xl font-semibold mb-3">New Here?</h2>
-          <p className="text-sm text-muted mb-6 max-w-md mx-auto leading-relaxed">
-            Start with our Getting Started guide to understand how ancient
-            Hebrew pictographs reveal hidden meanings in every word of Scripture.
-          </p>
-          <Link
-            href="/guide"
-            className="inline-block px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary-light transition-colors"
+      {/* ===== 7. CLOSING CTA ===== */}
+      <FadeInSection>
+        <section className="text-center py-24 px-4">
+          <span
+            className="paleo-glyph text-7xl text-accent opacity-20 block mb-6"
+            aria-hidden="true"
+            dir="rtl"
           >
-            Read the Getting Started Guide
-          </Link>
-        </div>
-      </section>
+            {"\uD802\uDD00\uD802\uDD15"}
+          </span>
+          <p className="font-serif text-xl italic text-muted max-w-lg mx-auto leading-relaxed">
+            &ldquo;I am the Aleph and the Tav, the Beginning and the
+            End.&rdquo;
+          </p>
+          <p className="text-sm text-muted mt-2">Revelation 22:13</p>
+          <div className="flex flex-wrap justify-center gap-4 mt-8">
+            <Link
+              href="/research"
+              className="inline-block px-6 py-3 bg-accent text-[#1a1410] font-semibold rounded-lg hover:bg-[#d4b36a] hover:-translate-y-0.5 transition-all duration-300"
+            >
+              Explore the Research
+            </Link>
+            <Link
+              href="/guide"
+              className="inline-block px-6 py-3 border-2 border-accent/50 text-accent font-semibold rounded-lg hover:bg-accent/10 hover:border-accent transition-all duration-300"
+            >
+              Getting Started Guide
+            </Link>
+          </div>
+        </section>
+      </FadeInSection>
 
       {/* ===== DISCLAIMER ===== */}
       <div className="max-w-4xl mx-auto px-4 pb-8 text-center text-xs text-muted border-t border-border pt-6">

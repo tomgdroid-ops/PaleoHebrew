@@ -18,7 +18,7 @@
   --hero-overlay-rgb: 15, 15, 26;
   --hero-title: #f5f0e6;
   --hero-subtitle: #d4c9a8;
-  --hero-desc: #b0a78e;
+  --hero-desc: #d4cbb2;
   --accent-rgb: 196, 163, 90;
   --interlinear-hebrew: #3b5998;
   --interlinear-translit: #8b6914;
@@ -59,6 +59,8 @@
   --color-decode-bg: var(--decode-bg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-cinzel);
+  --font-serif: var(--font-cormorant);
 }
 
 /* Paleo-Hebrew font */
@@ -593,9 +595,10 @@ html:not([data-theme="dark"]) .homepage-hero-overlay {
 
 .homepage-hero-title {
   font-size: 2.75rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--hero-title);
-  letter-spacing: -0.02em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   line-height: 1.1;
   margin-bottom: 0.75rem;
   position: relative;
@@ -605,6 +608,15 @@ html:not([data-theme="dark"]) .homepage-hero-overlay {
   font-size: 1.15rem;
   color: var(--hero-subtitle);
   font-weight: 500;
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+
+.homepage-hero-tagline {
+  font-size: 1.35rem;
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 400;
   margin-bottom: 1.25rem;
   position: relative;
 }
@@ -647,6 +659,91 @@ html:not([data-theme="dark"]) .homepage-hero-overlay {
   background: rgba(var(--accent-rgb), 0.15);
   border-color: rgba(var(--accent-rgb), 0.8);
   transform: translateY(-1px);
+}
+
+/* ============================================
+   Homepage: Thesis Divider
+   ============================================ */
+
+.thesis-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--accent), transparent);
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   Homepage: Discovery Path Cards
+   ============================================ */
+
+.discovery-card {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid transparent;
+  padding: 2rem 1.75rem;
+  background: var(--surface);
+  transition: border-color 0.5s ease, transform 0.4s ease, box-shadow 0.4s ease;
+  text-decoration: none;
+  color: var(--foreground);
+}
+
+.discovery-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.04), transparent 60%);
+  pointer-events: none;
+}
+
+.discovery-card:hover {
+  border-left-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .discovery-card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Center the odd last card in a 2-col grid */
+@media (min-width: 768px) {
+  .discovery-grid > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: calc(50% - 0.75rem);
+    justify-self: center;
+  }
+}
+
+/* ============================================
+   Homepage: Stats Bar
+   ============================================ */
+
+.stats-bar {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background:
+    linear-gradient(135deg, rgba(var(--accent-rgb), 0.03), transparent 50%, rgba(var(--accent-rgb), 0.03));
+}
+
+/* ============================================
+   Homepage: Book Strip
+   ============================================ */
+
+.book-strip-cell {
+  display: block;
+  padding: 1.25rem 0.5rem;
+  text-align: center;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  color: var(--foreground);
+}
+
+.book-strip-cell:hover {
+  background: var(--surface-hover);
 }
 
 /* ============================================
@@ -760,6 +857,10 @@ html:not([data-theme="dark"]) .homepage-hero-overlay {
 
   .homepage-hero-subtitle {
     font-size: 1rem;
+  }
+
+  .homepage-hero-tagline {
+    font-size: 1.1rem;
   }
 
   .homepage-hero-watermark {
