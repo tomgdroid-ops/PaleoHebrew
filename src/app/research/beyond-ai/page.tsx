@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: "Beyond the Reach of AI",
@@ -60,9 +61,20 @@ const CONSTRAINTS = [
 /*  PAGE                                                               */
 /* ------------------------------------------------------------------ */
 
+const ARTICLE_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "Beyond the Reach of AI",
+  description:
+    "A computational case for divine authorship of the Hebrew Scriptures, examining seven simultaneous constraint systems that no AI could reproduce.",
+  author: { "@type": "Person", name: "Tom Guadagno" },
+  publisher: { "@type": "Organization", name: "The Aleph Tav Project" },
+};
+
 export default function BeyondAIPage() {
   return (
     <div>
+      <JsonLd data={ARTICLE_JSONLD} />
       {/* ===== HERO ===== */}
       <section className="research-hero">
         <div className="research-hero-inner">

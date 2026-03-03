@@ -59,7 +59,7 @@ export default function Footer() {
             </a>
             {" (CC BY 4.0)"}
           </p>
-          <p>&copy; 2025 The Aleph Tav Project. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} The Aleph Tav Project. All rights reserved.</p>
         </div>
       </div>
     </footer>
