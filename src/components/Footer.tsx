@@ -96,7 +96,7 @@ export default function Footer() {
             </a>
             {" (CC BY 4.0)"}
           </p>
-          <p>&copy; {new Date().getFullYear()} The Aleph Tav Project. All rights reserved.</p>
+          <p>&copy; 2025 Tom Guadagno. All Rights Reserved.</p>
         </div>
       </div>
     </footer>
