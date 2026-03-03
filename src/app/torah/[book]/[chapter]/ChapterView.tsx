@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { TorahChapter, TorahWord, BookMeta, LetterMeaning, CuratedWordEntry } from "@/types";
 import NavigationBar from "@/components/torah/NavigationBar";
 import VerseDisplay from "@/components/torah/VerseDisplay";
@@ -52,6 +52,21 @@ export default function ChapterView({
     setSelectedWord(null);
   };
 
+  // Scroll to verse on hash navigation (deep-linking)
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const el = document.getElementById(hash.slice(1));
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          el.classList.add("verse-highlight");
+          setTimeout(() => el.classList.remove("verse-highlight"), 2000);
+        }, 300);
+      }
+    }
+  }, []);
+
   return (
     <div className="max-w-[1600px] mx-auto px-4 py-4">
       {/* Navigation */}
@@ -91,6 +106,12 @@ export default function ChapterView({
             />
           ))}
 
+          {!selectedWord && (
+            <p className="text-center py-8 text-sm text-muted italic lg:hidden">
+              Tap any Hebrew word above to see its Paleo-Hebrew breakdown
+            </p>
+          )}
+
           {chapter.verses.length === 0 && (
             <p className="text-muted text-center py-12">
               No verses available for this chapter yet.
@@ -113,6 +134,25 @@ export default function ChapterView({
               ref={decodePanelRef}
               className="decode-modal-panel rounded-xl border border-border bg-decode-bg decode-panel"
             >
+              {/* Mobile drag handle */}
+              <div className="lg:hidden flex justify-center pt-3 pb-1">
+                <div className="w-10 h-1 rounded-full bg-border" />
+              </div>
+
+              {/* Mobile close button */}
+              <div className="lg:hidden absolute top-3 right-3 z-10">
+                <button
+                  onClick={handleClosePanel}
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-hover hover:bg-border transition-colors text-muted"
+                  aria-label="Close decode panel"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
+
               <DecodePanel
                 word={selectedWord}
                 verseRef={selectedVerseRef}

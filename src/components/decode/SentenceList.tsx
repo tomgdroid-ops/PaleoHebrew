@@ -54,8 +54,16 @@ export default function SentenceList({ sentences }: SentenceListProps) {
 
   return (
     <div>
-      <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-3">
+      <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-3 flex items-center gap-1.5">
         Pictographic Interpretations
+        <span className="relative group inline-flex items-center">
+          <span className="w-4 h-4 rounded-full border border-muted/50 text-muted text-[10px] font-semibold flex items-center justify-center cursor-help">
+            ?
+          </span>
+          <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-60 p-2.5 text-xs normal-case tracking-normal bg-surface border border-border rounded-lg shadow-lg text-muted z-20 leading-relaxed">
+            Scores reflect how closely the pictographic interpretation aligns with established scholarly consensus for each letter meaning. Higher scores indicate primary, widely-accepted pictographic meanings.
+          </span>
+        </span>
       </h3>
 
       <div className="sentence-list space-y-2">

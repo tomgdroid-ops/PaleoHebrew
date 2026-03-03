@@ -282,16 +282,29 @@ const NAV_ITEMS = [
 
 export default function StoneToScriptPage() {
   return (
+    <>
+      {/* ============================================================ */}
+      {/* RESEARCH HERO                                                */}
+      {/* ============================================================ */}
+      <section className="research-hero">
+        <div className="research-hero-inner">
+          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+            From Stone to Script
+          </h1>
+          <p className="text-muted text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+            The journey of the Hebrew alphabet from ancient pictographs carved in
+            stone to the script used in Torah scrolls today.
+          </p>
+        </div>
+      </section>
+
     <div className="max-w-5xl mx-auto px-4 py-12">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Stone to Script" }]} />
 
       {/* ============================================================ */}
-      {/* SECTION 1 — HERO                                             */}
+      {/* SECTION 1 - INTRO                                            */}
       {/* ============================================================ */}
       <section className="text-center mb-16">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-3">
-          From Stone to Script
-        </h1>
         <p className="text-lg text-muted italic mb-10">
           How the alphabet of Abraham, Moses, and David became the Hebrew we
           read today
@@ -311,13 +324,13 @@ export default function StoneToScriptPage() {
               lang="he"
               aria-label="Genesis 1:1 in Paleo-Hebrew script"
             >
-              {"\u{10901}\u{10913}\u{10900}\u{10914}\u{10909}\u{10915}"}{" "}
-              {"\u{10901}\u{10913}\u{10900}"}{" "}
-              {"\u{10900}\u{1090B}\u{10904}\u{10909}\u{1090C}"}{" "}
-              {"\u{10900}\u{10915}"}{" "}
-              {"\u{10904}\u{10914}\u{1090C}\u{10909}\u{1090C}"}{" "}
-              {"\u{10905}\u{10900}\u{10915}"}{" "}
-              {"\u{10904}\u{10900}\u{10913}\u{10911}"}
+              {"𐤁𐤓𐤀𐤔𐤉𐤕"}{" "}
+              {"𐤁𐤓𐤀"}{" "}
+              {"𐤀𐤋𐤄𐤉𐤌"}{" "}
+              {"𐤀𐤕"}{" "}
+              {"𐤄𐤔𐤌𐤉𐤌"}{" "}
+              {"𐤅𐤀𐤕"}{" "}
+              {"𐤄𐤀𐤓𐤑"}
             </p>
           </div>
 
@@ -333,13 +346,13 @@ export default function StoneToScriptPage() {
               lang="he"
               aria-label="Genesis 1:1 in Modern Hebrew"
             >
-              {"\u05D1\u05B0\u05BC\u05E8\u05B5\u05D0\u05E9\u05C1\u05B4\u05D9\u05EA"}{" "}
-              {"\u05D1\u05B8\u05BC\u05E8\u05B8\u05D0"}{" "}
-              {"\u05D0\u05B1\u05DC\u05B9\u05D4\u05B4\u05D9\u05DD"}{" "}
-              {"\u05D0\u05B5\u05EA"}{" "}
-              {"\u05D4\u05B7\u05E9\u05C1\u05B8\u05BC\u05DE\u05B7\u05D9\u05B4\u05DD"}{" "}
-              {"\u05D5\u05B0\u05D0\u05B5\u05EA"}{" "}
-              {"\u05D4\u05B8\u05D0\u05B8\u05E8\u05B6\u05E5"}
+              {"בְּרֵאשִׁית"}{" "}
+              {"בָּרָא"}{" "}
+              {"אֱלֹהִים"}{" "}
+              {"אֵת"}{" "}
+              {"הַשָּׁמַיִם"}{" "}
+              {"וְאֵת"}{" "}
+              {"הָאָרֶץ"}
             </p>
           </div>
         </div>
@@ -386,6 +399,7 @@ export default function StoneToScriptPage() {
         </div>
       </section>
 
+
       {/* ============================================================ */}
       {/* SECTION 2 — TIMELINE                                         */}
       {/* ============================================================ */}
@@ -398,20 +412,18 @@ export default function StoneToScriptPage() {
           printed letters of a modern nation.
         </p>
 
-        {/* Horizontal scroll on md+, vertical stack on mobile */}
-        <div className="flex flex-col md:flex-row md:overflow-x-auto gap-4 md:gap-6 pb-4 md:snap-x md:snap-mandatory">
+        {/* Vertical timeline with connecting line */}
+        <div className="relative pl-8 border-l-2 border-accent/30 space-y-10 max-w-3xl mx-auto">
           {TIMELINE.map((stop, i) => (
-            <div
-              key={i}
-              className="shrink-0 md:w-72 p-5 rounded-xl border border-border bg-surface md:snap-start"
-            >
-              <p className="text-xs font-semibold text-accent uppercase tracking-wide mb-1">
+            <div key={i} className="relative">
+              {/* Dot on the line */}
+              <div className="absolute -left-[calc(1rem+5px)] top-1 w-3 h-3 rounded-full bg-accent border-2 border-background" />
+              {/* Era badge */}
+              <span className="inline-block text-xs font-mono font-semibold text-accent uppercase tracking-wide mb-1">
                 {stop.date}
-              </p>
-              <h3 className="font-bold mb-2">{stop.title}</h3>
-              <p className="text-sm text-muted leading-relaxed">
-                {stop.description}
-              </p>
+              </span>
+              <h3 className="text-lg font-bold text-foreground">{stop.title}</h3>
+              <p className="text-sm text-muted leading-relaxed mt-2">{stop.description}</p>
             </div>
           ))}
         </div>
@@ -911,5 +923,6 @@ export default function StoneToScriptPage() {
         </p>
       </div>
     </div>
+    </>
   );
 }

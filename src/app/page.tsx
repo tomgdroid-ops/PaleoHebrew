@@ -5,6 +5,11 @@ import BookHero from "@/components/BookHero";
 const SECTION_CARDS = [
   {
     title: "Torah Decoder",
+    icon: (
+      <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+      </svg>
+    ),
     description:
       "Navigate the five books of the Torah. Click any Hebrew word to see its Paleo-Hebrew pictographs, letter meanings, and generated interpretive sentences.",
     href: "/torah/genesis/1",
@@ -13,6 +18,11 @@ const SECTION_CARDS = [
   },
   {
     title: "The Ancient Alphabet",
+    icon: (
+      <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h8m-8 6h16M15 11l2 5 2-5" />
+      </svg>
+    ),
     description:
       "Explore all 22 letters of the Hebrew alphabet with their pictographic origins, meanings, gematria values, and how they evolved over 3,000 years.",
     href: "/alphabet",
@@ -21,6 +31,11 @@ const SECTION_CARDS = [
   },
   {
     title: "From Stone to Script",
+    icon: (
+      <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
     description:
       "Trace the journey of the Hebrew alphabet from Proto-Sinaitic carvings through the Babylonian Exile to the script used today.",
     href: "/stone-to-script",
@@ -28,7 +43,12 @@ const SECTION_CARDS = [
     gradientLight: "from-yellow-200/80 via-stone-100/60 to-stone-200/80",
   },
   {
-    title: "The Aleph Tav (\u05D0\u05EA) Study",
+    title: "The Aleph Tav (את) Study",
+    icon: (
+      <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    ),
     description:
       "Discover how the untranslated Aleph Tav marker appears and disappears before names in the Hebrew Bible, tracking covenant standing across Scripture.",
     href: "/aleph-tav",
@@ -37,6 +57,11 @@ const SECTION_CARDS = [
   },
   {
     title: "Messianic Prophecies",
+    icon: (
+      <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+      </svg>
+    ),
     description:
       "37 Old Testament prophecies examined alongside their New Testament fulfillment and the historical evidence from the Dead Sea Scrolls, ancient codices, and archaeology.",
     href: "/prophecies",
@@ -45,6 +70,11 @@ const SECTION_CARDS = [
   },
   {
     title: "Beyond the Reach of AI",
+    icon: (
+      <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+    ),
     description:
       "Can artificial intelligence create Scripture? A computational analysis of the seven simultaneous constraint systems operating in the Hebrew text that no AI could reproduce.",
     href: "/research/beyond-ai",
@@ -94,27 +124,6 @@ const BOOKS = [
   { name: "Leviticus", nameHe: "\u05D5\u05D9\u05E7\u05E8\u05D0", slug: "leviticus" },
   { name: "Numbers", nameHe: "\u05D1\u05DE\u05D3\u05D1\u05E8", slug: "numbers" },
   { name: "Deuteronomy", nameHe: "\u05D3\u05D1\u05E8\u05D9\u05DD", slug: "deuteronomy" },
-];
-
-const LATEST_ITEMS = [
-  {
-    title: "Aleph Tav Covenant Marker Study",
-    description:
-      "Track how the untranslated Aleph Tav marks covenant standing throughout Genesis.",
-    href: "/aleph-tav",
-  },
-  {
-    title: "Beyond the Reach of AI",
-    description:
-      "A computational analysis of the seven constraint systems in the Hebrew text.",
-    href: "/research/beyond-ai",
-  },
-  {
-    title: "From Stone to Script: Alphabet History",
-    description:
-      "The journey of Hebrew letters from Proto-Sinaitic carvings to modern script.",
-    href: "/stone-to-script",
-  },
 ];
 
 export default function HomePage() {
@@ -186,10 +195,11 @@ export default function HomePage() {
                 data-gradient-light={card.gradientLight}
               />
               <div className="section-card-content">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 mb-3">
+                  {card.icon}
                   <h3 className="text-xl font-bold">{card.title}</h3>
                 </div>
-                <p className="mt-2 text-sm leading-relaxed opacity-90">
+                <p className="text-sm leading-relaxed opacity-90">
                   {card.description}
                 </p>
               </div>
@@ -287,24 +297,32 @@ export default function HomePage() {
           How the Torah Decoder Works
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center">
-            <div className="text-3xl mb-2">1</div>
-            <h4 className="font-semibold mb-1">Navigate</h4>
-            <p className="text-sm text-muted">
+          <div className="text-center relative">
+            <div className="w-14 h-14 rounded-full bg-accent/15 text-accent font-bold text-xl flex items-center justify-center mx-auto mb-4">
+              1
+            </div>
+            <h4 className="font-semibold mb-2">Navigate</h4>
+            <p className="text-sm text-muted leading-relaxed">
               Browse any verse in the five books of the Torah
             </p>
+            <div className="hidden md:block absolute top-7 left-[calc(50%+2rem)] right-[calc(-50%+2rem)] h-px bg-border" />
           </div>
-          <div className="text-center">
-            <div className="text-3xl mb-2">2</div>
-            <h4 className="font-semibold mb-1">Click a Word</h4>
-            <p className="text-sm text-muted">
+          <div className="text-center relative">
+            <div className="w-14 h-14 rounded-full bg-accent/15 text-accent font-bold text-xl flex items-center justify-center mx-auto mb-4">
+              2
+            </div>
+            <h4 className="font-semibold mb-2">Click a Word</h4>
+            <p className="text-sm text-muted leading-relaxed">
               Tap any Hebrew word to decompose it into its root consonants
             </p>
+            <div className="hidden md:block absolute top-7 left-[calc(50%+2rem)] right-[calc(-50%+2rem)] h-px bg-border" />
           </div>
           <div className="text-center">
-            <div className="text-3xl mb-2">3</div>
-            <h4 className="font-semibold mb-1">Decode</h4>
-            <p className="text-sm text-muted">
+            <div className="w-14 h-14 rounded-full bg-accent/15 text-accent font-bold text-xl flex items-center justify-center mx-auto mb-4">
+              3
+            </div>
+            <h4 className="font-semibold mb-2">Decode</h4>
+            <p className="text-sm text-muted leading-relaxed">
               See Paleo-Hebrew pictographs, letter meanings, and generated
               interpretive sentences
             </p>
@@ -312,28 +330,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== LATEST FROM THE PROJECT ===== */}
-      <section className="max-w-5xl mx-auto px-4 pb-16">
-        <h2 className="text-xl font-semibold text-center mb-6">
-          Latest from the Project
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {LATEST_ITEMS.map((item) => (
-            <Link
-              key={item.title}
-              href={item.href}
-              className="p-5 rounded-xl border border-border bg-surface hover:shadow-md transition-shadow group"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <h3 className="font-semibold text-sm group-hover:text-primary transition-colors">
-                  {item.title}
-                </h3>
-              </div>
-              <p className="text-xs text-muted leading-relaxed">
-                {item.description}
-              </p>
-            </Link>
-          ))}
+
+      {/* ===== NEW HERE CTA ===== */}
+      <section className="max-w-3xl mx-auto px-4 pb-16 text-center">
+        <div className="p-8 rounded-xl border border-accent/30 bg-surface">
+          <h2 className="text-xl font-semibold mb-3">New Here?</h2>
+          <p className="text-sm text-muted mb-6 max-w-md mx-auto leading-relaxed">
+            Start with our Getting Started guide to understand how ancient
+            Hebrew pictographs reveal hidden meanings in every word of Scripture.
+          </p>
+          <Link
+            href="/guide"
+            className="inline-block px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary-light transition-colors"
+          >
+            Read the Getting Started Guide
+          </Link>
         </div>
       </section>
 

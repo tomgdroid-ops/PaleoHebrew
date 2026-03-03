@@ -326,7 +326,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    top: 3.5rem;
+    top: 40vh;
     width: 100%;
     z-index: 50;
     overflow-y: auto;
@@ -497,6 +497,10 @@ body {
 
 /* Mobile adjustments */
 @media (max-width: 767px) {
+  .verse-block {
+    padding: 1rem 0;
+  }
+
   .verse-container {
     gap: 8px 12px;
     padding: 12px;
@@ -1230,4 +1234,16 @@ html:not([data-theme="dark"]) .prophecy-hero-overlay {
   .prophecy-detail-section {
     padding: 1rem;
   }
+}
+
+/* ============================================
+   Verse Deep-Linking Highlight
+   ============================================ */
+
+.verse-highlight {
+  animation: verse-flash 2s ease-out;
+}
+@keyframes verse-flash {
+  0% { background-color: rgba(196, 163, 90, 0.3); border-radius: 0.5rem; }
+  100% { background-color: transparent; }
 }
