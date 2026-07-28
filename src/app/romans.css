@@ -1,0 +1,1155 @@
+/* ==========================================================================
+   ROMANS 8:1 — HOMEPAGE
+   "There is therefore now no condemnation for those who are in Christ Jesus."
+
+   The page is one sentence, read across five acts. It descends from darkness
+   into the weight of accusation, turns on a single word, and opens into
+   morning. Act I and Act V are the same landscape — night, then dawn.
+
+   Every backdrop is a hand-built "light field": layered gradient studies with
+   real silhouette geometry, because light without an edge reads as blur.
+   Photographic plates (see lib/plates) are optional layers inside the same
+   grade and grain, so the language holds either way.
+   ========================================================================== */
+
+@property --p {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+/* --------------------------------------------------------------------------
+   1. TOKENS
+   -------------------------------------------------------------------------- */
+
+.r81 {
+  --ink: #04060c;
+  --cream: #f3eee4;
+  --cream-soft: rgba(243, 238, 228, 0.74);
+  --cream-quiet: rgba(243, 238, 228, 0.58);
+
+  --amber: #e3ac63;
+  --amber-bright: #f6ce92;
+  --amber-ink: #8a5613; /* amber that still holds AA on paper */
+
+  --paper: #f2ede3;
+  --paper-ink: #1b1a17;
+  --paper-quiet: #55514a;
+  --paper-rule: rgba(27, 26, 23, 0.14);
+
+  --cold: #8892a5;
+
+  /* One easing curve for entrances, one for the pivot. Nothing else. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --gutter: clamp(1.25rem, 5vw, 5rem);
+  --measure: 36rem;
+
+  position: relative;
+  isolation: isolate;
+  background: var(--ink);
+  color: var(--cream);
+  overflow-x: clip;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   2. SITE CHROME
+   The global footer is bright by default. On this page it would land like a
+   light switch at the end of a film, so it is dimmed to match. Purely
+   cosmetic — where :has() is unsupported the standard footer simply returns.
+   -------------------------------------------------------------------------- */
+
+body:has(.r81) > footer {
+  background: #05070e;
+  border-top-color: rgba(243, 238, 228, 0.1);
+  color: rgba(243, 238, 228, 0.62);
+  margin-top: 0;
+}
+
+body:has(.r81) > footer :is(a, p, span) {
+  color: inherit;
+}
+
+body:has(.r81) > footer h3 {
+  color: rgba(227, 172, 99, 0.85);
+}
+
+body:has(.r81) > footer :is(a:hover, a:focus-visible) {
+  color: #f3eee4;
+}
+
+body:has(.r81) > footer .border-t {
+  border-top-color: rgba(243, 238, 228, 0.1);
+}
+
+/* --------------------------------------------------------------------------
+   3. PRIMITIVES — frame, grade, grain, geometry
+   -------------------------------------------------------------------------- */
+
+.r81 .frame {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* The light field: always present, always the grade of record. */
+.r81 .frame__light {
+  position: absolute;
+  inset: 0;
+}
+
+/* The optional photograph, sitting inside the light field's world. */
+.r81 .frame__plate {
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+  opacity: 0.82;
+}
+
+/* The grade sits above both, so a photograph and a gradient are graded alike. */
+.r81 .frame__grade {
+  position: absolute;
+  inset: 0;
+}
+
+/* 35mm grain. Static by design — an animated full-bleed overlay repaints every
+   frame and costs more than it returns. It also breaks up gradient banding,
+   which is the reason large washes on this page hold together. */
+.r81 .grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0.055;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+}
+
+/* --- Landscape geometry -------------------------------------------------
+   A flat plain, one hairline of light, and haze. Silhouetted ridges were
+   tried and cut: hard-edged CSS mountains read as illustration, and the brief
+   is an empty valley. What sells the space is the single crisp edge — one
+   real line in a field of soft light. Act I and Act V share it exactly, so
+   the page ends where it began, in daylight. */
+
+.r81 .glow,
+.r81 .haze,
+.r81 .horizon-line,
+.r81 .ground {
+  position: absolute;
+}
+
+.r81 .glow,
+.r81 .haze {
+  inset: 0;
+}
+
+.r81 .horizon-line {
+  left: 0;
+  right: 0;
+  top: var(--hz, 79%);
+  height: 1px;
+}
+
+.r81 .ground {
+  left: 0;
+  right: 0;
+  top: var(--hz, 79%);
+  bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   4. LIGHT FIELDS
+   -------------------------------------------------------------------------- */
+
+/* I. The valley, an hour before dawn. */
+.r81 .lf-void {
+  background: linear-gradient(
+    180deg,
+    #04060c 0%,
+    #05070f 28%,
+    #060a15 50%,
+    #08101f 64%,
+    #0c1728 73%,
+    #14223a 79%
+  );
+}
+
+/* Kept narrow on purpose: a wide amber wash greys the whole sky out. Warm at
+   the centre, cool blue at the flanks — that separation is what reads as
+   first light rather than fog. */
+.r81 .lf-void .glow {
+  background: radial-gradient(
+    48% 21% at 50% 79.5%,
+    rgba(246, 200, 132, 0.52) 0%,
+    rgba(227, 172, 99, 0.18) 32%,
+    rgba(227, 172, 99, 0.04) 58%,
+    transparent 76%
+  );
+}
+
+.r81 .lf-void .ground {
+  background: linear-gradient(180deg, #080e1a 0%, #04060c 62%);
+}
+
+.r81 .lf-void .haze {
+  background: linear-gradient(
+    180deg,
+    transparent 62%,
+    rgba(148, 178, 220, 0.045) 73%,
+    rgba(160, 190, 228, 0.075) 78.6%,
+    transparent 79%
+  );
+}
+
+.r81 .lf-void .horizon-line {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(246, 206, 146, 0.22) 16%,
+    rgba(246, 206, 146, 0.85) 50%,
+    rgba(246, 206, 146, 0.22) 84%,
+    transparent 100%
+  );
+}
+
+/* II & III. The chamber. A shaft with actual edges, and the pool it makes. */
+.r81 .lf-chamber {
+  background: linear-gradient(
+    172deg,
+    #06080f 0%,
+    #0a0e18 40%,
+    #0b1019 66%,
+    #05070c 100%
+  );
+}
+
+/* A beam, not a cutout. The width gradient softens both flanks and the mask
+   lets it fall off toward the floor, where the pool takes over. It is angled
+   into the right third so it never bisects a headline. */
+.r81 .shaft {
+  position: absolute;
+  top: -18%;
+  bottom: -8%;
+  left: 55%;
+  width: 30%;
+  transform: rotate(12deg);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(168, 191, 222, 0.04) 24%,
+    rgba(168, 191, 222, 0.15) 50%,
+    rgba(168, 191, 222, 0.04) 76%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.72) 44%,
+    rgba(0, 0, 0, 0.18) 84%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.72) 44%,
+    rgba(0, 0, 0, 0.18) 84%,
+    transparent 100%
+  );
+}
+
+.r81 .pool {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    24% 14% at 76% 94%,
+    rgba(168, 191, 222, 0.15) 0%,
+    rgba(168, 191, 222, 0.04) 46%,
+    transparent 74%
+  );
+}
+
+/* The same chamber, after. Same architecture, changed light. */
+.r81 .lf-chamber--warm {
+  background: linear-gradient(
+    172deg,
+    #0a0705 0%,
+    #1a1109 40%,
+    #241708 68%,
+    #0a0704 100%
+  );
+}
+
+.r81 .lf-chamber--warm .shaft {
+  background: linear-gradient(
+    102deg,
+    transparent 0%,
+    rgba(246, 206, 146, 0.05) 16%,
+    rgba(255, 226, 180, 0.3) 46%,
+    rgba(246, 206, 146, 0.08) 76%,
+    transparent 100%
+  );
+}
+
+.r81 .lf-chamber--warm .pool {
+  background: radial-gradient(
+    28% 17% at 76% 94%,
+    rgba(255, 224, 175, 0.3) 0%,
+    rgba(227, 172, 99, 0.08) 44%,
+    transparent 74%
+  );
+}
+
+/* IV. The wash. Light from the room we just left, blowing out into paper —
+   a cut to white rather than a fade to it. The topmost layer carries the
+   full width to paper so no corner is left behind in the dark. */
+.r81 .lf-wash {
+  background:
+    linear-gradient(0deg, var(--paper) 0%, rgba(242, 237, 227, 0) 30%),
+    radial-gradient(
+      108% 62% at 50% 102%,
+      rgba(255, 242, 219, 0.94) 0%,
+      rgba(255, 223, 174, 0.5) 30%,
+      rgba(227, 172, 99, 0.15) 56%,
+      transparent 80%
+    ),
+    linear-gradient(
+      180deg,
+      #0a0704 0%,
+      #150d07 32%,
+      #22160a 62%,
+      #33200e 88%,
+      #3d2711 100%
+    );
+}
+
+/* V. Morning, in the valley from Act I. The first stop carries the paper of
+   Act IV into the sky, so stepping outside is a blend and not a cut.
+   The horizon sits lower here than in Act I — the sunrise becomes a strip
+   under a very large sky, which both reads as more air and keeps the closing
+   lines off the one part of the frame bright enough to swallow them. */
+.r81 .lf-morning {
+  --hz: 86%;
+  background: linear-gradient(
+    180deg,
+    var(--paper) 0%,
+    #6c6055 5%,
+    #232634 10%,
+    #080d1c 15%,
+    #101529 31%,
+    #22213a 47%,
+    #3f3140 59%,
+    #664533 70%,
+    #97653f 79%,
+    #c68a4f 83.5%,
+    #efc188 86%
+  );
+}
+
+.r81 .lf-morning .glow {
+  background: radial-gradient(
+    34% 15% at 50% 86.5%,
+    rgba(255, 244, 214, 0.85) 0%,
+    rgba(255, 218, 158, 0.34) 28%,
+    rgba(227, 172, 99, 0.1) 54%,
+    transparent 78%
+  );
+}
+
+.r81 .lf-morning .ground {
+  background: linear-gradient(
+    180deg,
+    #b1793f 0%,
+    #4a2f18 16%,
+    #1b1109 44%,
+    #08090f 78%,
+    #04060c 100%
+  );
+}
+
+.r81 .lf-morning .haze {
+  background: linear-gradient(
+    180deg,
+    transparent 62%,
+    rgba(255, 224, 178, 0.12) 78%,
+    rgba(255, 236, 202, 0.22) 85.6%,
+    transparent 86%
+  );
+}
+
+.r81 .lf-morning .horizon-line {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 238, 208, 0.4) 14%,
+    rgba(255, 246, 226, 0.95) 50%,
+    rgba(255, 238, 208, 0.4) 86%,
+    transparent 100%
+  );
+}
+
+/* An opening with no door in it — the exit. */
+.r81 .lf-doorway {
+  background:
+    radial-gradient(
+      30% 46% at 50% 0%,
+      rgba(255, 226, 180, 0.14) 0%,
+      rgba(227, 172, 99, 0.04) 40%,
+      transparent 72%
+    ),
+    linear-gradient(180deg, #06080f 0%, #04060c 62%);
+}
+
+/* Shared grades. */
+.r81 .grade-dark {
+  background: radial-gradient(
+    132% 90% at 50% 44%,
+    transparent 24%,
+    rgba(3, 5, 11, 0.46) 72%,
+    rgba(3, 5, 11, 0.88) 100%
+  );
+}
+
+/* Outer falloff resolves toward --ink so every act meets the next one in the
+   same colour and the cuts between them disappear. */
+.r81 .grade-warm {
+  background: radial-gradient(
+    134% 94% at 50% 62%,
+    transparent 20%,
+    rgba(4, 6, 12, 0.3) 68%,
+    rgba(4, 6, 12, 0.72) 100%
+  );
+}
+
+/* The pivot hands off to the wash, which opens on #0a0704. */
+.r81 .grade-chamber {
+  background:
+    linear-gradient(
+      180deg,
+      transparent 56%,
+      rgba(10, 7, 4, 0.62) 86%,
+      #0a0704 100%
+    ),
+    radial-gradient(
+      132% 92% at 50% 54%,
+      transparent 22%,
+      rgba(8, 5, 3, 0.4) 70%,
+      rgba(8, 5, 3, 0.76) 100%
+    );
+}
+
+/* --------------------------------------------------------------------------
+   5. TYPE
+   Cormorant Garamond Light at scale is the whole voice of the page. Geist is
+   only ever used small, for labels and running text. Cinzel is deliberately
+   absent — engraved Roman caps are the fastest route to looking like every
+   other scripture site.
+   -------------------------------------------------------------------------- */
+
+.r81 .display {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 300;
+  line-height: 0.98;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.r81 .label {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin: 0;
+}
+
+.r81 .prose {
+  font-size: clamp(1rem, 1.5vw, 1.1875rem);
+  line-height: 1.72;
+  color: var(--cream-soft);
+  max-width: var(--measure);
+  margin: 0;
+}
+
+.r81 .act {
+  position: relative;
+  z-index: 1;
+  padding-inline: var(--gutter);
+  margin-inline: auto;
+  width: 100%;
+  max-width: 76rem;
+}
+
+.r81 a:focus-visible,
+.r81 button:focus-visible {
+  outline: 2px solid var(--amber-bright);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   6. REVEAL
+   The hidden state only exists once JS has confirmed it can undo it, so a
+   failed script or a blocked bundle leaves a fully readable page.
+   -------------------------------------------------------------------------- */
+
+.r81-js .r81 [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 1.75rem, 0);
+  transition:
+    opacity 1.1s var(--ease-out),
+    transform 1.1s var(--ease-out);
+  transition-delay: calc(var(--d, 0) * 110ms);
+}
+
+.r81-js .r81 [data-reveal].is-inview {
+  opacity: 1;
+  transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   ACT I — THE UNFINISHED SENTENCE
+   -------------------------------------------------------------------------- */
+
+.r81-hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding-block: 9rem 8rem;
+}
+
+.r81-hero__label {
+  margin-bottom: clamp(1.5rem, 4vh, 2.75rem);
+}
+
+.r81-hero__line {
+  font-size: clamp(2.9rem, 10.5vw, 9.5rem);
+  color: var(--cream);
+  max-width: 14ch;
+}
+
+/* The sentence stops mid-thought. This is the only thing that says so. */
+.r81-caret {
+  display: inline-block;
+  width: 0.05em;
+  height: 0.72em;
+  margin-left: 0.14em;
+  vertical-align: -0.03em;
+  background: var(--amber-bright);
+  box-shadow: 0 0 2rem rgba(246, 206, 146, 0.6);
+  animation: r81-breathe 4.4s var(--ease-io) infinite;
+}
+
+@keyframes r81-breathe {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.r81-hero__foot {
+  position: absolute;
+  left: var(--gutter);
+  bottom: clamp(2rem, 6vh, 3.5rem);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 1;
+}
+
+.r81-thread {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 3.5rem;
+  background: rgba(243, 238, 228, 0.16);
+  overflow: hidden;
+}
+
+.r81-thread::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: 42%;
+  background: linear-gradient(180deg, transparent, var(--amber-bright));
+  animation: r81-thread 3.6s var(--ease-io) infinite;
+}
+
+@keyframes r81-thread {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(240%);
+    opacity: 0;
+  }
+}
+
+.r81-hero__cue {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cream-quiet);
+}
+
+/* --------------------------------------------------------------------------
+   ACT II — THE WEIGHT
+   The voice, not the verdict. The verdict belongs to Act III, and saying it
+   twice would spend it.
+   -------------------------------------------------------------------------- */
+
+.r81-weight {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding-block: clamp(8rem, 20vh, 13rem);
+}
+
+.r81-weight__line {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(2.125rem, 6.2vw, 5.25rem);
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+  max-width: 15ch;
+  margin: clamp(1.75rem, 5vh, 3rem) 0 0;
+}
+
+/* Voices in a room, not a row of tags: each sits at its own depth and
+   surfaces on its own cycle. */
+.r81-whispers {
+  list-style: none;
+  margin: clamp(3.5rem, 11vh, 7rem) 0 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(0.75rem, 1.8vh, 1.25rem);
+  font-size: 0.8125rem;
+  letter-spacing: 0.05em;
+  color: var(--cream);
+  max-width: 40rem;
+}
+
+.r81-whispers li {
+  margin-left: calc(var(--x) * 1%);
+  animation: r81-fade-cycle 9s var(--ease-io) infinite;
+  animation-delay: calc(var(--i) * 1.3s);
+}
+
+/* These are words, not texture, so the trough of the cycle is set by contrast
+   rather than by mood: below ~0.55 the smallest type on the page drops under
+   4.5:1 against the chamber. */
+@keyframes r81-fade-cycle {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  45% {
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   ACT III — THE WORD
+   A tall scroll track with a pinned stage. Scroll position becomes --p, and
+   every transformation on this screen is derived from it — one custom
+   property, no per-element JavaScript.
+   -------------------------------------------------------------------------- */
+
+.r81-pivot {
+  --p: 1;
+  position: relative;
+  height: 340vh;
+}
+
+.r81-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: grid;
+  align-content: center;
+
+  /* Three phases, all read off --p. */
+  --warm: clamp(0, calc((var(--p) - 0.32) / 0.26), 1);
+  --arrive: clamp(0, calc((var(--p) - 0.28) / 0.19), 1);
+  --settle: clamp(0, calc((var(--p) - 0.7) / 0.2), 1);
+}
+
+.r81-stage .lf-chamber:not(.lf-chamber--warm) {
+  opacity: calc(1 - var(--warm));
+}
+
+.r81-stage .plate-cold {
+  opacity: calc(0.82 * (1 - var(--warm)));
+}
+
+.r81-stage .lf-chamber--warm {
+  opacity: var(--warm);
+}
+
+.r81-stage .plate-warm {
+  opacity: calc(0.82 * var(--warm));
+}
+
+/* The light that arrives with the word. */
+.r81-bloom {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: var(--warm);
+  background: radial-gradient(
+    38% 52% at 27% 50%,
+    rgba(255, 232, 195, 0.3) 0%,
+    rgba(246, 206, 146, 0.1) 34%,
+    transparent 68%
+  );
+  transform: scale(calc(0.6 + 0.4 * var(--warm)));
+}
+
+.r81-pivot .label {
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 7vh, 4.5rem);
+}
+
+/* Inline rather than flex, so the space between the two words is a real space:
+   a flex gap looks identical and reads aloud as "Nocondemnation". */
+.r81-pivot__line {
+  text-align: center;
+  font-size: min(12vw, 9.5rem);
+  white-space: nowrap;
+}
+
+.r81-no,
+.r81-cond {
+  display: inline-block;
+}
+
+/* "No" is not a correction stamped over the word. It is a thing that arrives,
+   and it brings the light with it. */
+.r81-no {
+  color: var(--amber-bright);
+  opacity: var(--arrive);
+  transform: translate3d(calc((var(--arrive) - 1) * 1.1em), 0, 0)
+    scale(calc(0.72 + 0.28 * var(--arrive)));
+  transform-origin: right center;
+  text-shadow: 0 0 calc(var(--arrive) * 4rem) rgba(246, 206, 146, 0.45);
+}
+
+/* The old word is never struck through or crossed out. It simply stops being
+   the brightest thing on the screen. */
+.r81-cond {
+  color: color-mix(in oklab, var(--cold) calc(100% - var(--warm) * 64%), #2b2f38);
+}
+
+.r81-pivot__coda {
+  margin: clamp(2.5rem, 7vh, 4rem) auto 0;
+  text-align: center;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(1.125rem, 2.4vw, 1.75rem);
+  letter-spacing: 0.02em;
+  color: var(--cream-soft);
+  opacity: var(--settle);
+  transform: translate3d(0, calc((1 - var(--settle)) * 1rem), 0);
+}
+
+.r81-pivot__coda em {
+  font-style: normal;
+  color: var(--amber-bright);
+}
+
+/* --------------------------------------------------------------------------
+   ACT IV — THE WELCOME
+   The page turns to paper. After five screens of night, the absence of an
+   image is the strongest image available.
+   -------------------------------------------------------------------------- */
+
+.r81-welcome {
+  position: relative;
+  background: var(--paper);
+  color: var(--paper-ink);
+  padding-bottom: clamp(7rem, 18vh, 12rem);
+}
+
+/* The light of the room we just left, becoming paper. */
+.r81-welcome__wash {
+  position: relative;
+  height: clamp(22rem, 46vh, 34rem);
+  overflow: hidden;
+}
+
+.r81-welcome__body {
+  padding-top: clamp(1rem, 4vh, 3rem);
+}
+
+.r81-welcome .label {
+  color: var(--amber-ink);
+}
+
+.r81-welcome__phrase {
+  font-size: clamp(2.75rem, 9vw, 7.5rem);
+  color: var(--paper-ink);
+  margin-block: clamp(1.5rem, 4vh, 2.5rem) clamp(2rem, 5vh, 3rem);
+}
+
+.r81-welcome .prose {
+  color: var(--paper-quiet);
+}
+
+.r81-welcome .prose em {
+  font-style: italic;
+  color: var(--paper-ink);
+}
+
+/* The bridge back into this project. Not a decorative glyph — the actual
+   first sentence of the Bible, with the mark shown standing in the Hebrew
+   and the hole it leaves in the English. */
+.r81-mark {
+  margin-top: clamp(4.5rem, 13vh, 8rem);
+  padding-top: clamp(3rem, 7vh, 4.5rem);
+  border-top: 1px solid var(--paper-rule);
+}
+
+.r81-specimen {
+  margin: clamp(2.75rem, 7vh, 4.5rem) 0 0;
+}
+
+.r81-specimen__he {
+  font-family: "SBL Hebrew", "Noto Sans Hebrew", "Frank Ruehl CLM", serif;
+  direction: rtl;
+  font-size: clamp(1.5rem, 4.2vw, 3.25rem);
+  line-height: 1.85;
+  color: var(--paper-ink);
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.55em;
+}
+
+.r81-specimen__he .is-mark {
+  color: var(--amber-ink);
+}
+
+.r81-specimen__en {
+  margin: clamp(1.5rem, 4vh, 2.5rem) 0 0;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.125rem, 2.2vw, 1.75rem);
+  line-height: 1.7;
+  color: var(--paper-ink);
+}
+
+/* The untranslated mark, standing in the English where nothing else does. */
+.r81-et {
+  display: inline-block;
+  font-family: "NotoSansPhoenician", "Noto Sans Phoenician", serif;
+  direction: rtl;
+  font-size: 0.8em;
+  color: var(--amber-ink);
+  padding-inline: 0.14em;
+  vertical-align: 0.02em;
+}
+
+.r81-specimen figcaption {
+  margin-top: clamp(1.25rem, 3vh, 1.75rem);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper-quiet);
+}
+
+.r81-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 2rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--amber-ink);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 0.15rem;
+  transition: gap 0.4s var(--ease-out);
+}
+
+.r81-link:hover {
+  gap: 1.125rem;
+}
+
+.r81-link svg {
+  flex: none;
+}
+
+/* --------------------------------------------------------------------------
+   ACT V — THE MORNING
+   -------------------------------------------------------------------------- */
+
+.r81-morning {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding-block: clamp(8rem, 20vh, 13rem);
+  text-align: center;
+}
+
+.r81-morning .act {
+  max-width: 60rem;
+}
+
+/* The whole sentence, whole, for the first time. */
+.r81-verse {
+  font-size: clamp(1.875rem, 5.4vw, 4.5rem);
+  line-height: 1.14;
+  color: var(--cream);
+  text-shadow: 0 1px 40px rgba(20, 10, 4, 0.5);
+  text-wrap: balance;
+}
+
+.r81-verse b {
+  font-weight: 300;
+  color: var(--amber-bright);
+}
+
+/* Sits over the brightest part of the sky, so it takes full cream and the
+   same shadow as the verse rather than the muted grey used on black. */
+.r81-morning__ref {
+  margin-top: clamp(2rem, 5vh, 3rem);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-shadow: 0 1px 24px rgba(20, 10, 4, 0.7);
+}
+
+.r81-morning__close {
+  margin: clamp(2.75rem, 7vh, 4.25rem) auto 0;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(1.25rem, 2.8vw, 2rem);
+  line-height: 1.45;
+  color: var(--cream);
+  text-shadow: 0 1px 30px rgba(20, 10, 4, 0.6);
+  max-width: 26ch;
+}
+
+/* --------------------------------------------------------------------------
+   EXIT — three doors, set as an index rather than a card grid
+   -------------------------------------------------------------------------- */
+
+.r81-exit {
+  position: relative;
+  background: var(--ink);
+  padding-block: clamp(7rem, 18vh, 11rem);
+}
+
+.r81-exit .act {
+  max-width: 58rem;
+}
+
+.r81-exit__intro {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(1.5rem, 3.4vw, 2.5rem);
+  color: var(--cream);
+  margin: 0 0 clamp(2.5rem, 7vh, 4rem);
+}
+
+.r81-door {
+  display: grid;
+  grid-template-columns: 3rem 1fr auto;
+  align-items: baseline;
+  gap: 0 clamp(1rem, 3vw, 2rem);
+  padding-block: clamp(1.75rem, 4vh, 2.5rem);
+  border-top: 1px solid rgba(243, 238, 228, 0.12);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.5s var(--ease-out);
+}
+
+.r81-doors > .r81-door:last-child {
+  border-bottom: 1px solid rgba(243, 238, 228, 0.12);
+}
+
+.r81-door:hover {
+  border-top-color: rgba(227, 172, 99, 0.6);
+}
+
+.r81-door__n {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  color: var(--amber);
+}
+
+.r81-door__title {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(1.5rem, 3.4vw, 2.375rem);
+  line-height: 1.15;
+  color: var(--cream);
+  margin: 0;
+  transition: color 0.4s var(--ease-out);
+}
+
+.r81-door:hover .r81-door__title {
+  color: var(--amber-bright);
+}
+
+.r81-door__desc {
+  grid-column: 2;
+  margin: 0.5rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--cream-quiet);
+  max-width: 42ch;
+}
+
+.r81-door__arrow {
+  color: var(--cream-quiet);
+  transition:
+    transform 0.5s var(--ease-out),
+    color 0.4s var(--ease-out);
+}
+
+.r81-door:hover .r81-door__arrow {
+  transform: translateX(0.5rem);
+  color: var(--amber-bright);
+}
+
+.r81-sign {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.875rem;
+  margin-top: clamp(4rem, 11vh, 6.5rem);
+}
+
+.r81-sign__glyph {
+  font-family: "NotoSansPhoenician", "Noto Sans Phoenician", serif;
+  direction: rtl;
+  font-size: 1.5rem;
+  color: var(--amber);
+}
+
+.r81-sign__name {
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  color: var(--cream-soft);
+}
+
+.r81-note {
+  margin: clamp(2.5rem, 6vh, 3.5rem) 0 0;
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: var(--cream-quiet);
+  max-width: 52ch;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE
+   -------------------------------------------------------------------------- */
+
+@media (min-width: 60rem) {
+  .r81-welcome .prose {
+    font-size: 1.1875rem;
+  }
+}
+
+@media (max-width: 40rem) {
+  .r81-pivot {
+    height: 270vh;
+  }
+
+  /* The line is a fixed string on one line, so its size is bounded by the
+     narrowest viewport it has to survive, not by taste. */
+  .r81-pivot__line {
+    font-size: 11.5vw;
+    gap: 0.14em;
+  }
+
+  .r81-hero {
+    padding-block: 7rem 8rem;
+  }
+
+  .r81-door {
+    grid-template-columns: 2.25rem 1fr auto;
+  }
+
+  .r81-whispers li {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 22.5rem) {
+  .r81-pivot__line {
+    font-size: 11vw;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   REDUCED MOTION
+   Nothing moves, nothing is withheld. The pivot resolves to its finished
+   state and gives back the scroll length it was borrowing.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .r81 *,
+  .r81 *::before,
+  .r81 *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .r81-js .r81 [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .r81-caret {
+    opacity: 1;
+  }
+
+  .r81-pivot {
+    height: auto;
+  }
+
+  .r81-stage {
+    position: static;
+    min-height: 100svh;
+    height: auto;
+    padding-block: clamp(6rem, 18vh, 10rem);
+  }
+
+  .r81-bloom,
+  .r81-no,
+  .r81-pivot__coda {
+    transform: none;
+  }
+}

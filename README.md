@@ -1,5 +1,36 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## The homepage
+
+`src/app/page.tsx` is a five-act reading of Romans 8:1 — darkness, the weight of
+accusation, the word that turns it, the welcome, the morning. It has its own
+stylesheet (`src/app/romans.css`) and does not share the interior pages' design
+system.
+
+Two things are worth knowing before editing it:
+
+**Light fields, then plates.** Every backdrop is a layered gradient study built
+in CSS (`.lf-void`, `.lf-chamber`, `.lf-wash`, `.lf-morning`). The page is
+complete and cinematic with no images at all. A *plate* is an optional
+photograph that layers on top of a light field, underneath the same grade and
+grain, so the visual language holds either way. `src/lib/plates.ts` lists the
+five frames and resolves each to `null` until its file exists in
+`public/images/romans/`, so a missing plate is never a broken image.
+
+To add them:
+
+```bash
+npm run fetch:plates   # downloads from the URLs in src/lib/plates.ts
+npm run build
+```
+
+**One custom property drives Act III.** `PivotStage` writes scroll progress to
+`--p` (0 → 1) on the pinned section; every transformation on that screen is
+derived from it in CSS. There is no per-element JavaScript, the listener only
+exists while the section is on screen, and under `prefers-reduced-motion` the
+scene resolves to its finished state and gives back the scroll length it was
+borrowing.
+
 ## Getting Started
 
 First, run the development server:

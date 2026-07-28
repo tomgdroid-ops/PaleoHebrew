@@ -1,383 +1,450 @@
-import Link from "next/link";
+import type { Metadata } from "next";
 import Image from "next/image";
-import FadeInSection from "@/components/FadeInSection";
+import Link from "next/link";
 
-const SECTION_CARDS = [
-  {
-    title: "Torah Decoder",
-    icon: (
-      <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-      </svg>
-    ),
+import Frame from "@/components/home/Frame";
+import PivotStage from "@/components/home/PivotStage";
+import Reveal from "@/components/home/Reveal";
+import JsonLd from "@/components/JsonLd";
+import { plate } from "@/lib/plates";
+
+import "./romans.css";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "The Aleph Tav Project — There Is Therefore Now No Condemnation",
+  },
+  description:
+    "Romans 8:1, read slowly. A cinematic descent from accusation into grace — and the mark the Hebrew Scriptures were already using for the same thing.",
+  openGraph: {
+    title: "There Is Therefore Now No Condemnation — Romans 8:1",
     description:
-      'Before Hebrew was an alphabet, it was pictographs carved in stone. The word for "father" - aleph bet - reads "the strength of the house." The word for "son" - bet nun - reads "the house of the seed." Navigate the Torah word by word and see what the ancient letters reveal.',
+      "Romans 8:1, read slowly. A cinematic descent from accusation into grace — and the mark the Hebrew Scriptures were already using for the same thing.",
+  },
+};
+
+/* Each voice sits at its own depth in the room. */
+const WHISPERS = [
+  { text: "not enough.", x: 0 },
+  { text: "too far gone.", x: 22 },
+  { text: "you knew better.", x: 7 },
+  { text: "again.", x: 34 },
+];
+
+/**
+ * Genesis 1:1, pointed, straight from this project's own OSHB data
+ * (data/torah/genesis.json). Positions 3 and 5 carry lemma H0853 — the
+ * particle no English Bible renders.
+ */
+const GENESIS_1_1 = [
+  { position: 0, he: "בְּרֵאשִׁ֖ית", mark: false },
+  { position: 1, he: "בָּרָ֣א", mark: false },
+  { position: 2, he: "אֱלֹהִ֑ים", mark: false },
+  { position: 3, he: "אֵ֥ת", mark: true },
+  { position: 4, he: "הַשָּׁמַ֖יִם", mark: false },
+  { position: 5, he: "וְאֵ֥ת", mark: true },
+  { position: 6, he: "הָאָֽרֶץ", mark: false },
+];
+
+/** The mark, standing in the English where nothing else does. */
+function Et() {
+  return (
+    <span className="r81-et" dir="rtl" role="img" aria-label="aleph tav, untranslated">
+      &#x10900;&#x10915;
+    </span>
+  );
+}
+
+const DOORS = [
+  {
     href: "/torah/genesis/1",
-    gradient: "from-amber-900/80 via-amber-800/60 to-yellow-900/80",
-    gradientLight: "from-amber-200/80 via-amber-100/60 to-yellow-200/80",
+    title: "The Torah, word by word",
+    desc: "Open Genesis and take the text apart one Hebrew word at a time — pictograph, root, and gloss, side by side.",
   },
   {
-    title: "The Ancient Alphabet",
-    icon: (
-      <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h8m-8 6h16M15 11l2 5 2-5" />
-      </svg>
-    ),
-    description:
-      "All 22 letters of the Hebrew alphabet traced from their Proto-Sinaitic pictographic origins to the modern square script. See each letter's pictograph, name, meaning, gematria value, and how it evolved across 3,000 years.",
     href: "/alphabet",
-    gradient: "from-stone-900/80 via-stone-800/60 to-amber-900/80",
-    gradientLight: "from-stone-200/80 via-stone-100/60 to-amber-200/80",
+    title: "Twenty-two letters",
+    desc: "Every Hebrew letter began as a picture of a thing. See where each one came from and what it still carries.",
   },
   {
-    title: "From Stone to Script",
-    icon: (
-      <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    description:
-      "Trace the evolution of all 22 Hebrew letters from Proto-Sinaitic inscriptions through Phoenician, Paleo-Hebrew, and Aramaic transitions to the modern square script - and understand why the letter forms changed but the meanings endured.",
-    href: "/stone-to-script",
-    gradient: "from-yellow-900/80 via-stone-800/60 to-stone-900/80",
-    gradientLight: "from-yellow-200/80 via-stone-100/60 to-stone-200/80",
-  },
-  {
-    title: "The Aleph Tav (\u05D0\u05EA) Study",
-    icon: (
-      <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-      </svg>
-    ),
-    description:
-      "The Aleph Tav (\u05D0\u05EA) is not translated in any English Bible. Yet it appears and disappears before names across the Hebrew text in a pattern that tracks covenant standing with precision. When someone walks with God, the marker is present. When they fall away, it vanishes.",
     href: "/aleph-tav",
-    gradient: "from-indigo-900/80 via-slate-800/60 to-amber-900/80",
-    gradientLight: "from-indigo-200/80 via-slate-100/60 to-amber-200/80",
-  },
-  {
-    title: "Messianic Prophecies",
-    icon: (
-      <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-      </svg>
-    ),
-    description:
-      "From the method of death described a thousand years before crucifixion existed to the birthplace named seven centuries in advance - each prophecy examined alongside its New Testament fulfillment and verified against the Dead Sea Scrolls, ancient codices, and archaeology.",
-    href: "/prophecies",
-    gradient: "from-purple-900/80 via-amber-900/60 to-stone-900/80",
-    gradientLight: "from-purple-200/80 via-amber-100/60 to-stone-200/80",
-  },
-  {
-    title: "Beyond the Reach of AI",
-    icon: (
-      <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-      </svg>
-    ),
-    description:
-      "The Torah operates under seven simultaneous constraint systems - equidistant letter sequences, pictographic root meanings, gematria relationships, chiastic literary structures, prophetic typology, covenant markers, and intertextual weaving. No AI, no human committee, and no editorial process could satisfy all seven at once.",
-    href: "/research/beyond-ai",
-    gradient: "from-slate-900/80 via-indigo-900/60 to-stone-900/80",
-    gradientLight: "from-slate-200/80 via-indigo-100/60 to-stone-200/80",
+    title: "The mark nobody translates",
+    desc: "Aleph and Tav, tracked across 23,213 verses — where the mark stands, and where it goes missing.",
   },
 ];
 
-const SAMPLE_WORDS = [
-  {
-    modern: "\u05D1\u05E8\u05D0\u05E9\u05D9\u05EA",
-    paleo:
-      "\uD802\uDD01\uD802\uDD12\uD802\uDD00\uD802\uDD14\uD802\uDD09\uD802\uDD15",
-    name: "Bereshit (In the Beginning)",
-    meaning:
-      "The Son of the house, the Head of God, consumed by His own hand on a cross",
+const PAGE_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "There Is Therefore Now No Condemnation — Romans 8:1",
+  url: "https://alephtavproject.com",
+  description:
+    "Romans 8:1 read as a five-act descent from accusation into grace, and the covenant mark the Hebrew Scriptures use for the same idea.",
+  isPartOf: {
+    "@type": "WebSite",
+    name: "The Aleph Tav Project",
+    url: "https://alephtavproject.com",
   },
-  {
-    modern: "\u05EA\u05D5\u05E8\u05D4",
-    paleo: "\uD802\uDD15\uD802\uDD05\uD802\uDD12\uD802\uDD04",
-    name: "Torah (Instruction)",
-    meaning: "The sign secured by the head who reveals",
+  about: {
+    "@type": "Quotation",
+    text: "There is therefore now no condemnation for those who are in Christ Jesus.",
+    citation: "Romans 8:1",
   },
-  {
-    modern: "\u05D0\u05D1",
-    paleo: "\uD802\uDD00\uD802\uDD01",
-    name: "Av (Father)",
-    meaning: "The strength of the house",
-  },
-];
+};
 
-const BOOKS = [
-  {
-    name: "Genesis",
-    nameHe: "\u05D1\u05E8\u05D0\u05E9\u05D9\u05EA",
-    slug: "genesis",
-  },
-  { name: "Exodus", nameHe: "\u05E9\u05DE\u05D5\u05EA", slug: "exodus" },
-  {
-    name: "Leviticus",
-    nameHe: "\u05D5\u05D9\u05E7\u05E8\u05D0",
-    slug: "leviticus",
-  },
-  {
-    name: "Numbers",
-    nameHe: "\u05D1\u05DE\u05D3\u05D1\u05E8",
-    slug: "numbers",
-  },
-  {
-    name: "Deuteronomy",
-    nameHe: "\u05D3\u05D1\u05E8\u05D9\u05DD",
-    slug: "deuteronomy",
-  },
-];
+/* A flat plain, one hairline of first light, and haze. Act I and Act V share
+   it exactly: the page ends where it began, in daylight. */
+function Valley() {
+  return (
+    <>
+      <div className="glow" />
+      <div className="ground" />
+      <div className="haze" />
+      <div className="horizon-line" />
+    </>
+  );
+}
 
-const STATS = [
-  { number: "23,213", label: "Verses Analyzed for Aleph Tav Markers" },
-  { number: "37", label: "Messianic Prophecies Examined" },
-  { number: "7", label: "Simultaneous Constraint Systems" },
-  { number: "22", label: "Letters Traced Across 3,000 Years" },
-];
+/* A beam angled into the right third, and the pool it makes on the floor. */
+function Chamber() {
+  return (
+    <>
+      <div className="shaft" />
+      <div className="pool" />
+    </>
+  );
+}
+
+/* Act III stacks two of these and cross-fades them, so it needs the light
+   field wrapper rather than just the geometry. */
+function ChamberLight({ warm = false }: { warm?: boolean }) {
+  return (
+    <div className={`frame__light lf-chamber${warm ? " lf-chamber--warm" : ""}`}>
+      <Chamber />
+    </div>
+  );
+}
+
+function Arrow() {
+  return (
+    <svg
+      className="r81-door__arrow"
+      width="26"
+      height="10"
+      viewBox="0 0 26 10"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      aria-hidden="true"
+    >
+      <path d="M0 5h24M20 1l4 4-4 4" />
+    </svg>
+  );
+}
 
 export default function HomePage() {
   return (
-    <div>
-      {/* ===== 1. HERO SECTION ===== */}
-      <section className="homepage-hero">
-        <div className="homepage-hero-bg">
-          <Image
-            src="/images/homepage-hero.png"
-            alt="Ancient study with Torah scrolls and golden light"
-            fill
-            priority
-            sizes="100vw"
-            style={{ objectFit: "cover" }}
-          />
-        </div>
-        <div className="homepage-hero-overlay" />
-        <div className="homepage-hero-inner">
-          <span
-            className="paleo-glyph homepage-hero-watermark"
-            aria-hidden="true"
-            dir="rtl"
-          >
-            {"\uD802\uDD00\uD802\uDD15"}
-          </span>
+    <>
+      {/* Marks the document before first paint, so the reveal system may hide
+          things it is certain it can bring back. No JS, nothing hidden. */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: "document.documentElement.classList.add('r81-js')",
+        }}
+      />
+      <JsonLd data={PAGE_JSONLD} />
+      <Reveal />
 
-          <h1 className="homepage-hero-title font-display">
-            The Aleph Tav Project
-          </h1>
-          <p className="homepage-hero-tagline font-serif">
-            Uncovering the Divine Architecture of the Hebrew Scriptures
-          </p>
-          <p className="homepage-hero-desc">
-            Covenant markers that track God&apos;s promises across 23,000
-            verses. Prophecies written centuries apart, fulfilled in one person.
-            Structural patterns no human author could have coordinated. Explore
-            the evidence through interactive study tools and original research.
-          </p>
+      <div className="r81">
+        {/* ============================================================
+            ACT I — THE UNFINISHED SENTENCE
+            An hour before dawn. The verse begins and does not finish.
+            ============================================================ */}
+        <section className="r81-hero">
+          <Frame light="lf-void" plateKey="void" priority>
+            <Valley />
+          </Frame>
 
-          <div className="flex flex-wrap justify-center gap-4 mt-8">
-            <Link href="/research" className="homepage-hero-cta-primary">
-              See the Evidence
-            </Link>
-            <Link
-              href="/torah/genesis/1"
-              className="homepage-hero-cta-secondary"
-            >
-              Begin Exploring
-            </Link>
+          <div className="act">
+            <p className="label r81-hero__label">Romans 8:1</p>
+            <h1 className="display r81-hero__line">
+              There is therefore now
+              <span className="r81-caret" aria-hidden="true" />
+            </h1>
           </div>
-        </div>
-      </section>
 
-      {/* ===== 2. THESIS STATEMENT ===== */}
-      <FadeInSection>
-        <section className="max-w-3xl mx-auto px-6 py-24 text-center">
-          <div className="thesis-divider mb-10" />
-          <p className="font-serif text-lg leading-relaxed text-foreground/70 italic">
-            The Hebrew Scriptures are not a single-layer text. Beneath the
-            narrative surface lie interlocking systems of evidence - linguistic,
-            structural, prophetic, and mathematical - that span thousands of
-            years and dozens of human authors, yet operate with a coherence that
-            points to a single divine hand. The Aleph Tav Project makes these
-            hidden layers visible and explorable.
-          </p>
-          <div className="thesis-divider mt-10" />
-        </section>
-      </FadeInSection>
-
-      {/* ===== 3. SECTION CARDS ===== */}
-      <FadeInSection>
-        <section className="max-w-6xl mx-auto px-4 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {SECTION_CARDS.map((card) => (
-              <Link
-                key={card.title}
-                href={card.href}
-                className="section-card group"
-              >
-                <div
-                  className={`section-card-bg bg-gradient-to-br ${card.gradient}`}
-                  data-gradient-light={card.gradientLight}
-                />
-                <div className="section-card-content">
-                  <div className="flex items-center gap-2 mb-3">
-                    {card.icon}
-                    <h3 className="text-xl font-bold">{card.title}</h3>
-                  </div>
-                  <p className="text-sm leading-relaxed opacity-90">
-                    {card.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      </FadeInSection>
-
-      {/* ===== 4. EVIDENCE AT A GLANCE ===== */}
-      <FadeInSection>
-        <section className="stats-bar py-16">
-          <div className="max-w-5xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {STATS.map((stat) => (
-              <div key={stat.label}>
-                <div className="font-display text-4xl font-bold text-accent mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-xs uppercase tracking-[0.1em] text-muted">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      </FadeInSection>
-
-      {/* ===== 5. WHAT THE ANCIENT LETTERS REVEAL ===== */}
-      <FadeInSection>
-        <section className="max-w-5xl mx-auto px-4 py-28">
-          <div className="text-center mb-12">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
-              Torah Decoder
+          <div className="r81-hero__foot">
+            <span className="r81-thread" aria-hidden="true" />
+            <span className="r81-hero__cue" aria-hidden="true">
+              The sentence continues
             </span>
-            <h2 className="text-3xl font-display font-bold mt-2">
-              What the Ancient Letters Reveal
+            <span className="sr-only">Scroll to continue reading.</span>
+          </div>
+        </section>
+
+        {/* ============================================================
+            ACT II — THE WEIGHT
+            The voice, not the verdict. The verdict belongs to Act III.
+            ============================================================ */}
+        <section className="r81-weight" aria-labelledby="r81-weight-heading">
+          <Frame light="lf-chamber" plateKey="chamberCold">
+            <Chamber />
+          </Frame>
+
+          <div className="act">
+            <p className="label" data-reveal>
+              I — The Weight
+            </p>
+            <h2
+              className="r81-weight__line"
+              id="r81-weight-heading"
+              data-reveal
+              style={{ "--d": 1 } as React.CSSProperties}
+            >
+              You know the voice. It uses your own name.
             </h2>
-            <p className="text-sm text-muted mt-3 max-w-xl mx-auto leading-relaxed">
-              Click any word in the Torah to decompose it into Paleo-Hebrew
-              pictographs and uncover the meaning embedded in each letter.
+
+            <ul
+              className="r81-whispers"
+              data-reveal
+              style={{ "--d": 2 } as React.CSSProperties}
+            >
+              {WHISPERS.map((whisper, i) => (
+                <li
+                  key={whisper.text}
+                  style={{ "--i": i, "--x": whisper.x } as React.CSSProperties}
+                >
+                  {whisper.text}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* ============================================================
+            ACT III — THE WORD
+            One word arrives and the room changes temperature. The old word
+            is never struck through; it simply stops being the brightest
+            thing on the screen.
+            ============================================================ */}
+        <PivotStage className="r81-pivot">
+          <div className="r81-stage">
+            <div className="frame grain" aria-hidden="true">
+              <ChamberLight />
+              <PivotPlate which="cold" />
+              <ChamberLight warm />
+              <PivotPlate which="warm" />
+              <div className="frame__grade grade-chamber" />
+            </div>
+            <div className="r81-bloom" aria-hidden="true" />
+
+            <div className="act">
+              <p className="label">II — The Word</p>
+              <h2 className="display r81-pivot__line">
+                <span className="r81-no">No</span>{" "}
+                <span className="r81-cond">condemnation</span>
+              </h2>
+              <p className="r81-pivot__coda">
+                Not softened. Not suspended. <em>Removed.</em>
+              </p>
+            </div>
+          </div>
+        </PivotStage>
+
+        {/* ============================================================
+            ACT IV — THE WELCOME
+            The page turns to paper. After five screens of night, the absence
+            of an image is the strongest image available.
+            ============================================================ */}
+        <section className="r81-welcome" aria-labelledby="r81-welcome-heading">
+          <div className="r81-welcome__wash">
+            <div className="frame grain" aria-hidden="true">
+              <div className="frame__light lf-wash" />
+            </div>
+          </div>
+
+          <div className="act r81-welcome__body">
+            <p className="label" data-reveal>
+              III — The Welcome
+            </p>
+            <h2
+              className="display r81-welcome__phrase"
+              id="r81-welcome-heading"
+              data-reveal
+              style={{ "--d": 1 } as React.CSSProperties}
+            >
+              for those who are
+            </h2>
+
+            <p
+              className="prose"
+              data-reveal
+              style={{ "--d": 2 } as React.CSSProperties}
+            >
+              Not <em>for those who managed it</em>. Not{" "}
+              <em>for those who finally got it right</em>. The sentence closes
+              the condition before it can open.
+            </p>
+
+            <div className="r81-mark">
+              <p className="prose" data-reveal>
+                Long before Paul wrote that line, the Hebrew text was already
+                carrying a mark that nobody translates — two letters, the first
+                and the last of the alphabet. It stands in the very first
+                sentence of the Bible. Twice.
+              </p>
+
+              <figure
+                className="r81-specimen"
+                data-reveal
+                style={{ "--d": 1 } as React.CSSProperties}
+              >
+                <p className="r81-specimen__he" lang="he" dir="rtl">
+                  {GENESIS_1_1.map((word) => (
+                    <span
+                      key={word.position}
+                      className={word.mark ? "is-mark" : undefined}
+                    >
+                      {word.he}
+                    </span>
+                  ))}
+                </p>
+
+                <p className="r81-specimen__en">
+                  In the beginning God created <Et /> the heavens and <Et /> the
+                  earth.
+                </p>
+
+                <figcaption>
+                  Genesis 1:1 — twice in the Hebrew, twice absent in English
+                </figcaption>
+              </figure>
+
+              <div data-reveal style={{ "--d": 2 } as React.CSSProperties}>
+                <p className="prose" style={{ marginTop: "clamp(2rem,5vh,3rem)" }}>
+                  This project follows that mark through the text. Where it
+                  stands, and where it goes missing.
+                </p>
+                <Link href="/aleph-tav" className="r81-link">
+                  Follow the mark through the text
+                  <svg
+                    width="18"
+                    height="8"
+                    viewBox="0 0 18 8"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.2"
+                    aria-hidden="true"
+                  >
+                    <path d="M0 4h16M13 1l3 3-3 3" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================
+            ACT V — THE MORNING
+            The same valley as Act I, and the sentence, whole, for the
+            first time.
+            ============================================================ */}
+        <section className="r81-morning" aria-labelledby="r81-morning-heading">
+          <Frame light="lf-morning" grade="grade-warm" plateKey="morning">
+            <Valley />
+          </Frame>
+
+          <div className="act">
+            <p className="label" data-reveal>
+              IV — The Morning
+            </p>
+            <h2
+              className="display r81-verse"
+              id="r81-morning-heading"
+              data-reveal
+              style={{ "--d": 1 } as React.CSSProperties}
+            >
+              There is therefore now <b>no condemnation</b> for those who are in
+              Christ Jesus.
+            </h2>
+            <p
+              className="r81-morning__ref"
+              data-reveal
+              style={{ "--d": 2 } as React.CSSProperties}
+            >
+              Romans 8:1
+            </p>
+            <p
+              className="r81-morning__close"
+              data-reveal
+              style={{ "--d": 3 } as React.CSSProperties}
+            >
+              The sentence is finished. It was finished before you arrived.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {SAMPLE_WORDS.map((word) => (
-              <div
-                key={word.modern}
-                className="p-6 rounded-xl border border-border bg-surface text-center hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
-              >
-                <div className="flex items-center justify-center gap-4 mb-3">
-                  <span
-                    className="hebrew-text text-2xl font-semibold"
-                    lang="he"
-                    dir="rtl"
-                  >
-                    {word.modern}
-                  </span>
-                  <span className="paleo-glyph text-2xl text-accent" dir="rtl">
-                    {word.paleo}
-                  </span>
-                </div>
-                <p className="font-semibold text-sm">{word.name}</p>
-                <p className="font-serif text-sm text-muted mt-1 italic">
-                  &ldquo;{word.meaning}&rdquo;
-                </p>
-              </div>
-            ))}
-          </div>
-          <div className="text-center mt-10">
-            <Link
-              href="/torah/genesis/1"
-              className="inline-block px-6 py-3 border-2 border-accent/50 text-accent font-semibold rounded-lg hover:bg-accent/10 hover:border-accent transition-all duration-300"
-            >
-              Explore the Full Torah
-            </Link>
-          </div>
         </section>
-      </FadeInSection>
 
-      {/* ===== 6. THE FIVE BOOKS ===== */}
-      <FadeInSection>
-        <section className="max-w-4xl mx-auto px-4 pb-28">
-          <div className="text-center mb-10">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
-              Read
-            </span>
-            <h2 className="text-3xl font-display font-bold mt-2">
-              The Five Books
+        {/* ============================================================
+            EXIT — three doors, set as an index rather than a card grid
+            ============================================================ */}
+        <section className="r81-exit" aria-labelledby="r81-exit-heading">
+          <Frame light="lf-doorway" plateKey="threshold" />
+
+          <div className="act">
+            <h2 className="r81-exit__intro" id="r81-exit-heading" data-reveal>
+              Begin anywhere.
             </h2>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-            {BOOKS.map((book) => (
-              <Link
-                key={book.slug}
-                href={`/torah/${book.slug}/1`}
-                className="book-strip-cell"
-              >
-                <div
-                  className="hebrew-text text-xl font-semibold"
-                  lang="he"
-                  dir="rtl"
+
+            <div className="r81-doors">
+              {DOORS.map((door, i) => (
+                <Link
+                  key={door.href}
+                  href={door.href}
+                  className="r81-door"
+                  data-reveal
+                  style={{ "--d": i + 1 } as React.CSSProperties}
                 >
-                  {book.nameHe}
-                </div>
-                <div className="text-[0.7rem] uppercase tracking-[0.08em] text-muted mt-1">
-                  {book.name}
-                </div>
-              </Link>
-            ))}
+                  <span className="r81-door__n" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="r81-door__title">{door.title}</h3>
+                  <Arrow />
+                  <p className="r81-door__desc">{door.desc}</p>
+                </Link>
+              ))}
+            </div>
+
+            <div className="r81-sign" data-reveal>
+              <span className="r81-sign__glyph" dir="rtl" aria-hidden="true">
+                &#x10900;&#x10915;
+              </span>
+              <span className="r81-sign__name">The Aleph Tav Project</span>
+            </div>
+
+            <p className="r81-note">
+              This project reads the Hebrew Scriptures through pictographic,
+              structural, and covenantal lenses. Scholars differ on how far
+              those readings can be pressed. Everything here is offered as
+              study, alongside the standard lexicons — never in place of them.
+            </p>
           </div>
         </section>
-      </FadeInSection>
-
-      {/* ===== 7. CLOSING CTA ===== */}
-      <FadeInSection>
-        <section className="text-center py-24 px-4">
-          <span
-            className="paleo-glyph text-7xl text-accent opacity-20 block mb-6"
-            aria-hidden="true"
-            dir="rtl"
-          >
-            {"\uD802\uDD00\uD802\uDD15"}
-          </span>
-          <p className="font-serif text-xl italic text-muted max-w-lg mx-auto leading-relaxed">
-            &ldquo;I am the Aleph and the Tav, the Beginning and the
-            End.&rdquo;
-          </p>
-          <p className="text-sm text-muted mt-2">Revelation 22:13</p>
-          <div className="flex flex-wrap justify-center gap-4 mt-8">
-            <Link
-              href="/research"
-              className="inline-block px-6 py-3 bg-accent text-[#1a1410] font-semibold rounded-lg hover:bg-[#d4b36a] hover:-translate-y-0.5 transition-all duration-300"
-            >
-              Explore the Research
-            </Link>
-            <Link
-              href="/guide"
-              className="inline-block px-6 py-3 border-2 border-accent/50 text-accent font-semibold rounded-lg hover:bg-accent/10 hover:border-accent transition-all duration-300"
-            >
-              Getting Started Guide
-            </Link>
-          </div>
-        </section>
-      </FadeInSection>
-
-      {/* ===== DISCLAIMER ===== */}
-      <div className="max-w-4xl mx-auto px-4 pb-8 text-center text-xs text-muted border-t border-border pt-6">
-        <p>
-          Pictographic analysis represents one interpretive lens for Hebrew
-          words. Scholars debate the validity of reading pictographic meanings
-          into fully alphabetic Hebrew text. This app presents these readings as
-          enrichment and study aids, not as replacement for lexical definitions.
-        </p>
       </div>
-    </div>
+    </>
+  );
+}
+
+/** The pivot cross-fades one room against itself, so its plates are paired. */
+function PivotPlate({ which }: { which: "cold" | "warm" }) {
+  const photo = plate(which === "cold" ? "chamberCold" : "chamberWarm");
+  if (!photo) return null;
+  return (
+    <Image
+      className={`frame__plate plate-${which}`}
+      src={photo.file}
+      alt=""
+      fill
+      sizes="100vw"
+    />
   );
 }

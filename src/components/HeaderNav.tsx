@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTheme } from "@/contexts/ThemeContext";
 
 /* ------------------------------------------------------------------ */
@@ -71,7 +72,13 @@ function Chevron({ open }: { open: boolean }) {
 
 export default function HeaderNav() {
   const { theme, toggleTheme } = useTheme();
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  /* The homepage opens on a full-viewport night frame. The header floats over
+     it in cream and scrolls away with the act, rather than capping the frame
+     with a bar. */
+  const overlay = pathname === "/";
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -97,11 +104,18 @@ export default function HeaderNav() {
     closeTimer.current = setTimeout(() => setOpenDropdown(null), 150);
   }
 
+  const linkTone = overlay
+    ? "text-[rgba(243,238,228,0.72)] hover:text-[#f3eee4]"
+    : "text-muted hover:text-foreground";
+  const buttonTone = overlay
+    ? "bg-white/10 hover:bg-white/20 text-[#f3eee4]"
+    : "bg-surface-hover hover:bg-border";
+
   /* ---- THEME TOGGLE BUTTON ---- */
   const themeButton = (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg bg-surface-hover hover:bg-border transition-colors"
+      className={`p-2 rounded-lg transition-colors ${buttonTone}`}
       aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
       title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
     >
@@ -126,14 +140,25 @@ export default function HeaderNav() {
   );
 
   return (
-    <header className="border-b border-border bg-surface relative z-40">
+    <header
+      className={
+        overlay
+          ? "absolute inset-x-0 top-0 z-50"
+          : "border-b border-border bg-surface relative z-40"
+      }
+    >
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0">
           <span className="paleo-glyph text-accent text-2xl shrink-0">𐤀𐤕</span>
-          <h1 className="text-base sm:text-lg font-semibold text-foreground leading-tight truncate">
+          {/* A wordmark, not a heading — every page owns its own <h1>. */}
+          <span
+            className={`text-base sm:text-lg font-semibold leading-tight truncate ${
+              overlay ? "text-[#f3eee4]" : "text-foreground"
+            }`}
+          >
             The Aleph Tav Project
-          </h1>
+          </span>
         </Link>
 
         {/* Desktop nav + theme toggle + hamburger */}
@@ -146,7 +171,7 @@ export default function HeaderNav() {
                   <Link
                     key={entry.href}
                     href={entry.href}
-                    className="px-3 py-2 text-muted hover:text-foreground transition-colors rounded-md"
+                    className={`px-3 py-2 transition-colors rounded-md ${linkTone}`}
                   >
                     {entry.label}
                   </Link>
@@ -163,7 +188,7 @@ export default function HeaderNav() {
                 >
                   <button
                     onClick={() => setOpenDropdown(isOpen ? null : entry.label)}
-                    className="px-3 py-2 text-muted hover:text-foreground transition-colors rounded-md flex items-center gap-1.5"
+                    className={`px-3 py-2 transition-colors rounded-md flex items-center gap-1.5 ${linkTone}`}
                   >
                     {entry.label}
                     <Chevron open={isOpen} />
@@ -196,7 +221,7 @@ export default function HeaderNav() {
           {/* Mobile hamburger (hidden on lg+) */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="p-2 rounded-lg bg-surface-hover hover:bg-border transition-colors lg:hidden"
+            className={`p-2 rounded-lg transition-colors lg:hidden ${buttonTone}`}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
             {menuOpen ? (

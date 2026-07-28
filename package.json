@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "fetch:plates": "npx tsx scripts/fetch-plates.ts",
     "build:data": "npx tsx scripts/build-all.ts",
     "build:strongs": "npx tsx scripts/build-strongs-data.ts",
     "build:torah": "npx tsx scripts/build-torah-data.ts"

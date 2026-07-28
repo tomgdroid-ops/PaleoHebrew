@@ -20,12 +20,17 @@ const cinzel = Cinzel({
   variable: "--font-cinzel",
   subsets: ["latin"],
   weight: ["400", "700"],
+  // Used by a handful of interior pages only. Preloading it forces every
+  // route — including a homepage that never renders it — to fetch both cuts.
+  preload: false,
 });
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  // 300 carries the homepage display type — Cormorant Light at 9rem is the
+  // difference between cinematic and ecclesiastical.
+  weight: ["300", "400", "500", "600"],
   style: ["normal", "italic"],
 });
 

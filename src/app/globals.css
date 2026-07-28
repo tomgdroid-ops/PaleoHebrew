@@ -63,10 +63,12 @@
   --font-serif: var(--font-cormorant);
 }
 
-/* Paleo-Hebrew font */
+/* Paleo-Hebrew font. The woff2 is subset to the Phoenician block only —
+   5 KB against 52 KB for the full TrueType, which is kept as a fallback. */
 @font-face {
   font-family: 'NotoSansPhoenician';
-  src: url('/fonts/NotoSansPhoenician-Regular.ttf') format('truetype');
+  src: url('/fonts/NotoSansPhoenician-Regular.woff2') format('woff2'),
+       url('/fonts/NotoSansPhoenician-Regular.ttf') format('truetype');
   font-display: swap;
   unicode-range: U+10900-U+1091F;
 }
