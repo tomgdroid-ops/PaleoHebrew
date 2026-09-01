@@ -55,20 +55,39 @@ cd android
 
 ## Installing
 
-### Phone
+The phone and the watch are two different devices with two different menus, and Samsung
+names the tap-target differently on each. Read the right section.
+
+### Phone (Galaxy S22)
+
+**No developer mode needed.** Sideloading the phone APK does not require it:
+
+1. Download `phone-apk` from the CI run and unzip it to get `app-debug.apk`.
+2. Tap the APK in **My Files**. Android will offer to let the Files app install unknown
+   apps — allow it, then confirm the install.
+
+You only need developer mode on the phone if you want to install over USB from a computer.
+In that case: **Settings → About phone → Software information → tap "Build number" 7 times**
+(it prompts for your PIN partway through), then **Settings → Developer options → USB
+debugging**, and:
 
 ```bash
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-### Watch
+Note the phone says **Build number**, under **Software information**. It does *not* say
+"Software version" — that is the watch's wording, below.
 
-The Galaxy Watch needs developer access once:
+### Watch (Galaxy Watch 4 or later)
 
-1. On the watch: **Settings → About watch → Software → tap Software version 5 times**.
-2. **Settings → Developer options → ADB debugging** on, and **Debug over Wi-Fi** on.
-3. Note the IP shown under Debug over Wi-Fi, with the watch on the same Wi-Fi as your
-   computer.
+The watch does need developer mode, and there is no way to sideload to it from the phone
+alone — you need a computer with `adb` on the same Wi-Fi network.
+
+1. On the **watch**: **Settings → About watch → Software information → tap "Software
+   version" repeatedly** until it says *Developer mode turned on*.
+2. **Settings → Developer options →** turn on **ADB debugging** *and* **Debug over Wi-Fi**.
+3. Under Debug over Wi-Fi the watch shows an IP address and port. Note it. Keep the watch
+   and your computer on the same Wi-Fi.
 
 ```bash
 adb connect <watch-ip>:5555
