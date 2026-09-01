@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Heart Rate Sync</string>
+    <string name="notification_channel_name">Heart rate measurement</string>
+    <string name="notification_title">Measuring heart rate</string>
+    <string name="notification_text">Streaming to your phone</string>
+</resources>
