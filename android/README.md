@@ -85,9 +85,29 @@ alone — you need a computer with `adb` on the same Wi-Fi network.
 
 1. On the **watch**: **Settings → About watch → Software information → tap "Software
    version" repeatedly** until it says *Developer mode turned on*.
-2. **Settings → Developer options →** turn on **ADB debugging** *and* **Debug over Wi-Fi**.
-3. Under Debug over Wi-Fi the watch shows an IP address and port. Note it. Keep the watch
-   and your computer on the same Wi-Fi.
+2. **Settings → Developer options → ADB debugging** on. If the menu offers you
+   *"Disable ADB debugging"*, it is **already on** — that wording is the enabled state.
+   Leave it alone.
+3. Still in Developer options, turn on **Turn off automatic Wi-Fi**. Without this the watch
+   defers to the phone over Bluetooth instead of joining Wi-Fi, and the debugging option
+   stays greyed out or missing.
+4. Put the watch on the **same Wi-Fi network as your computer**.
+5. Turn on **Wireless debugging** (older watches call this **Debug over Wi-Fi**).
+
+Then pair. Newer watches use a pairing code; older ones connect directly.
+
+**Newer (Wireless debugging with pairing):** tap **Pair new device** on the watch. It shows
+an IP, a *pairing* port, and a six-digit code. Note that the pairing port and the connect
+port are different numbers — the Wireless debugging main screen shows the connect port.
+
+```bash
+adb pair <watch-ip>:<pairing-port>     # enter the six-digit code when prompted
+adb connect <watch-ip>:<connect-port>
+adb devices                            # confirm the watch is listed
+adb -s <watch-ip>:<connect-port> install -r wear/build/outputs/apk/debug/wear-debug.apk
+```
+
+**Older (Debug over Wi-Fi, no pairing):**
 
 ```bash
 adb connect <watch-ip>:5555
