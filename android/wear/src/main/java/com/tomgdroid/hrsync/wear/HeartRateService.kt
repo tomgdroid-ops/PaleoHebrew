@@ -69,7 +69,6 @@ class HeartRateService : Service() {
                 DataTypeAvailability.AVAILABLE -> HrAccuracy.GOOD
                 DataTypeAvailability.ACQUIRING -> HrAccuracy.UNKNOWN
                 DataTypeAvailability.UNAVAILABLE -> HrAccuracy.NO_CONTACT
-                DataTypeAvailability.UNAVAILABLE_DEVICE_OFF -> HrAccuracy.NO_CONTACT
                 else -> HrAccuracy.UNKNOWN
             }
         }

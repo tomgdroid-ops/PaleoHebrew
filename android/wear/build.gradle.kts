@@ -48,6 +48,10 @@ dependencies {
 
     implementation(libs.androidx.health.services.client)
     implementation(libs.androidx.concurrent.futures.ktx)
+    // health-services-client returns ListenableFuture, but the transitive
+    // com.google.guava:listenablefuture:1.0 artifact is an empty stub, so the class is not
+    // actually on the compile classpath. A real Guava supplies it.
+    implementation(libs.guava)
     implementation(libs.play.services.wearable)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.compose)
