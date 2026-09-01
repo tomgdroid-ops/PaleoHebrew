@@ -1,7 +1,7 @@
 package com.tomgdroid.hrsync.live
 
 import android.content.Context
-import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Build
 import android.os.VibrationEffect
@@ -73,18 +73,18 @@ class ZoneAlerts(context: Context) {
         // A fresh generator per alert: holding one open for a whole workout keeps the audio
         // path active and needlessly ducks the user's music.
         runCatching {
-            ToneGenerator(AudioAttributes.CONTENT_TYPE_SONIFICATION, TONE_VOLUME).use { tone ->
+            val tone = ToneGenerator(AudioManager.STREAM_NOTIFICATION, TONE_VOLUME)
+            try {
                 tone.startTone(
                     if (entering) ToneGenerator.TONE_PROP_ACK else ToneGenerator.TONE_PROP_NACK,
                     if (entering) 150 else 400,
                 )
                 Thread.sleep(if (entering) 200L else 450L)
+            } finally {
+                tone.release()
             }
         }
     }
-
-    private inline fun <T : ToneGenerator, R> T.use(block: (T) -> R): R =
-        try { block(this) } finally { release() }
 
     private companion object {
         const val MIN_INTERVAL_MILLIS = 8_000L

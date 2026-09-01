@@ -97,14 +97,14 @@ class LiveViewModel(application: Application) : AndroidViewModel(application) {
         val recorded = LiveHrRepository.drainRecorded()
         if (recorded.isEmpty()) return
         dao.insertAll(recorded.map { it.toEntity() })
-        SyncScheduler.runNow(getApplication())
+        SyncScheduler.runNow(getApplication<Application>())
     }
 
     fun setMaxHr(value: Int) = viewModelScope.launch { settingsStore.setMaxHr(value) }
     fun setTargetZones(low: Int, high: Int) = viewModelScope.launch { settingsStore.setTargetZones(low, high) }
     fun setAlertsEnabled(value: Boolean) = viewModelScope.launch { settingsStore.setAlertsEnabled(value) }
     fun setKeepScreenOn(value: Boolean) = viewModelScope.launch { settingsStore.setKeepScreenOn(value) }
-    fun syncNow() = SyncScheduler.runNow(getApplication())
+    fun syncNow() = SyncScheduler.runNow(getApplication<Application>())
 
     private companion object {
         const val TICK_MILLIS = 1_000L
