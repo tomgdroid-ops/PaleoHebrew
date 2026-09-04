@@ -1,7 +1,664 @@
-# Wayfarer Build Prompts (all 13, in order)
+# Wayfarer Build Kit (complete, single file)
 
-Paste one prompt per Claude Code session, in order. Check each prompt's **Done when** list and commit before starting the next. Copy `SPEC.md` and `PARAMETERS.md` into your project's `docs/` folder before prompt 01.
+Contents: Part 1 README (setup, compiling, DAW install). Part 2 SPEC. Part 3 PARAMETERS. Part 4 the 13 build prompts in order.
 
+Before prompt 01, save Part 2 as `docs/SPEC.md` and Part 3 as `docs/PARAMETERS.md` inside your new project folder. Then paste one prompt per Claude Code session, in order, and check each prompt's **Done when** list before moving on.
+
+---
+
+# PART 1: README
+
+# Wayfarer Build Kit
+
+A prompt-driven plan for building **Wayfarer**, a cinematic hybrid synthesizer plugin
+modelled on the feature set of KeySolutions Sounds *Traveler*, in C++ with JUCE 8.
+Target: Windows 10/11, VST3 + Standalone, loading in Studio One, Fender Studio Pro
+and Gig Performer.
+
+Everything here is text. Nothing has been compiled yet. You feed the prompts in
+`prompts/` to Claude Code on your Windows machine, one at a time, and it writes,
+compiles and tests each layer of the synth. `SPEC.md` is the design the prompts
+implement and `PARAMETERS.md` is the parameter map that keeps every prompt
+consistent with the ones before it.
+
+> Naming: the working name is **Wayfarer**. Do not ship it as "Traveler" or use
+> KeySolutions branding. The architecture is a clean-room re-implementation from
+> public feature descriptions. No KeySolutions code, presets or wavetables are used.
+
+---
+
+## 1. What you need installed (once)
+
+| Tool | Version | Notes |
+|---|---|---|
+| Visual Studio 2022 Community | 17.x | Select the **Desktop development with C++** workload. This gives you MSVC, the Windows SDK and CMake integration. |
+| CMake | 3.28 or newer | https://cmake.org/download/ , tick "Add to PATH". |
+| Git for Windows | latest | Enable long paths: `git config --global core.longpaths true` |
+| Ninja (optional) | latest | Faster builds. `winget install Ninja-build.Ninja` |
+| Claude Code | latest | Run it from **Windows Terminal opened as Administrator** for the build steps, so the VST3 can be copied into `C:\Program Files\Common Files\VST3`. |
+| pluginval (optional, recommended) | latest | https://github.com/Tracktion/pluginval/releases . Validates the plugin the way a host would. |
+
+Also enable Windows long paths once (PowerShell as admin):
+
+```powershell
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+```
+
+JUCE 8 is pulled by CMake automatically (prompt 01 sets that up). No VST3 SDK
+download is needed. JUCE bundles it. JUCE's free tier covers personal use.
+Check the current JUCE licence page for any splash screen or revenue conditions.
+
+---
+
+## 2. How to run the prompts
+
+1. Create an empty folder, e.g. `C:\dev\wayfarer`, and `git init` it.
+2. Open Windows Terminal **as Administrator**, `cd C:\dev\wayfarer`, run `claude`.
+3. Copy `SPEC.md` and `PARAMETERS.md` from this kit into `C:\dev\wayfarer\docs\`
+   before prompt 01. Prompt 01 tells Claude to read them and write `CLAUDE.md`
+   so every later session carries the design without you re-pasting it.
+4. Paste `prompts/01-scaffold.md`. Let it finish. Confirm the build passes and
+   the plugin appears in Studio One. Commit.
+5. Run `/clear` (or start a new session) and paste the next prompt. Repeat.
+6. Each prompt ends with a **Done when** list. If any item is not met, reply
+   with the failing item or the error text and let Claude fix it before you move on.
+7. Commit after every prompt. If a later prompt breaks something, `git diff`
+   against the last good commit is your safety net.
+
+Order matters. Each prompt assumes the previous ones are complete:
+
+| # | Prompt | Builds |
+|---|---|---|
+| 01 | Scaffold | CMake + JUCE project, empty plugin that passes audio, CLAUDE.md |
+| 02 | Parameters and state | Full parameter tree, save/load, preset file format |
+| 03 | Oscillators | 3 oscillators, sync, FM, Super stack, wavetable, noise, Vintage drift |
+| 04 | Voices | 16-voice poly, mono, legato, unison, glide, bend, aftertouch, CC learn |
+| 05 | Filters | Ladder 6/12/18/24, NJM2069-style 12/24, stereo/dual routing |
+| 06 | Envelopes | 3 envelopes, ADSR / ADBSSR, stage curves, retrigger |
+| 07 | LFOs and mod matrix | 3 poly LFOs, 21 shapes, 21-slot matrix, 100+ destinations |
+| 08 | Control Tracks | Dual 16-step modulation sequencers |
+| 09 | Arpeggiator | 20 modes, oscillator targeting, per-step envelope |
+| 10 | Effects | EQ, BBD chorus, modulated delay, modulated reverb, plus standalone FX plugins |
+| 11 | GUI | Resizable editor, all panels, preset browser |
+| 12 | Presets | Factory bank, categories, embedded via BinaryData |
+| 13 | QA and release | pluginval, host testing, installer, performance pass |
+
+Expect prompts 03, 05, 07, 10 and 11 to take the longest. Budget one sitting per prompt.
+
+---
+
+## 3. Compiling by hand
+
+Claude does this for you inside each prompt, but you should know the commands.
+
+```bat
+:: from C:\dev\wayfarer, in a terminal opened as Administrator
+cmake -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release --target Wayfarer_VST3 Wayfarer_Standalone
+```
+
+Faster incremental builds with Ninja (run from "x64 Native Tools Command Prompt for VS 2022"):
+
+```bat
+cmake -B build-ninja -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build-ninja --target Wayfarer_VST3
+```
+
+Outputs:
+
+```
+build\Wayfarer_artefacts\Release\VST3\Wayfarer.vst3\        (bundle folder)
+build\Wayfarer_artefacts\Release\Standalone\Wayfarer.exe
+```
+
+With `COPY_PLUGIN_AFTER_BUILD TRUE` in CMake (prompt 01 sets it), the VST3 is
+copied to `C:\Program Files\Common Files\VST3\Wayfarer.vst3` after each build.
+That copy needs an admin terminal. If you would rather not run as admin, set
+`-DJUCE_VST3_COPY_DIR=C:\Users\<you>\VST3` when configuring and add that folder
+to each DAW's plugin search path.
+
+Run tests:
+
+```bat
+cmake --build build --config Release --target WayfarerTests
+build\tests\Release\WayfarerTests.exe
+```
+
+Validate like a host:
+
+```bat
+pluginval --strictness-level 5 --validate "C:\Program Files\Common Files\VST3\Wayfarer.vst3"
+```
+
+---
+
+## 4. Getting it into your DAWs
+
+**Studio One**
+Studio One > Options > Locations > VST Plug-Ins. Make sure
+`C:\Program Files\Common Files\VST3` is listed (it is by default) or add your custom
+folder. Tick "Scan at startup", then restart. If the plugin was blocklisted
+after a crash during development: Options > Locations > VST Plug-Ins > Reset Blocklist.
+
+**Gig Performer**
+Options > Plugin Manager. Under the VST3 tab confirm the search path, then
+"Manage Plugins" > "Scan for new plugins" (or "Rescan all plugins" after a rebuild).
+Gig Performer caches plugin scans, so after every rebuild that changes parameters
+you need a rescan. For live use, Wayfarer's parameters are exposed as VST3
+parameters, so Gig Performer widget-to-parameter mapping and Predictive Loading work.
+
+**Fender Studio Pro**
+Open the application's plugin or preferences settings, confirm the VST3 search
+folder includes `C:\Program Files\Common Files\VST3`, and trigger a rescan. The
+exact menu path could not be verified from this environment. If the plugin does
+not appear, check the host's plugin blocklist first.
+
+After a rebuild while a DAW is open, the DAW usually has the old `.vst3` file
+locked. Close the DAW before building, or build with `JUCE_VST3_COPY_DIR` pointing
+at a scratch folder and copy manually.
+
+---
+
+## 5. Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| `cmake` not found | Reopen the terminal after installing CMake, or use the "x64 Native Tools Command Prompt for VS 2022" which has it. |
+| FetchContent fails to download JUCE | Corporate proxy or offline. `git clone --depth 1 --branch 8.0.9 https://github.com/juce-framework/JUCE.git external/JUCE` and configure with `-DFETCHCONTENT_SOURCE_DIR_JUCE=%CD%\external\JUCE`. |
+| Copy to Common Files fails with access denied | Terminal is not elevated, or the DAW has the plugin loaded. Close DAW, re-run as admin. |
+| Plugin not visible in DAW | Rescan. Check it is 64-bit Release build. Check blocklist. Run pluginval to see if it crashes on load. |
+| Crackles at low buffer sizes | Report the CPU meter reading and buffer size to Claude in prompt 13. Usually oversampling or the reverb needs tuning. |
+| Standalone shows no audio device | Use the Standalone's Options > Audio Settings, pick Windows Audio (WASAPI) exclusive mode or your ASIO device if the ASIO SDK was enabled. |
+| `error C1128: number of sections exceeded` | Add `/bigobj` to MSVC flags (prompt 01's CMake already includes it). |
+| Path too long errors | Enable long paths (section 1) and keep the repo at a short path like `C:\dev\wayfarer`. |
+
+---
+
+## 6. Files in this kit
+
+```
+README.md          this file
+SPEC.md            architecture and behaviour spec (what Wayfarer is)
+PARAMETERS.md      parameter IDs, ranges, mod sources and destinations
+prompts/01..13     the build prompts, in order
+```
+
+---
+
+# PART 2: SPEC.md
+
+# Wayfarer Specification
+
+Wayfarer is a stereo, polyphonic, hybrid virtual-analog / wavetable synthesizer
+plugin (VST3 + Standalone, Windows first) with a modulation-sequencer-driven
+"motion" workflow. This document is the single source of truth for behaviour.
+`PARAMETERS.md` is the source of truth for parameter IDs and ranges.
+
+Reference points (public feature descriptions only): KeySolutions Sounds Traveler
+(2026). Where Traveler's exact behaviour is unknown, this spec picks a concrete
+behaviour and the implementation follows the spec, not guesses about Traveler.
+
+## 1. Signal flow
+
+```
+        +-------+   +-------+   +-------+   +-------+
+        | Osc 1 |   | Osc 2 |   | Osc 3 |   | Noise |
+        +---+---+   +---+---+   +---+---+   +---+---+
+            |           |           |           |
+            +-----------+-----+-----+-----------+
+                              | per-voice stereo mix (level + pan each)
+                       +------+------+
+                       |  Filter A   |  <-- routing: Series / Parallel / Split(L=A, R=B)
+                       |  Filter B   |
+                       +------+------+
+                              | Amp (Env 2) x Velocity x Unison sum
+                    (voices summed here)
+                              |
+                 +------------+------------+
+                 | EQ > Chorus > Delay > Reverb |  (global, one instance)
+                 +------------+------------+
+                              |
+                        Master volume
+```
+
+- Audio path is 32-bit float, stereo from the oscillators onward.
+- Internal oversampling: 2x on the oscillator + filter block (user selectable Off/2x/4x).
+- Block-based modulation: modulators are evaluated once per 32 samples (control rate)
+  and linearly smoothed to audio rate for pitch, cutoff and level. Filter cutoff,
+  oscillator pitch and amp are smoothed per sample.
+
+## 2. Oscillators
+
+Three oscillators plus a noise source per voice.
+
+Common to all three:
+- **Wave**: a single continuous control that morphs Sine → Triangle → Saw → Square → Pulse.
+  Implement as PolyBLEP saw/square with crossfades; Sine and Triangle are direct.
+- **Pulse width** applies in the Square/Pulse region and is a mod destination (PWM).
+- **Range**: Octave (-3..+3, six octaves), Semitone (-12..+12), Fine (-100..+100 cents).
+- **Level** (0..1) and **Pan** (-1..+1), both mod destinations.
+- **Key track** on/off (off = fixed pitch, useful as an FM or drone source).
+- **Phase**: Free-running or Reset on note-on with a start phase.
+
+Oscillator 1 extras:
+- **Hard sync** to Oscillator 2 (Osc 2 is master, Osc 1 resets).
+- **Linear FM** and **Exponential FM**, each with its own amount, source selectable
+  Osc 2 or Osc 3. Linear FM is through-zero. Both amounts are mod destinations.
+
+Oscillator 2 extras:
+- **Super** stack: 7 detuned copies with **Detune** (0..100 cents spread) and
+  **Stereo Spread** (0..1) and **Mix** (center vs sides). When Super is off it
+  is a single oscillator. Copies use the same waveform.
+
+Oscillator 3 extras:
+- **Mode** switch: VA (same as others) or **Wavetable**.
+- Wavetable mode: factory bank of 85 tables (generated by the build, see prompt 03),
+  **Position** (0..1, mod destination, crossfades between frames), import of
+  `.wav` wavetables (Serum-style 2048-sample frames, any frame count; also detect
+  the `clm` chunk), band-limited via mip-mapped per-octave tables.
+- **Duo**: second copy of Osc 3 with **Detune** and **Stereo Spread**.
+
+Noise: White/Pink with **Level** and **Colour** (low-pass tilt), mod destinations.
+
+**Vintage** (global, 0..1): adds slow, non-periodic drift to every oscillator's pitch
+(per-oscillator, per-voice independent random walks, a few cents at max), small
+random start-phase and level jitter, and a slight per-voice cutoff offset. At 0
+the engine is perfectly stable.
+
+## 3. Filters
+
+Two filter units (A and B), each selectable between:
+
+- **Ladder** low-pass, 6 / 12 / 18 / 24 dB per octave. Zero-delay-feedback
+  Moog-style 4-pole with tanh saturation in the feedback path. Slope is selected by
+  taking the output from pole 1, 2, 3 or 4 with resonance scaled accordingly.
+  Self-oscillates at max resonance. Resonance compensation option keeps bass at
+  high resonance.
+- **NJM2069-style** 12 / 24 dB per octave, modelled on the character of the Korg
+  DW-8000 / DSS-1 filter chip: 4-pole OTA-style cascade with soft clipping in
+  each stage, brighter and more aggressive resonance than the ladder, less bass
+  loss at high resonance, and a distinct "bark" when driven. Implement as a
+  Zavalishin-style OTA cascade with per-stage saturation and a resonance feedback
+  path that saturates harder than the ladder.
+
+Per filter: Cutoff (20 Hz..20 kHz, log), Resonance (0..1), Drive (input gain 0..24 dB),
+Key Track (0..200 %), Env Amount (bipolar, from Env 1), LFO Amount (bipolar, from LFO 1),
+Velocity to cutoff.
+
+**Routing**: Series (A then B), Parallel (mixed with Balance), Split (Filter A on the
+left channel, B on the right). **Stereo Offset** detunes cutoff between left and
+right channels of each filter for stereo width even in Series/Parallel.
+
+## 4. Envelopes
+
+Three envelopes: Env 1 (Filter), Env 2 (Amp), Env 3 (Mod). Each:
+
+- **Mode**: ADSR or ADBSSR (Attack, Decay, Break level, Slope time, Sustain, Release).
+  In ADBSSR the decay goes to Break level, then Slope moves to Sustain.
+- Times: 0 ms..20 s (log), curves per stage: Attack curve, Decay curve, Release curve
+  each -1..+1 (linear at 0, exponential/logarithmic at extremes).
+- Velocity sensitivity (0..1), and an overall Depth (Env 1 and 3 only).
+- Env 3 **Trigger**: Note (default), Mod Wheel (retrigger when wheel crosses a
+  threshold going up), Aftertouch, LFO 1 / 2 / 3 cycle (retriggers each time the LFO
+  wraps). This is what makes Env 3 usable as a rhythmic shaper.
+- Legato mode: envelopes do not retrigger on legato notes when glide mode is Legato.
+
+## 5. LFOs
+
+Three LFOs, all **polyphonic** (one instance per voice) with an option to run as
+global (shared phase across voices).
+
+- 21 shapes: Sine, Triangle, Saw Up, Saw Down, Square, Pulse 25 %, Pulse 75 %,
+  Sample & Hold, Smooth Random, Exp Up, Exp Down, Log Up, Log Down, Stairs 4 Up,
+  Stairs 4 Down, Stairs 8, Half Sine, Rectified Sine, Trapezoid, Sine+Saw, Drift (1/f noise).
+- Rate 0.01..50 Hz free, or tempo synced (1/64 .. 8 bars, with dotted and triplet).
+- Start Phase, Fade In (0..10 s), Key Trigger (reset phase on note), One Shot,
+  Polarity (bipolar / unipolar), Smooth (slew on stepped shapes).
+- "Random motion": with Drift shape and Smooth this yields organic movement.
+
+## 6. Modulation matrix
+
+21 slots. Each slot: Source, Destination, Amount (-100..+100 %), Via (secondary
+source that scales the amount, default None), Curve (linear / exponential).
+
+Sources: Env 1, Env 2, Env 3, LFO 1, LFO 2, LFO 3, Control Track A, Control Track B,
+Velocity, Release Velocity, Key Track, Mod Wheel, Aftertouch (channel), Poly Aftertouch,
+Pitch Bend, Expression (CC 11), Breath (CC 2), Macro 1-4, Random (per voice, fixed
+at note-on), Arp Step Value, Constant (+1), Learn 1-4 (MIDI CC learn slots).
+
+Destinations: every entry marked `M` in `PARAMETERS.md` (over 100).
+
+Per-voice sources modulate per-voice; global sources are applied per voice at
+note-on time and continuously thereafter. Amounts sum; destinations clamp to range.
+
+## 7. Control Tracks
+
+Two identical **modulation step sequencers** (A and B). Each writes a repeating
+series of values to any destination through the mod matrix (as a source) and also
+has one direct destination selector for convenience.
+
+- 16 steps, each a bipolar value (-1..+1). **Length** (1..16).
+- Per-step **Step Length** multiplier (x0.5, x1, x2, x3, x4 in steps). 
+- **Rate**: tempo synced (1/64 .. 4 bars) or free Hz.
+- **Smoothing** (0..1): slew between step values, at 1 the track is a continuous curve.
+- **Swing** (0..75 %), **Gate** (0..100 %: fraction of each step the value is held
+  before returning to zero; 100 % = hold, no gaps).
+- **Randomise** amount (0..1): per cycle, each step's value is offset by a random
+  amount scaled by this. Also a "Randomise now" button that rewrites the steps.
+- **Direction**: Forward, Reverse, Ping-Pong, Random.
+- **Trigger**: Free running (synced to host transport) or Retrigger on note-on.
+- Polyphonic option: each voice gets its own track playhead when Retrigger is on.
+
+## 8. Arpeggiator
+
+- On/Off, **Hold/Latch**, **Rate** (1/64 .. 1 bar, dotted/triplet), **Octaves** 1..4,
+  **Gate** (1..200 %), **Swing** (0..75 %), **Velocity source** (Played / Step / Fixed).
+- **20 playback modes**: Up, Down, Up-Down (inclusive), Up-Down (exclusive),
+  Down-Up (inclusive), Down-Up (exclusive), As Played, Reverse Played, Random,
+  Random No Repeat, Chord, Converge, Diverge, Converge-Diverge, Pinky Up, Pinky Down,
+  Thumb Up, Thumb Down, Up x2, Down x2.
+- **Step sequence** (1..16 steps): per step On/Off (rest), Tie, Velocity, Gate,
+  Transpose (-12..+12), and **Env Shape** (-1..+1, scales the amp envelope attack
+  and decay for that step: negative = plucky, positive = swelling).
+- **Oscillator targeting**: choose which oscillators the arp drives (any combination
+  of Osc 1/2/3). Non-targeted oscillators are held as sustained notes from the
+  played chord. This means one hand can play a pad on Osc 2 while Osc 1 arpeggiates.
+- The Arp Step Value (the current step's Env Shape) is a mod matrix source.
+
+## 9. Voicing and MIDI
+
+- Modes: Poly, Mono, Legato. Voices 1..16. Voice stealing: oldest, with a 5 ms fade.
+- Unison 1..16 voices (stacked per note) with Detune (0..100 cents) and Stereo Spread.
+  Voice count is total voices; unison divides polyphony.
+- Glide: time 0..10 s, mode Off / Always / Legato only, **Poly glide** (each voice
+  glides from the last voice's pitch that was assigned to it).
+- Pitch bend range **Up** and **Down** set separately (0..24 semitones).
+- Channel aftertouch and Poly aftertouch as mod sources.
+- MIDI CC Learn: right-click any knob → Learn, next CC received is bound. Four
+  generic Learn slots also available as mod sources. Bindings saved with the preset
+  and, optionally, globally.
+- Sustain pedal (CC 64), All Notes Off, transport-synced modulators follow host PPQ.
+- MPE: not in scope for v1 (matches Traveler at launch). Leave hooks in the voice
+  allocator for per-note channels.
+
+## 10. Effects (global chain, each with On/Off)
+
+1. **EQ**: 3-band. Low shelf (gain, freq), Mid peak (gain, freq, Q), High shelf (gain, freq).
+2. **Chorus** "bucket brigade": three modes. Mode I (slow, wide), Mode II (faster,
+   deeper), Mode I+II (both, classic Juno-style). Rate, Depth, Mix. Modelled as a
+   short modulated delay with BBD-style band limiting and gentle noise.
+3. **Delay** (also built as standalone plugin `WayfarerTime`): dual modulated delay.
+   Modes Dual (independent L/R times) and Ping Pong. Time L/R (sync or ms),
+   Feedback, Mod Rate, Mod Depth (pitch-varies repeats), High cut, Low cut, Mix,
+   Ducking. The modulation is applied to delay read position with interpolation so
+   repeats drift in pitch.
+4. **Reverb** (also built as standalone plugin `WayfarerSpace`): modulated reverb
+   with three algorithms. Room (small FDN, early reflections dominant), Hall (8-line
+   FDN, Householder mixing, moderate modulation), Space (long-decay 8-line FDN with
+   heavier modulation, diffusion and a subtle pitch-drift, tuned to stay clear on
+   the source). Size, Decay, Pre-delay, Damping, Mod Rate, Mod Depth, Low cut, Mix.
+
+## 11. GUI
+
+- Single-window, resizable (scale 75 %..200 %), dark cinematic look, one accent colour.
+- Layout: top bar (preset browser, prev/next, save, master volume, voice meter,
+  CPU meter); Oscillators row; Filters + Envelopes row; Modulation row with tabs
+  (LFOs, Mod Matrix, Control Tracks, Arp); Effects row; footer with macros 1-4.
+- Every knob: double-click resets, Ctrl-drag fine, right-click → MIDI Learn / Unlearn /
+  Add to Mod Matrix.
+- Control Tracks and Arp steps: draggable bar editors.
+- Wavetable display shows current frame with position.
+- Preset browser: categories (Bass, Lead, Pad, Keys, Pluck, Sequence, Motion, FX,
+  Drone, Artist), search, favourites, user folder in `%APPDATA%\Wayfarer\Presets`.
+
+## 12. Non-goals for v1
+
+MPE, sample playback, per-voice effects, macOS builds (the CMake supports it,
+but nothing is tested there), AAX.
+
+## 13. Quality bars
+
+- No allocations, locks or logging on the audio thread after `prepareToPlay`.
+- Denormals disabled (`juce::ScopedNoDenormals`).
+- Passes `pluginval --strictness-level 5`.
+- 16 voices, 16-unison, all FX on, 2x oversampling: under 25 % of one core of a
+  modern desktop CPU at 48 kHz / 128 samples. Measured in prompt 13.
+- Parameter changes never click. State load is sample-accurate and silent.
+
+---
+
+# PART 3: PARAMETERS.md
+
+# Wayfarer Parameter Map
+
+Parameter IDs are stable strings used in `juce::AudioProcessorValueTreeState`,
+preset files and automation. Never rename an ID after prompt 02; add new ones
+instead. Column `M` = valid modulation-matrix destination.
+
+Conventions: `N` in an ID means 1..3 for oscillators / envelopes / LFOs, `X` means
+A or B for filters and control tracks, `S` means step 1..16, `K` means slot 1..21.
+Ranges are the user-facing ranges. Booleans are 0/1. Choice parameters list their
+items in order.
+
+## Global
+
+| ID | Type | Range / Choices | Default | M |
+|---|---|---|---|---|
+| masterVolume | float dB | -60..+6 | 0 | M |
+| masterPan | float | -1..1 | 0 | M |
+| voiceMode | choice | Poly, Mono, Legato | Poly | |
+| voices | int | 1..16 | 8 | |
+| unisonVoices | int | 1..16 | 1 | |
+| unisonDetune | float cents | 0..100 | 12 | M |
+| unisonSpread | float | 0..1 | 0.5 | M |
+| glideTime | float s | 0..10 (log) | 0 | M |
+| glideMode | choice | Off, Always, Legato | Off | |
+| polyGlide | bool | | 0 | |
+| pbUp | int semi | 0..24 | 2 | |
+| pbDown | int semi | 0..24 | 2 | |
+| vintage | float | 0..1 | 0.15 | M |
+| oversampling | choice | Off, 2x, 4x | 2x | |
+| macro1..macro4 | float | 0..1 | 0 | (source) |
+
+## Oscillators (N = 1..3)
+
+| ID | Type | Range / Choices | Default | M |
+|---|---|---|---|---|
+| oscN_on | bool | | osc1 on, others off | |
+| oscN_wave | float | 0..1 (Sine→Tri→Saw→Square→Pulse) | 0.5 | M |
+| oscN_pw | float | 0.05..0.95 | 0.5 | M |
+| oscN_octave | int | -3..3 | 0 | |
+| oscN_semi | int | -12..12 | 0 | |
+| oscN_fine | float cents | -100..100 | 0 | M |
+| oscN_pitch | float semi | -24..24 (mod-only offset, hidden from UI) | 0 | M |
+| oscN_level | float | 0..1 | 0.8 | M |
+| oscN_pan | float | -1..1 | 0 | M |
+| oscN_keytrack | bool | | 1 | |
+| oscN_phaseMode | choice | Free, Reset | Free | |
+| oscN_phase | float | 0..1 | 0 | |
+| osc1_sync | bool | | 0 | |
+| osc1_fmSource | choice | Osc2, Osc3 | Osc2 | |
+| osc1_fmLin | float | 0..1 | 0 | M |
+| osc1_fmExp | float | 0..1 | 0 | M |
+| osc2_super | bool | | 0 | |
+| osc2_superDetune | float cents | 0..100 | 20 | M |
+| osc2_superSpread | float | 0..1 | 0.7 | M |
+| osc2_superMix | float | 0..1 | 0.6 | M |
+| osc3_mode | choice | VA, Wavetable | VA | |
+| osc3_wtIndex | int | 0..(tableCount-1) | 0 | |
+| osc3_wtPosition | float | 0..1 | 0 | M |
+| osc3_duo | bool | | 0 | |
+| osc3_duoDetune | float cents | 0..100 | 10 | M |
+| osc3_duoSpread | float | 0..1 | 0.6 | M |
+| noise_level | float | 0..1 | 0 | M |
+| noise_colour | float | 0..1 (white→dark) | 0.3 | M |
+
+User-imported wavetables are referenced in the preset by file name and stored in
+`%APPDATA%\Wayfarer\Wavetables`. `osc3_wtIndex` above the factory count indexes
+the user list.
+
+## Filters (X = A, B)
+
+| ID | Type | Range / Choices | Default | M |
+|---|---|---|---|---|
+| fltX_type | choice | Ladder6, Ladder12, Ladder18, Ladder24, NJM12, NJM24 | Ladder24 | |
+| fltX_cutoff | float Hz | 20..20000 (log) | 20000 (A), 20000 (B) | M |
+| fltX_res | float | 0..1 | 0.1 | M |
+| fltX_drive | float dB | 0..24 | 0 | M |
+| fltX_keytrack | float | 0..2 | 0.5 | |
+| fltX_envAmt | float | -1..1 | 0.5 (A), 0 (B) | M |
+| fltX_lfoAmt | float | -1..1 | 0 | M |
+| fltX_velAmt | float | 0..1 | 0 | |
+| fltX_resComp | bool | | 1 | |
+| fltX_on | bool | | A on, B off | |
+| filterRouting | choice | Series, Parallel, Split | Series | |
+| filterBalance | float | -1..1 (Parallel only) | 0 | M |
+| filterStereoOffset | float semi | 0..24 | 0 | M |
+
+## Envelopes (N = 1 Filter, 2 Amp, 3 Mod)
+
+| ID | Type | Range / Choices | Default | M |
+|---|---|---|---|---|
+| envN_mode | choice | ADSR, ADBSSR | ADSR | |
+| envN_attack | float s | 0..20 (log) | 0.005 | M |
+| envN_decay | float s | 0..20 (log) | 0.3 | M |
+| envN_break | float | 0..1 | 0.7 | |
+| envN_slope | float s | 0..20 (log) | 0.5 | |
+| envN_sustain | float | 0..1 | 1 (amp), 0.5 others | M |
+| envN_release | float s | 0..20 (log) | 0.3 | M |
+| envN_attackCurve | float | -1..1 | 0 | |
+| envN_decayCurve | float | -1..1 | -0.5 | |
+| envN_releaseCurve | float | -1..1 | -0.5 | |
+| envN_velocity | float | 0..1 | 0.5 (amp), 0 others | |
+| envN_depth | float | -1..1 (env 1 and 3) | 1 | M |
+| env3_trigger | choice | Note, ModWheel, Aftertouch, LFO1, LFO2, LFO3 | Note | |
+
+## LFOs (N = 1..3)
+
+| ID | Type | Range / Choices | Default | M |
+|---|---|---|---|---|
+| lfoN_shape | choice | Sine, Triangle, SawUp, SawDown, Square, Pulse25, Pulse75, SampleHold, SmoothRandom, ExpUp, ExpDown, LogUp, LogDown, Stairs4Up, Stairs4Down, Stairs8, HalfSine, RectSine, Trapezoid, SineSaw, Drift | Sine | |
+| lfoN_rate | float Hz | 0.01..50 (log) | 1 | M |
+| lfoN_sync | bool | | 0 | |
+| lfoN_div | choice | 1/64, 1/32T, 1/32, 1/16T, 1/16, 1/8T, 1/16D, 1/8, 1/4T, 1/8D, 1/4, 1/2T, 1/4D, 1/2, 1/2D, 1 bar, 2 bars, 4 bars, 8 bars | 1/4 | |
+| lfoN_phase | float | 0..1 | 0 | M |
+| lfoN_fadeIn | float s | 0..10 | 0 | |
+| lfoN_keyTrigger | bool | | 1 | |
+| lfoN_oneShot | bool | | 0 | |
+| lfoN_polarity | choice | Bipolar, Unipolar | Bipolar | |
+| lfoN_smooth | float | 0..1 | 0 | |
+| lfoN_global | bool | | 0 | |
+| lfoN_depth | float | 0..1 (scales the LFO as a source) | 1 | M |
+
+## Mod matrix (K = 1..21)
+
+| ID | Type | Choices |
+|---|---|---|
+| modK_source | choice | None, Env1, Env2, Env3, LFO1, LFO2, LFO3, CtrlA, CtrlB, Velocity, RelVelocity, KeyTrack, ModWheel, Aftertouch, PolyAftertouch, PitchBend, Expression, Breath, Macro1, Macro2, Macro3, Macro4, Random, ArpStep, Constant, Learn1, Learn2, Learn3, Learn4 |
+| modK_dest | choice | None, then every `M` parameter in this file, in file order |
+| modK_amount | float -1..1 |
+| modK_via | choice | same list as source |
+| modK_curve | choice | Linear, Exp |
+
+The destination list is generated in code from a single table
+(`ModDestinations.h`) so the UI, the matrix and the presets agree.
+
+## Control Tracks (X = A, B)
+
+| ID | Type | Range / Choices | Default | M |
+|---|---|---|---|---|
+| ctX_on | bool | | 0 | |
+| ctX_length | int | 1..16 | 8 | |
+| ctX_sync | bool | | 1 | |
+| ctX_rate | float Hz | 0.05..50 (log) | 4 | M |
+| ctX_div | choice | same list as lfoN_div | 1/16 | |
+| ctX_smooth | float | 0..1 | 0 | M |
+| ctX_swing | float | 0..0.75 | 0 | M |
+| ctX_gate | float | 0..1 | 1 | M |
+| ctX_random | float | 0..1 | 0 | M |
+| ctX_direction | choice | Forward, Reverse, PingPong, Random | Forward | |
+| ctX_trigger | choice | Free, Retrigger | Free | |
+| ctX_poly | bool | | 0 | |
+| ctX_depth | float | 0..1 | 1 | M |
+| ctX_dest | choice | same as modK_dest (direct destination) | None | |
+| ctX_destAmount | float | -1..1 | 0 | |
+| ctX_stepS | float | -1..1 | 0 | |
+| ctX_lenS | choice | x0.5, x1, x2, x3, x4 | x1 | |
+
+## Arpeggiator
+
+| ID | Type | Range / Choices | Default | M |
+|---|---|---|---|---|
+| arp_on | bool | | 0 | |
+| arp_latch | bool | | 0 | |
+| arp_mode | choice | Up, Down, UpDownInc, UpDownExc, DownUpInc, DownUpExc, AsPlayed, ReversePlayed, Random, RandomNoRepeat, Chord, Converge, Diverge, ConvergeDiverge, PinkyUp, PinkyDown, ThumbUp, ThumbDown, UpX2, DownX2 | Up | |
+| arp_div | choice | same list as lfoN_div | 1/16 | |
+| arp_octaves | int | 1..4 | 1 | |
+| arp_gate | float | 0.01..2 | 0.8 | M |
+| arp_swing | float | 0..0.75 | 0 | M |
+| arp_velMode | choice | Played, Step, Fixed | Played | |
+| arp_target | choice | All, Osc1, Osc2, Osc3, Osc1+2, Osc1+3, Osc2+3 | All | |
+| arp_steps | int | 1..16 | 8 | |
+| arp_stepOnS | bool | | 1 | |
+| arp_stepTieS | bool | | 0 | |
+| arp_stepVelS | float | 0..1 | 0.8 | |
+| arp_stepGateS | float | 0.01..2 | 1 | |
+| arp_stepTransS | int | -12..12 | 0 | |
+| arp_stepEnvS | float | -1..1 | 0 | |
+
+## Effects
+
+| ID | Type | Range / Choices | Default | M |
+|---|---|---|---|---|
+| eq_on | bool | | 0 | |
+| eq_lowGain | float dB | -15..15 | 0 | M |
+| eq_lowFreq | float Hz | 30..500 (log) | 100 | |
+| eq_midGain | float dB | -15..15 | 0 | M |
+| eq_midFreq | float Hz | 200..8000 (log) | 1000 | M |
+| eq_midQ | float | 0.3..10 (log) | 0.7 | |
+| eq_highGain | float dB | -15..15 | 0 | M |
+| eq_highFreq | float Hz | 1500..16000 (log) | 6000 | |
+| chorus_on | bool | | 0 | |
+| chorus_mode | choice | I, II, I+II | I | |
+| chorus_rate | float Hz | 0.05..10 (log) | 0.5 | M |
+| chorus_depth | float | 0..1 | 0.5 | M |
+| chorus_mix | float | 0..1 | 0.5 | M |
+| delay_on | bool | | 0 | |
+| delay_mode | choice | Dual, PingPong | Dual | |
+| delay_sync | bool | | 1 | |
+| delay_timeL | float ms | 1..2000 (log) | 375 | M |
+| delay_timeR | float ms | 1..2000 (log) | 500 | M |
+| delay_divL | choice | same list as lfoN_div | 1/8D | |
+| delay_divR | choice | same list as lfoN_div | 1/4 | |
+| delay_feedback | float | 0..1.1 | 0.4 | M |
+| delay_modRate | float Hz | 0.05..5 (log) | 0.3 | M |
+| delay_modDepth | float | 0..1 | 0.2 | M |
+| delay_lowCut | float Hz | 20..2000 (log) | 100 | |
+| delay_highCut | float Hz | 1000..20000 (log) | 8000 | M |
+| delay_duck | float | 0..1 | 0 | |
+| delay_mix | float | 0..1 | 0.3 | M |
+| reverb_on | bool | | 0 | |
+| reverb_algo | choice | Room, Hall, Space | Hall | |
+| reverb_size | float | 0..1 | 0.5 | M |
+| reverb_decay | float s | 0.1..60 (log) | 3 | M |
+| reverb_predelay | float ms | 0..250 | 20 | |
+| reverb_damp | float | 0..1 | 0.5 | M |
+| reverb_modRate | float Hz | 0.05..5 (log) | 0.4 | M |
+| reverb_modDepth | float | 0..1 | 0.3 | M |
+| reverb_lowCut | float Hz | 20..1000 (log) | 80 | |
+| reverb_mix | float | 0..1 | 0.25 | M |
+
+## Non-parameter state (saved in the preset but not automatable)
+
+- MIDI learn map: list of (CC number, parameter ID) plus Learn slot 1-4 CC numbers.
+- Preset metadata: name, author, category, tags, comment.
+- User wavetable file name for Osc 3.
+- Control Track and Arp step data are ordinary parameters above so they are
+  automatable, but the GUI treats them as editors rather than knobs.
+
+---
+
+# PART 4: BUILD PROMPTS
 
 ---
 
