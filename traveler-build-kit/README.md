@@ -44,7 +44,7 @@ Check the current JUCE licence page for any splash screen or revenue conditions.
 
 1. Create an empty folder, e.g. `C:\dev\wayfarer`, and `git init` it.
 2. Open Windows Terminal **as Administrator**, `cd C:\dev\wayfarer`, run `claude`.
-3. Copy `SPEC.md` and `PARAMETERS.md` from this kit into `C:\dev\wayfarer\docs\`
+3. Copy `SPEC.md`, `PARAMETERS.md` and `PRESETS.md` from this kit into `C:\dev\wayfarer\docs\`
    before prompt 01. Prompt 01 tells Claude to read them and write `CLAUDE.md`
    so every later session carries the design without you re-pasting it.
 4. Paste `prompts/01-scaffold.md`. Let it finish. Confirm the build passes and
@@ -70,7 +70,7 @@ Order matters. Each prompt assumes the previous ones are complete:
 | 09 | Arpeggiator | 20 modes, oscillator targeting, per-step envelope |
 | 10 | Effects | EQ, BBD chorus, modulated delay, modulated reverb, plus standalone FX plugins |
 | 11 | GUI | Resizable editor, all panels, preset browser |
-| 12 | Presets | Factory bank, categories, embedded via BinaryData |
+| 12 | Presets | The 22 starter presets from `PRESETS.md`, then a full factory bank, embedded via BinaryData |
 | 13 | QA and release | pluginval, host testing, installer, performance pass |
 
 Expect prompts 03, 05, 07, 10 and 11 to take the longest. Budget one sitting per prompt.
@@ -170,5 +170,7 @@ at a scratch folder and copy manually.
 README.md          this file
 SPEC.md            architecture and behaviour spec (what Wayfarer is)
 PARAMETERS.md      parameter IDs, ranges, mod sources and destinations
+PRESETS.md         22 starter presets as exact parameter recipes (prompt 12 builds them)
+ALL-PROMPTS.md     everything above plus all prompts, in one file
 prompts/01..13     the build prompts, in order
 ```

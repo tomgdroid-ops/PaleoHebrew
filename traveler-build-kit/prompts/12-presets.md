@@ -1,6 +1,7 @@
 # Prompt 12 — Factory preset bank
 
-Read `CLAUDE.md`, `docs/SPEC.md` section 11 (categories), `src/core/PresetManager.*`.
+Read `CLAUDE.md`, `docs/SPEC.md` section 11 (categories), `docs/PRESETS.md`
+(22 fully specified starter presets) and `src/core/PresetManager.*`.
 
 ## Deliverables
 
@@ -9,7 +10,13 @@ Read `CLAUDE.md`, `docs/SPEC.md` section 11 (categories), `src/core/PresetManage
    state, set parameters by ID, set metadata, write `.wayfarer` JSON into
    `resources/presets/<Category>/`. This keeps presets reproducible and lets you
    refactor them in code.
-2. Author **at least 80 presets** across the categories Bass, Lead, Pad, Keys,
+2. **First, implement every preset in `docs/PRESETS.md` exactly as written.**
+   Write a parser for that file's notation (see its final section) so the bank
+   regenerates from the document, resolve wavetable names to indices, add
+   `ctA_destAmount` / `ctB_destAmount` to `ModDestinations` as that file requests,
+   and unit-test that all 22 load, render non-silent finite audio, and that
+   preset 1 "Horizon Bed" has its EQ mid scoop and Space reverb active. Then
+   author **at least 58 more presets** (80+ total) across the categories Bass, Lead, Pad, Keys,
    Pluck, Sequence, Motion, FX, Drone. Each must use the engine meaningfully, and the
    bank as a whole must showcase: Super stack on Osc 2, wavetable Osc 3 with
    position modulated by LFO and Control Track, Osc 1 sync and FM, both filter
