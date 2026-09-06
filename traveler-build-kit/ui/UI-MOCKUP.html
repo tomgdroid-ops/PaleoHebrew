@@ -1,0 +1,328 @@
+<title>Wayfarer Panel</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground0:#0B1226; --ground1:#13213F; --panel:#141F38; --panel2:#0F182D; --line:#22304F;
+  --text:#E6ECF5; --label:#8C9BB5; --dim:#5B6B8A;
+  --osc:#F08A24; --flt:#35C26F; --env:#E9C440; --lfo:#4AA8F0; --mtx:#C65CC1; --trk:#2EC4B6; --arp:#E8574E; --fx:#8F6FEC; --sys:#B9C5D8;
+  --display:"Rajdhani",system-ui,sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+html,body{background:#070C18;color:var(--text);font-family:var(--body);margin:0}
+body{padding:20px 0 40px}
+.note{max-width:1280px;margin:0 auto 14px;color:var(--label);font-size:13px;line-height:1.5;padding:0 12px}
+.note b{color:var(--text)}
+.stage{width:1280px;margin:0 auto;transform-origin:top left}
+.panel{
+  width:1280px;height:960px;position:relative;box-sizing:border-box;padding:10px;
+  display:grid;grid-template-rows:44px 226px 268px 246px 136px;gap:8px;
+  border-radius:8px;border:1px solid #1C2A4A;
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.02 0.9' numOctaves='3' seed='7'/><feColorMatrix values='0 0 0 0 0.35  0 0 0 0 0.45  0 0 0 0 0.65  0 0 0 0.16 0'/></filter><rect width='400' height='400' filter='url(%23n)'/></svg>"),
+    radial-gradient(120% 90% at 50% 0%,#182B52 0%,var(--ground1) 40%,var(--ground0) 100%);
+  box-shadow:inset 0 1px 0 #2A3B62, 0 30px 60px rgba(0,0,0,.6);
+}
+.row{display:grid;gap:8px;min-height:0}
+.r1{grid-template-columns:1fr 1fr 1fr 190px 210px}
+.r2{grid-template-columns:1fr 1fr 380px 1fr 1fr 1fr}
+.r3{grid-template-columns:1.15fr 1fr}
+.r4{grid-template-columns:1fr 1fr 1.3fr 1.3fr}
+.sec{background:linear-gradient(180deg,#16233F,var(--panel2));border:1px solid var(--line);border-radius:5px;display:flex;flex-direction:column;min-height:0;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.hd{height:22px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-family:var(--display);font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#0B1020}
+.hd .tag{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:0;opacity:.75;text-transform:none}
+.hd.osc{background:var(--osc)} .hd.flt{background:var(--flt)} .hd.env{background:var(--env)} .hd.lfo{background:var(--lfo)} .hd.mtx{background:var(--mtx)} .hd.trk{background:var(--trk)} .hd.arp{background:var(--arp)} .hd.fx{background:var(--fx)} .hd.sys{background:var(--sys)}
+.bd{flex:1;padding:8px;display:flex;flex-wrap:wrap;gap:6px 10px;align-content:flex-start;min-height:0}
+.k{display:flex;flex-direction:column;align-items:center;gap:3px;width:52px}
+.k .dial{width:34px;height:34px;border-radius:50%;background:
+  conic-gradient(from 225deg,var(--c,var(--sys)) calc(var(--v)*270deg),#1B2743 calc(var(--v)*270deg) 270deg,transparent 270deg);
+  position:relative;box-shadow:0 2px 4px rgba(0,0,0,.6)}
+.k .dial::after{content:"";position:absolute;inset:5px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#3A4A70,#1A2440 70%);box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}
+.k .dial::before{content:"";position:absolute;width:2px;height:9px;background:var(--text);left:50%;top:6px;transform-origin:50% 11px;transform:translateX(-50%) rotate(calc(-135deg + var(--v)*270deg));z-index:1;border-radius:1px}
+.k.s .dial{width:28px;height:28px}.k.s{width:46px}
+.k.s .dial::before{height:7px;transform-origin:50% 8px;top:5px}
+.k label{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--label);white-space:nowrap}
+.k .v{font-family:var(--mono);font-size:9.5px;color:var(--text);margin-top:-2px}
+.sel{font-family:var(--mono);font-size:10px;background:#0B1224;border:1px solid var(--line);border-radius:3px;padding:3px 6px;color:var(--text);display:inline-flex;gap:6px;align-items:center}
+.sel::after{content:"▾";color:var(--label)}
+.pill{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);border-radius:10px;padding:2px 7px;color:var(--label)}
+.pill.on{color:#0B1020;background:var(--c,var(--sys));border-color:transparent}
+.rowline{width:100%;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.lbl{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.slider{height:6px;background:#0B1224;border-radius:3px;position:relative;flex:1;border:1px solid var(--line)}
+.slider i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--c,var(--sys));width:var(--v)}
+/* top bar */
+.top{display:flex;align-items:center;gap:10px;padding:0 10px;background:linear-gradient(180deg,#1A2A4C,#0F182D);border:1px solid var(--line);border-radius:5px}
+.logo{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.22em;color:var(--text)}
+.logo span{color:var(--osc)}
+.preset{flex:1;display:flex;align-items:center;gap:8px;background:#0B1224;border:1px solid var(--line);border-radius:4px;padding:4px 10px;font-family:var(--mono);font-size:12px}
+.preset .cat{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:1px 6px;border-radius:8px;background:#1F2B4A;color:var(--label)}
+.btn{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.1em;border:1px solid var(--line);border-radius:3px;padding:3px 8px;color:var(--text);background:#141F38}
+.meter{display:flex;flex-direction:column;gap:2px;font-family:var(--mono);font-size:9.5px;color:var(--label)}
+.meter .bar{width:90px;height:5px;background:#0B1224;border-radius:2px;overflow:hidden;border:1px solid var(--line)}
+.meter .bar i{display:block;height:100%;width:var(--v);background:linear-gradient(90deg,var(--flt),var(--env))}
+/* tabs */
+.tabs{display:flex;gap:2px;padding:6px 8px 0}
+.tab{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:3px 3px 0 0;color:var(--label);background:#0F182D;border:1px solid var(--line);border-bottom:none}
+.tab.on{color:#0B1020;background:var(--c)}
+/* scope */
+.scope{position:relative;flex:1;margin:8px;border-radius:4px;background:#050912;border:1px solid #1C2A4A;box-shadow:inset 0 0 30px rgba(0,0,0,.8);overflow:hidden}
+.scope canvas{width:100%;height:100%;display:block}
+.scope .modes{position:absolute;top:6px;left:8px;display:flex;gap:4px}
+.scope .modes span{font-family:var(--mono);font-size:9.5px;padding:1px 6px;border-radius:2px;color:var(--label);border:1px solid #1C2A4A;background:rgba(11,18,36,.8)}
+.scope .modes span.on{color:#0B1020;background:var(--sys);border-color:transparent}
+.scope .read{position:absolute;right:8px;bottom:6px;font-family:var(--mono);font-size:9.5px;color:var(--dim)}
+.macros{display:flex;justify-content:space-around;padding:0 8px 8px}
+/* steps */
+.steps{display:flex;gap:3px;align-items:flex-end;height:96px;width:100%;padding:0 2px;border-bottom:1px solid var(--line)}
+.steps i{flex:1;background:linear-gradient(180deg,var(--c),color-mix(in srgb,var(--c) 40%,#0B1224));height:var(--h);border-radius:2px 2px 0 0;opacity:.9}
+.steps i.ph{outline:1px solid var(--text)}
+.matrix{width:100%;font-family:var(--mono);font-size:10px;border-collapse:collapse}
+.matrix td{padding:2px 4px;border-bottom:1px solid #1A2540;color:var(--text)}
+.matrix td:first-child{color:var(--dim);width:18px}
+.matrix .amt{width:110px}
+.envg{width:100%;height:60px;border:1px solid var(--line);border-radius:3px;background:#0B1224}
+.legend{max-width:1280px;margin:16px auto 0;display:grid;grid-template-columns:repeat(9,1fr);gap:6px;padding:0 12px}
+.legend div{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#0B1020;padding:4px 8px;border-radius:3px}
+</style>
+
+<p class="note"><b>Wayfarer editor, proposed layout at 1280 × 960.</b> Signal flow reads top to bottom: sources, then shaping around the live monitor, then modulation and motion, then the effects chain left to right. Every section carries a Roland-style colour bar so the eye finds it without reading. The monitor is drawn live below.</p>
+
+<div class="stage" id="stage">
+<div class="panel">
+
+  <div class="top">
+    <div class="logo">WAY<span>FARER</span></div>
+    <span class="btn">◀</span><span class="btn">▶</span>
+    <div class="preset"><span class="cat">Pad</span> Horizon Bed <span style="color:var(--dim)">· Wayfarer</span></div>
+    <span class="btn">SAVE</span><span class="btn">↶</span><span class="btn">↷</span>
+    <div class="meter">VOICES 6 / 16<div class="bar"><i style="--v:38%"></i></div></div>
+    <div class="meter">CPU 11 %<div class="bar"><i style="--v:11%"></i></div></div>
+    <div class="k s" style="--v:.78;--c:var(--sys)"><div class="dial"></div><label>Master</label></div>
+    <span class="sel">100 %</span>
+  </div>
+
+  <div class="row r1">
+    <div class="sec"><div class="hd osc">Osc 1 <span class="tag">VA · sync · FM</span></div><div class="bd">
+      <div class="k" style="--v:.55;--c:var(--osc)"><div class="dial"></div><label>Wave</label><span class="v">Saw+</span></div>
+      <div class="k" style="--v:.5;--c:var(--osc)"><div class="dial"></div><label>PW</label><span class="v">50</span></div>
+      <div class="k" style="--v:.5;--c:var(--osc)"><div class="dial"></div><label>Oct</label><span class="v">0</span></div>
+      <div class="k" style="--v:.5;--c:var(--osc)"><div class="dial"></div><label>Fine</label><span class="v">0</span></div>
+      <div class="k" style="--v:.55;--c:var(--osc)"><div class="dial"></div><label>Level</label><span class="v">-5 dB</span></div>
+      <div class="k" style="--v:.4;--c:var(--osc)"><div class="dial"></div><label>Pan</label><span class="v">L20</span></div>
+      <div class="rowline"><span class="pill" style="--c:var(--osc)">Sync</span><span class="lbl">FM from</span><span class="sel">Osc 2</span>
+      <div class="k s" style="--v:0;--c:var(--osc)"><div class="dial"></div><label>Lin</label></div>
+      <div class="k s" style="--v:0;--c:var(--osc)"><div class="dial"></div><label>Exp</label></div></div>
+    </div></div>
+    <div class="sec"><div class="hd osc">Osc 2 <span class="tag">VA · Super 7</span></div><div class="bd">
+      <div class="k" style="--v:.42;--c:var(--osc)"><div class="dial"></div><label>Wave</label><span class="v">Tri/Saw</span></div>
+      <div class="k" style="--v:.5;--c:var(--osc)"><div class="dial"></div><label>PW</label><span class="v">50</span></div>
+      <div class="k" style="--v:.33;--c:var(--osc)"><div class="dial"></div><label>Oct</label><span class="v">-1</span></div>
+      <div class="k" style="--v:.5;--c:var(--osc)"><div class="dial"></div><label>Fine</label><span class="v">0</span></div>
+      <div class="k" style="--v:.7;--c:var(--osc)"><div class="dial"></div><label>Level</label><span class="v">-3 dB</span></div>
+      <div class="k" style="--v:.5;--c:var(--osc)"><div class="dial"></div><label>Pan</label><span class="v">C</span></div>
+      <div class="rowline"><span class="pill on" style="--c:var(--osc)">Super</span>
+      <div class="k s" style="--v:.18;--c:var(--osc)"><div class="dial"></div><label>Detune</label></div>
+      <div class="k s" style="--v:.9;--c:var(--osc)"><div class="dial"></div><label>Spread</label></div>
+      <div class="k s" style="--v:.5;--c:var(--osc)"><div class="dial"></div><label>Mix</label></div></div>
+    </div></div>
+    <div class="sec"><div class="hd osc">Osc 3 <span class="tag">Wavetable · Duo</span></div><div class="bd">
+      <div class="rowline"><span class="sel">Wavetable</span><span class="sel" style="flex:1">Cinematic Evolve 03</span></div>
+      <div class="k" style="--v:.2;--c:var(--osc)"><div class="dial"></div><label>Position</label><span class="v">20</span></div>
+      <div class="k" style="--v:.5;--c:var(--osc)"><div class="dial"></div><label>Oct</label><span class="v">0</span></div>
+      <div class="k" style="--v:.45;--c:var(--osc)"><div class="dial"></div><label>Level</label><span class="v">-7 dB</span></div>
+      <div class="k" style="--v:.57;--c:var(--osc)"><div class="dial"></div><label>Pan</label><span class="v">R15</span></div>
+      <span class="pill on" style="--c:var(--osc);align-self:center">Duo</span>
+      <div class="k s" style="--v:.08;--c:var(--osc)"><div class="dial"></div><label>Detune</label></div>
+      <div class="k s" style="--v:.8;--c:var(--osc)"><div class="dial"></div><label>Spread</label></div>
+    </div></div>
+    <div class="sec"><div class="hd osc">Noise</div><div class="bd">
+      <div class="k" style="--v:.06;--c:var(--osc)"><div class="dial"></div><label>Level</label><span class="v">-24</span></div>
+      <div class="k" style="--v:.7;--c:var(--osc)"><div class="dial"></div><label>Colour</label><span class="v">Dark</span></div>
+      <div class="rowline"><span class="lbl">Vintage</span><div class="slider" style="--c:var(--osc);--v:30%"><i></i></div></div>
+    </div></div>
+    <div class="sec"><div class="hd sys">Voice</div><div class="bd">
+      <div class="rowline"><span class="sel">Poly</span><span class="sel">8 voices</span></div>
+      <div class="k s" style="--v:.12;--c:var(--sys)"><div class="dial"></div><label>Unison</label><span class="v">2</span></div>
+      <div class="k s" style="--v:.06;--c:var(--sys)"><div class="dial"></div><label>Detune</label></div>
+      <div class="k s" style="--v:.6;--c:var(--sys)"><div class="dial"></div><label>Spread</label></div>
+      <div class="k s" style="--v:0;--c:var(--sys)"><div class="dial"></div><label>Glide</label></div>
+      <div class="rowline"><span class="sel">Bend 2 / 2</span><span class="sel">2× OS</span></div>
+    </div></div>
+  </div>
+
+  <div class="row r2">
+    <div class="sec"><div class="hd flt">Filter A <span class="tag">Ladder 24</span></div><div class="bd">
+      <svg class="envg" viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M0 22 L120 22 C140 22 146 6 150 10 C154 14 158 58 200 58" fill="none" stroke="#35C26F" stroke-width="1.5"/></svg>
+      <div class="k" style="--v:.55;--c:var(--flt)"><div class="dial"></div><label>Cutoff</label><span class="v">900</span></div>
+      <div class="k" style="--v:.15;--c:var(--flt)"><div class="dial"></div><label>Res</label><span class="v">15</span></div>
+      <div class="k" style="--v:.12;--c:var(--flt)"><div class="dial"></div><label>Drive</label><span class="v">3 dB</span></div>
+      <div class="k" style="--v:.62;--c:var(--flt)"><div class="dial"></div><label>Env</label><span class="v">+25</span></div>
+      <div class="k" style="--v:.3;--c:var(--flt)"><div class="dial"></div><label>Key</label><span class="v">30</span></div>
+      <div class="k" style="--v:.5;--c:var(--flt)"><div class="dial"></div><label>LFO</label><span class="v">0</span></div>
+    </div></div>
+    <div class="sec"><div class="hd flt">Filter B <span class="tag">NJM 12</span></div><div class="bd">
+      <svg class="envg" viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M0 26 L150 26 C165 26 170 14 174 18 C178 22 184 52 200 56" fill="none" stroke="#35C26F" stroke-width="1.5"/></svg>
+      <div class="k" style="--v:.68;--c:var(--flt)"><div class="dial"></div><label>Cutoff</label><span class="v">2.4k</span></div>
+      <div class="k" style="--v:.2;--c:var(--flt)"><div class="dial"></div><label>Res</label><span class="v">20</span></div>
+      <div class="k" style="--v:0;--c:var(--flt)"><div class="dial"></div><label>Drive</label><span class="v">0</span></div>
+      <div class="k" style="--v:.57;--c:var(--flt)"><div class="dial"></div><label>Env</label><span class="v">+15</span></div>
+      <div class="rowline"><span class="sel">Parallel</span>
+      <div class="k s" style="--v:.4;--c:var(--flt)"><div class="dial"></div><label>Balance</label></div>
+      <div class="k s" style="--v:.12;--c:var(--flt)"><div class="dial"></div><label>St. Offset</label></div></div>
+    </div></div>
+
+    <div class="sec"><div class="hd sys">Monitor <span class="tag">post-FX · L+R</span></div>
+      <div class="scope"><canvas id="scope" width="720" height="290"></canvas>
+        <div class="modes"><span class="on">OUT</span><span>PRE</span><span>OSC1</span><span>OSC2</span><span>OSC3</span><span>SPEC</span></div>
+        <div class="read">-8.4 dBFS · 6 v · 120.0 BPM</div>
+      </div>
+      <div class="macros">
+        <div class="k" style="--v:.3;--c:var(--osc)"><div class="dial"></div><label>Brightness</label></div>
+        <div class="k" style="--v:.5;--c:var(--trk)"><div class="dial"></div><label>Motion</label></div>
+        <div class="k" style="--v:.45;--c:var(--fx)"><div class="dial"></div><label>Space</label></div>
+        <div class="k" style="--v:.2;--c:var(--env)"><div class="dial"></div><label>Character</label></div>
+      </div>
+    </div>
+
+    <div class="sec"><div class="hd env">Env 1 <span class="tag">Filter · ADBSSR</span></div><div class="bd">
+      <svg class="envg" viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M0 58 C10 30 18 10 32 6 L70 24 L130 36 L160 36 C175 40 190 54 200 58" fill="none" stroke="#E9C440" stroke-width="1.5"/></svg>
+      <div class="k s" style="--v:.4;--c:var(--env)"><div class="dial"></div><label>A</label><span class="v">1.2s</span></div>
+      <div class="k s" style="--v:.5;--c:var(--env)"><div class="dial"></div><label>D</label><span class="v">2.0s</span></div>
+      <div class="k s" style="--v:.6;--c:var(--env)"><div class="dial"></div><label>Brk</label><span class="v">60</span></div>
+      <div class="k s" style="--v:.6;--c:var(--env)"><div class="dial"></div><label>Slp</label><span class="v">4.0s</span></div>
+      <div class="k s" style="--v:.4;--c:var(--env)"><div class="dial"></div><label>S</label><span class="v">40</span></div>
+      <div class="k s" style="--v:.55;--c:var(--env)"><div class="dial"></div><label>R</label><span class="v">2.5s</span></div>
+      <div class="k s" style="--v:.5;--c:var(--env)"><div class="dial"></div><label>Vel</label></div>
+      <div class="k s" style="--v:1;--c:var(--env)"><div class="dial"></div><label>Depth</label></div>
+    </div></div>
+    <div class="sec"><div class="hd env">Env 2 <span class="tag">Amp · ADSR</span></div><div class="bd">
+      <svg class="envg" viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M0 58 C8 34 16 12 30 6 L60 6 L150 6 C170 12 190 48 200 58" fill="none" stroke="#E9C440" stroke-width="1.5"/></svg>
+      <div class="k s" style="--v:.35;--c:var(--env)"><div class="dial"></div><label>A</label><span class="v">0.9s</span></div>
+      <div class="k s" style="--v:.4;--c:var(--env)"><div class="dial"></div><label>D</label><span class="v">1.0s</span></div>
+      <div class="k s" style="--v:1;--c:var(--env)"><div class="dial"></div><label>S</label><span class="v">100</span></div>
+      <div class="k s" style="--v:.6;--c:var(--env)"><div class="dial"></div><label>R</label><span class="v">3.2s</span></div>
+      <div class="k s" style="--v:.3;--c:var(--env)"><div class="dial"></div><label>Vel</label></div>
+      <div class="rowline"><span class="lbl">Curves</span><span class="sel">A +0.3</span><span class="sel">D -0.5</span></div>
+    </div></div>
+    <div class="sec"><div class="hd env">Env 3 <span class="tag">Mod · trig LFO 3</span></div><div class="bd">
+      <svg class="envg" viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M0 58 C14 40 30 12 60 6 C90 14 110 34 140 40 L160 40 C175 44 190 54 200 58" fill="none" stroke="#E9C440" stroke-width="1.5"/></svg>
+      <div class="k s" style="--v:.6;--c:var(--env)"><div class="dial"></div><label>A</label><span class="v">3.0s</span></div>
+      <div class="k s" style="--v:.65;--c:var(--env)"><div class="dial"></div><label>D</label><span class="v">4.0s</span></div>
+      <div class="k s" style="--v:.3;--c:var(--env)"><div class="dial"></div><label>S</label><span class="v">30</span></div>
+      <div class="k s" style="--v:.6;--c:var(--env)"><div class="dial"></div><label>R</label><span class="v">3.0s</span></div>
+      <div class="k s" style="--v:1;--c:var(--env)"><div class="dial"></div><label>Depth</label></div>
+      <div class="rowline"><span class="lbl">Trigger</span><span class="sel">LFO 3</span></div>
+    </div></div>
+  </div>
+
+  <div class="row r3">
+    <div class="sec">
+      <div class="tabs" style="--c:var(--lfo)"><span class="tab on" style="--c:var(--lfo)">LFO 1</span><span class="tab" style="--c:var(--lfo)">LFO 2</span><span class="tab" style="--c:var(--lfo)">LFO 3</span><span class="tab" style="--c:var(--mtx)">Matrix</span></div>
+      <div class="hd lfo">LFO 1 <span class="tag">poly · sine · 0.08 Hz</span></div>
+      <div class="bd" style="flex-direction:row;flex-wrap:nowrap">
+        <div style="display:flex;flex-wrap:wrap;gap:6px 10px;width:300px;align-content:flex-start">
+          <svg class="envg" viewBox="0 0 200 60" preserveAspectRatio="none" style="width:100%"><path d="M0 30 C25 0 50 0 75 30 S125 60 150 30 S200 0 200 30" fill="none" stroke="#4AA8F0" stroke-width="1.5"/></svg>
+          <span class="sel">Sine</span><span class="pill" style="--c:var(--lfo)">Sync</span><span class="pill" style="--c:var(--lfo)">Key trig</span><span class="pill" style="--c:var(--lfo)">Global</span>
+          <div class="k s" style="--v:.2;--c:var(--lfo)"><div class="dial"></div><label>Rate</label><span class="v">0.08</span></div>
+          <div class="k s" style="--v:0;--c:var(--lfo)"><div class="dial"></div><label>Phase</label></div>
+          <div class="k s" style="--v:.2;--c:var(--lfo)"><div class="dial"></div><label>Fade</label><span class="v">2.0s</span></div>
+          <div class="k s" style="--v:0;--c:var(--lfo)"><div class="dial"></div><label>Smooth</label></div>
+          <div class="k s" style="--v:1;--c:var(--lfo)"><div class="dial"></div><label>Depth</label></div>
+        </div>
+        <div style="flex:1;overflow:hidden">
+          <div class="lbl" style="margin-bottom:4px">Matrix · slots 1 – 8 of 21 <span style="color:var(--mtx)">■</span></div>
+          <table class="matrix">
+            <tr><td>1</td><td>LFO 1</td><td>→ Osc 3 Position</td><td class="amt"><div class="slider" style="--c:var(--mtx);--v:65%"><i></i></div></td><td>+30</td></tr>
+            <tr><td>2</td><td>LFO 2</td><td>→ Osc 2 Pan</td><td class="amt"><div class="slider" style="--c:var(--mtx);--v:62%"><i></i></div></td><td>+25</td></tr>
+            <tr><td>3</td><td>LFO 2 · via Wheel</td><td>→ Filter A Cutoff</td><td class="amt"><div class="slider" style="--c:var(--mtx);--v:54%"><i></i></div></td><td>+8</td></tr>
+            <tr><td>4</td><td>Env 3</td><td>→ Filter B Cutoff</td><td class="amt"><div class="slider" style="--c:var(--mtx);--v:60%"><i></i></div></td><td>+20</td></tr>
+            <tr><td>5</td><td>LFO 3</td><td>→ Osc 3 Duo Detune</td><td class="amt"><div class="slider" style="--c:var(--mtx);--v:57%"><i></i></div></td><td>+15</td></tr>
+            <tr><td>6</td><td>Macro 1</td><td>→ Filter A Cutoff</td><td class="amt"><div class="slider" style="--c:var(--mtx);--v:80%"><i></i></div></td><td>+60</td></tr>
+            <tr><td>7</td><td>Aftertouch</td><td>→ Filter A Cutoff</td><td class="amt"><div class="slider" style="--c:var(--mtx);--v:65%"><i></i></div></td><td>+30</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="tabs"><span class="tab on" style="--c:var(--trk)">Track A</span><span class="tab" style="--c:var(--trk)">Track B</span><span class="tab" style="--c:var(--arp)">Arp</span></div>
+      <div class="hd trk">Control Track A <span class="tag">→ Filter A Cutoff · 1/2 · ping-pong</span></div>
+      <div class="bd">
+        <div class="steps" style="--c:var(--trk)"><i style="--h:60%"></i><i style="--h:75%" class="ph"></i><i style="--h:55%"></i><i style="--h:85%"></i><i style="--h:65%"></i><i style="--h:80%"></i><i style="--h:50%"></i><i style="--h:70%"></i></div>
+        <div class="rowline">
+          <span class="sel">8 steps</span><span class="pill on" style="--c:var(--trk)">Sync</span><span class="sel">1/2</span><span class="sel">Ping-pong</span><span class="sel">Free</span>
+          <div class="k s" style="--v:.9;--c:var(--trk)"><div class="dial"></div><label>Smooth</label></div>
+          <div class="k s" style="--v:0;--c:var(--trk)"><div class="dial"></div><label>Swing</label></div>
+          <div class="k s" style="--v:1;--c:var(--trk)"><div class="dial"></div><label>Gate</label></div>
+          <div class="k s" style="--v:0;--c:var(--trk)"><div class="dial"></div><label>Random</label></div>
+          <div class="k s" style="--v:.67;--c:var(--trk)"><div class="dial"></div><label>Amount</label></div>
+          <span class="btn">RND</span><span class="btn">CLR</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row r4">
+    <div class="sec"><div class="hd fx">EQ <span class="tag">on</span></div><div class="bd">
+      <div class="k s" style="--v:.43;--c:var(--fx)"><div class="dial"></div><label>Low</label><span class="v">-2</span></div>
+      <div class="k s" style="--v:.4;--c:var(--fx)"><div class="dial"></div><label>Mid</label><span class="v">-3</span></div>
+      <div class="k s" style="--v:.5;--c:var(--fx)"><div class="dial"></div><label>Freq</label><span class="v">900</span></div>
+      <div class="k s" style="--v:.45;--c:var(--fx)"><div class="dial"></div><label>High</label><span class="v">-1.5</span></div>
+    </div></div>
+    <div class="sec"><div class="hd fx">Chorus <span class="tag">BBD · I+II</span></div><div class="bd">
+      <span class="sel" style="align-self:center">I+II</span>
+      <div class="k s" style="--v:.5;--c:var(--fx)"><div class="dial"></div><label>Rate</label></div>
+      <div class="k s" style="--v:.35;--c:var(--fx)"><div class="dial"></div><label>Depth</label></div>
+      <div class="k s" style="--v:.3;--c:var(--fx)"><div class="dial"></div><label>Mix</label></div>
+    </div></div>
+    <div class="sec"><div class="hd fx">Delay <span class="tag">Dual · sync</span></div><div class="bd">
+      <span class="sel" style="align-self:center">1/4 D</span><span class="sel" style="align-self:center">1/2</span>
+      <div class="k s" style="--v:.35;--c:var(--fx)"><div class="dial"></div><label>Feedback</label></div>
+      <div class="k s" style="--v:.25;--c:var(--fx)"><div class="dial"></div><label>Mod</label></div>
+      <div class="k s" style="--v:.4;--c:var(--fx)"><div class="dial"></div><label>Hi cut</label></div>
+      <div class="k s" style="--v:.4;--c:var(--fx)"><div class="dial"></div><label>Duck</label></div>
+      <div class="k s" style="--v:.18;--c:var(--fx)"><div class="dial"></div><label>Mix</label></div>
+    </div></div>
+    <div class="sec"><div class="hd fx">Reverb <span class="tag">Space</span></div><div class="bd">
+      <span class="sel" style="align-self:center">Space</span>
+      <div class="k s" style="--v:.75;--c:var(--fx)"><div class="dial"></div><label>Size</label></div>
+      <div class="k s" style="--v:.55;--c:var(--fx)"><div class="dial"></div><label>Decay</label><span class="v">9 s</span></div>
+      <div class="k s" style="--v:.16;--c:var(--fx)"><div class="dial"></div><label>Pre</label></div>
+      <div class="k s" style="--v:.6;--c:var(--fx)"><div class="dial"></div><label>Damp</label></div>
+      <div class="k s" style="--v:.4;--c:var(--fx)"><div class="dial"></div><label>Mod</label></div>
+      <div class="k s" style="--v:.38;--c:var(--fx)"><div class="dial"></div><label>Mix</label></div>
+    </div></div>
+  </div>
+
+</div>
+</div>
+
+<div class="legend">
+  <div style="background:var(--osc)">Osc</div><div style="background:var(--flt)">Filter</div><div style="background:var(--env)">Env</div><div style="background:var(--lfo)">LFO</div><div style="background:var(--mtx)">Matrix</div><div style="background:var(--trk)">Tracks</div><div style="background:var(--arp)">Arp</div><div style="background:var(--fx)">FX</div><div style="background:var(--sys)">System</div>
+</div>
+
+<script>
+(function(){
+  var st=document.getElementById('stage');
+  function fit(){var w=Math.min(window.innerWidth-24,1280);var s=w/1280;st.style.transform='scale('+s+')';st.style.height=(960*s)+'px';}
+  fit();window.addEventListener('resize',fit);
+  var c=document.getElementById('scope'),g=c.getContext('2d'),t=0;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function draw(){
+    var W=c.width,H=c.height;g.clearRect(0,0,W,H);
+    g.strokeStyle='#15213C';g.lineWidth=1;
+    for(var x=0;x<=W;x+=W/12){g.beginPath();g.moveTo(x,0);g.lineTo(x,H);g.stroke();}
+    for(var y=0;y<=H;y+=H/6){g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke();}
+    g.strokeStyle='#22304F';g.beginPath();g.moveTo(0,H/2);g.lineTo(W,H/2);g.stroke();
+    var morph=(Math.sin(t*0.6)+1)/2, cut=0.5+0.4*Math.sin(t*0.37);
+    g.lineWidth=2;g.strokeStyle='#F5B15A';g.shadowColor='#F08A24';g.shadowBlur=10;g.beginPath();
+    for(var i=0;i<=W;i++){
+      var ph=(i/W)*3*Math.PI*2, s=0;
+      for(var h=1;h<=9;h++){var saw=Math.sin(ph*h)/h; var sq=(h%2? Math.sin(ph*h)/h:0); s+= (saw*(1-morph)+sq*morph*1.3) * Math.exp(-(h-1)*(1-cut)*0.6);}
+      var v=H/2 - s*H*0.32 - Math.sin(ph*0.5+t)*H*0.03;
+      i?g.lineTo(i,v):g.moveTo(i,v);
+    }
+    g.stroke();g.shadowBlur=0;
+    if(!reduce){t+=0.02;requestAnimationFrame(draw);}
+  }
+  draw();
+})();
+</script>

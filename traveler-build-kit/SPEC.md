@@ -211,16 +211,83 @@ has one direct destination selector for convenience.
 
 ## 11. GUI
 
-- Single-window, resizable (scale 75 %..200 %), dark cinematic look, one accent colour.
-- Layout: top bar (preset browser, prev/next, save, master volume, voice meter,
-  CPU meter); Oscillators row; Filters + Envelopes row; Modulation row with tabs
-  (LFOs, Mod Matrix, Control Tracks, Arp); Effects row; footer with macros 1-4.
-- Every knob: double-click resets, Ctrl-drag fine, right-click → MIDI Learn / Unlearn /
-  Add to Mod Matrix.
-- Control Tracks and Arp steps: draggable bar editors.
-- Wavetable display shows current frame with position.
-- Preset browser: categories (Bass, Lead, Pad, Keys, Pluck, Sequence, Motion, FX,
-  Drone, Artist), search, favourites, user folder in `%APPDATA%\Wayfarer\Presets`.
+Reference mockup: `ui/UI-MOCKUP.html` (open in a browser). The editor must
+match its layout, colour system and proportions. Base size 1280 x 960,
+resizable by aspect-locked scaling 60 %..200 %, scale remembered globally.
+
+**Look.** Deep dark blue metallic panel: a vertical gradient from `#13213F`
+(top) to `#0B1226` (bottom) with a subtle radial highlight at top centre
+(`#182B52`), overlaid with a fine horizontal brushed-metal grain and a soft
+vignette. The grain comes from `resources/ui/background.png` (a 2048 x 2048
+tileable brushed navy texture, drawn at 35 % opacity) when present, otherwise
+a procedural fractal-noise generator produces an equivalent tile at startup.
+Section panels are slightly lighter (`#16233F` to `#0F182D`) with a 1 px
+`#22304F` border, 5 px radius and a 1 px inner top highlight. Knobs are dark
+metal caps with a coloured value arc and a white pointer.
+
+**Colour-coded section headers (Roland style).** Every section has a 22 px
+solid header bar in its family colour with dark text (`#0B1020`), the section
+name left in the display face, and a live one-line status right in mono (for
+example "Ladder 24", "poly · sine · 0.08 Hz"). Knob arcs, tab highlights and
+active pills inside a section use the same family colour. Families:
+
+| Family | Colour | Sections |
+|---|---|---|
+| Oscillators | amber `#F08A24` | Osc 1, Osc 2, Osc 3, Noise |
+| Filters | green `#35C26F` | Filter A, Filter B, routing |
+| Envelopes | yellow `#E9C440` | Env 1, Env 2, Env 3 |
+| LFOs | sky `#4AA8F0` | LFO 1-3 tabs |
+| Mod matrix | magenta `#C65CC1` | Matrix tab, amount sliders |
+| Control Tracks | teal `#2EC4B6` | Track A, Track B tabs |
+| Arpeggiator | coral `#E8574E` | Arp tab |
+| Effects | violet `#8F6FEC` | EQ, Chorus, Delay, Reverb |
+| System | silver `#B9C5D8` | Top bar, Voice, Monitor, Master |
+
+Macro knobs borrow the colour of what they mostly control: Brightness amber,
+Motion teal, Space violet, Character yellow.
+
+**Type.** Rajdhani (600/700) for section titles, tabs and buttons; IBM Plex
+Sans for labels; IBM Plex Mono for values and status. Fonts are embedded via
+BinaryData. Labels are 9.5 px uppercase with 0.06 em tracking at base scale.
+
+**Layout, top to bottom (signal flow).**
+1. Top bar (44 px): logo, prev/next, preset name with category chip and
+   author, Save, undo/redo, voice meter, CPU meter, master knob, scale menu.
+2. Sources row (226 px): Osc 1 | Osc 2 | Osc 3 | Noise | Voice. Osc 3 shows
+   the wavetable name and a small frame view when in wavetable mode.
+3. Shaping row (268 px): Filter A | Filter B (with routing strip) |
+   **Monitor** (380 px wide, centre) | Env 1 | Env 2 | Env 3. Filters and
+   envelopes show a live response / shape graph above their knobs. The Monitor
+   holds the oscilloscope with the four macro knobs underneath it.
+4. Modulation row (246 px): left panel tabs LFO 1 / LFO 2 / LFO 3 / Matrix
+   (LFO tabs sky, Matrix tab magenta); the LFO view shows the shape graph,
+   controls, and a compact read-only view of the first matrix rows beside it.
+   Right panel tabs Track A / Track B / Arp (teal, teal, coral) with the
+   draggable step editors and the row of track controls.
+5. Effects row (136 px): EQ | Chorus | Delay | Reverb, left to right in signal
+   order, each with an on/off in its header.
+
+**Monitor (oscilloscope).** Centre of the shaping row. Draws the audio as a
+glowing amber trace on a near-black screen with a faint 12 x 6 grid and a
+centre line. Modes as tabs inside the screen: OUT (post-FX stereo sum,
+default), PRE (pre-FX voice sum), OSC1 / OSC2 / OSC3 (the most recently
+started voice's oscillator output, pre-filter), SPEC (log-frequency spectrum,
+2048-point FFT, 30 dB..-90 dB). Time window ~3 cycles of the lowest sounding
+note when a note is held (zero-crossing rising-edge trigger on the tapped
+signal, so the display is stable), otherwise a fixed 20 ms window. A readout
+in the lower right shows peak dBFS, active voices and host BPM. The audio
+thread writes into a lock-free FIFO (`juce::AbstractFifo`, 8192 samples per
+tap); the UI reads at 60 Hz. Tapping costs nothing when the editor is closed
+(a flag the editor sets on open/close). Trace uses `Path` with a 2 px stroke
+and a drop-shadow glow in the amber colour.
+
+**Interaction.** Every knob: double-click resets, Ctrl-drag fine, mouse-wheel,
+right-click menu with MIDI Learn / Unlearn / Add to mod matrix. A thin
+mod-ring around a knob shows the summed modulation range in the family colour.
+Control Track and Arp steps are draggable bars with a playhead. Hovering any
+control shows its full name and value in the top bar (no tooltips popping
+over the panel). Preset browser opens as an overlay over rows 2-4 with
+categories, search, favourites, and user folder in `%APPDATA%\Wayfarer\Presets`.
 
 ## 12. Non-goals for v1
 

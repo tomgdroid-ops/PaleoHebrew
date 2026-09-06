@@ -1,8 +1,8 @@
 # Wayfarer Build Kit (complete, single file)
 
-Contents: Part 1 README (setup, compiling, DAW install). Part 2 SPEC. Part 3 PARAMETERS. Part 4 PRESETS (22 starter presets). Part 5 the 13 build prompts in order.
+Contents: Part 1 README (setup, compiling, DAW install). Part 2 SPEC. Part 3 PARAMETERS. Part 4 PRESETS (22 starter presets). Part 5 the 13 build prompts in order. The UI mockup (ui/UI-MOCKUP.html) is a separate file in the kit; prompt 11 needs it copied into docs/.
 
-Before prompt 01, save Part 2 as `docs/SPEC.md`, Part 3 as `docs/PARAMETERS.md` and Part 4 as `docs/PRESETS.md` inside your new project folder. Then paste one prompt per Claude Code session, in order, and check each prompt's **Done when** list before moving on.
+Before prompt 01, save Part 2 as `docs/SPEC.md`, Part 3 as `docs/PARAMETERS.md` and Part 4 as `docs/PRESETS.md` inside your new project folder, and copy `ui/UI-MOCKUP.html` to `docs/UI-MOCKUP.html`. Then paste one prompt per Claude Code session, in order, and check each prompt's **Done when** list before moving on.
 
 ---
 
@@ -54,7 +54,7 @@ Check the current JUCE licence page for any splash screen or revenue conditions.
 
 1. Create an empty folder, e.g. `C:\dev\wayfarer`, and `git init` it.
 2. Open Windows Terminal **as Administrator**, `cd C:\dev\wayfarer`, run `claude`.
-3. Copy `SPEC.md`, `PARAMETERS.md` and `PRESETS.md` from this kit into `C:\dev\wayfarer\docs\`
+3. Copy `SPEC.md`, `PARAMETERS.md`, `PRESETS.md` and `ui/UI-MOCKUP.html` from this kit into `C:\dev\wayfarer\docs\`
    before prompt 01. Prompt 01 tells Claude to read them and write `CLAUDE.md`
    so every later session carries the design without you re-pasting it.
 4. Paste `prompts/01-scaffold.md`. Let it finish. Confirm the build passes and
@@ -79,7 +79,7 @@ Order matters. Each prompt assumes the previous ones are complete:
 | 08 | Control Tracks | Dual 16-step modulation sequencers |
 | 09 | Arpeggiator | 20 modes, oscillator targeting, per-step envelope |
 | 10 | Effects | EQ, BBD chorus, modulated delay, modulated reverb, plus standalone FX plugins |
-| 11 | GUI | Resizable editor, all panels, preset browser |
+| 11 | GUI | Colour-coded editor matching `ui/UI-MOCKUP.html`, centre oscilloscope, preset browser |
 | 12 | Presets | The 22 starter presets from `PRESETS.md`, then a full factory bank, embedded via BinaryData |
 | 13 | QA and release | pluginval, host testing, installer, performance pass |
 
@@ -181,6 +181,8 @@ README.md          this file
 SPEC.md            architecture and behaviour spec (what Wayfarer is)
 PARAMETERS.md      parameter IDs, ranges, mod sources and destinations
 PRESETS.md         22 starter presets as exact parameter recipes (prompt 12 builds them)
+ui/UI-MOCKUP.html  interactive mockup of the editor layout (open in a browser; prompt 11 matches it)
+ui/UI-MOCKUP.png   screenshot of the mockup
 ALL-PROMPTS.md     everything above plus all prompts, in one file
 prompts/01..13     the build prompts, in order
 ```
@@ -402,16 +404,83 @@ has one direct destination selector for convenience.
 
 ## 11. GUI
 
-- Single-window, resizable (scale 75 %..200 %), dark cinematic look, one accent colour.
-- Layout: top bar (preset browser, prev/next, save, master volume, voice meter,
-  CPU meter); Oscillators row; Filters + Envelopes row; Modulation row with tabs
-  (LFOs, Mod Matrix, Control Tracks, Arp); Effects row; footer with macros 1-4.
-- Every knob: double-click resets, Ctrl-drag fine, right-click → MIDI Learn / Unlearn /
-  Add to Mod Matrix.
-- Control Tracks and Arp steps: draggable bar editors.
-- Wavetable display shows current frame with position.
-- Preset browser: categories (Bass, Lead, Pad, Keys, Pluck, Sequence, Motion, FX,
-  Drone, Artist), search, favourites, user folder in `%APPDATA%\Wayfarer\Presets`.
+Reference mockup: `ui/UI-MOCKUP.html` (open in a browser). The editor must
+match its layout, colour system and proportions. Base size 1280 x 960,
+resizable by aspect-locked scaling 60 %..200 %, scale remembered globally.
+
+**Look.** Deep dark blue metallic panel: a vertical gradient from `#13213F`
+(top) to `#0B1226` (bottom) with a subtle radial highlight at top centre
+(`#182B52`), overlaid with a fine horizontal brushed-metal grain and a soft
+vignette. The grain comes from `resources/ui/background.png` (a 2048 x 2048
+tileable brushed navy texture, drawn at 35 % opacity) when present, otherwise
+a procedural fractal-noise generator produces an equivalent tile at startup.
+Section panels are slightly lighter (`#16233F` to `#0F182D`) with a 1 px
+`#22304F` border, 5 px radius and a 1 px inner top highlight. Knobs are dark
+metal caps with a coloured value arc and a white pointer.
+
+**Colour-coded section headers (Roland style).** Every section has a 22 px
+solid header bar in its family colour with dark text (`#0B1020`), the section
+name left in the display face, and a live one-line status right in mono (for
+example "Ladder 24", "poly · sine · 0.08 Hz"). Knob arcs, tab highlights and
+active pills inside a section use the same family colour. Families:
+
+| Family | Colour | Sections |
+|---|---|---|
+| Oscillators | amber `#F08A24` | Osc 1, Osc 2, Osc 3, Noise |
+| Filters | green `#35C26F` | Filter A, Filter B, routing |
+| Envelopes | yellow `#E9C440` | Env 1, Env 2, Env 3 |
+| LFOs | sky `#4AA8F0` | LFO 1-3 tabs |
+| Mod matrix | magenta `#C65CC1` | Matrix tab, amount sliders |
+| Control Tracks | teal `#2EC4B6` | Track A, Track B tabs |
+| Arpeggiator | coral `#E8574E` | Arp tab |
+| Effects | violet `#8F6FEC` | EQ, Chorus, Delay, Reverb |
+| System | silver `#B9C5D8` | Top bar, Voice, Monitor, Master |
+
+Macro knobs borrow the colour of what they mostly control: Brightness amber,
+Motion teal, Space violet, Character yellow.
+
+**Type.** Rajdhani (600/700) for section titles, tabs and buttons; IBM Plex
+Sans for labels; IBM Plex Mono for values and status. Fonts are embedded via
+BinaryData. Labels are 9.5 px uppercase with 0.06 em tracking at base scale.
+
+**Layout, top to bottom (signal flow).**
+1. Top bar (44 px): logo, prev/next, preset name with category chip and
+   author, Save, undo/redo, voice meter, CPU meter, master knob, scale menu.
+2. Sources row (226 px): Osc 1 | Osc 2 | Osc 3 | Noise | Voice. Osc 3 shows
+   the wavetable name and a small frame view when in wavetable mode.
+3. Shaping row (268 px): Filter A | Filter B (with routing strip) |
+   **Monitor** (380 px wide, centre) | Env 1 | Env 2 | Env 3. Filters and
+   envelopes show a live response / shape graph above their knobs. The Monitor
+   holds the oscilloscope with the four macro knobs underneath it.
+4. Modulation row (246 px): left panel tabs LFO 1 / LFO 2 / LFO 3 / Matrix
+   (LFO tabs sky, Matrix tab magenta); the LFO view shows the shape graph,
+   controls, and a compact read-only view of the first matrix rows beside it.
+   Right panel tabs Track A / Track B / Arp (teal, teal, coral) with the
+   draggable step editors and the row of track controls.
+5. Effects row (136 px): EQ | Chorus | Delay | Reverb, left to right in signal
+   order, each with an on/off in its header.
+
+**Monitor (oscilloscope).** Centre of the shaping row. Draws the audio as a
+glowing amber trace on a near-black screen with a faint 12 x 6 grid and a
+centre line. Modes as tabs inside the screen: OUT (post-FX stereo sum,
+default), PRE (pre-FX voice sum), OSC1 / OSC2 / OSC3 (the most recently
+started voice's oscillator output, pre-filter), SPEC (log-frequency spectrum,
+2048-point FFT, 30 dB..-90 dB). Time window ~3 cycles of the lowest sounding
+note when a note is held (zero-crossing rising-edge trigger on the tapped
+signal, so the display is stable), otherwise a fixed 20 ms window. A readout
+in the lower right shows peak dBFS, active voices and host BPM. The audio
+thread writes into a lock-free FIFO (`juce::AbstractFifo`, 8192 samples per
+tap); the UI reads at 60 Hz. Tapping costs nothing when the editor is closed
+(a flag the editor sets on open/close). Trace uses `Path` with a 2 px stroke
+and a drop-shadow glow in the amber colour.
+
+**Interaction.** Every knob: double-click resets, Ctrl-drag fine, mouse-wheel,
+right-click menu with MIDI Learn / Unlearn / Add to mod matrix. A thin
+mod-ring around a knob shows the summed modulation range in the family colour.
+Control Track and Arp steps are draggable bars with a playhead. Hovering any
+control shows its full name and value in the top bar (no tooltips popping
+over the panel). Preset browser opens as an overlay over rows 2-4 with
+categories, search, favourites, and user folder in `%APPDATA%\Wayfarer\Presets`.
 
 ## 12. Non-goals for v1
 
@@ -2517,81 +2586,123 @@ on; WayfarerTime and WayfarerSpace on an audio track.
 
 # Prompt 11 — GUI
 
-Read `CLAUDE.md`, `docs/SPEC.md` section 11, and skim `docs/PARAMETERS.md`.
-Replace the placeholder editors of all three plugins with real interfaces. Use
-plain JUCE components (no WebView) so it works in every host without extra runtime.
+Read `CLAUDE.md`, `docs/SPEC.md` section 11 in full, and open `docs/UI-MOCKUP.html`
+in a browser (it is a static HTML mockup of the finished editor with a live
+canvas oscilloscope; take a screenshot of it and keep it beside you). Replace the
+placeholder editors of all three plugins with real interfaces that match the
+mockup's layout, proportions and colour system. Use plain JUCE components (no
+WebView) so it works in every host without extra runtime.
 
-## Design brief
+## Design brief (from the spec, summarised)
 
-Dark, low-glare, cinematic. One background tone (near-black blue-grey), one panel
-tone slightly lighter, one accent (warm amber) used only for active states and
-value arcs, off-white text, muted labels. Avoid dense repeated ornaments; group
-controls into clearly bordered sections with a heading. Keep the "visual tinnitus"
-criticism of busy synth UIs in mind: whitespace and alignment over decoration.
-Base size 1180 × 760, resizable by aspect-locked scaling 75 %..200 %, scale
-remembered in a global settings file.
+- Deep dark blue metallic panel with brushed grain and a soft vignette.
+- Roland-style colour-coded section headers: a solid 22 px bar per section in
+  its family colour with dark text, section name left, live status text right.
+  Families and hex values are in the spec table. Knob arcs and active states
+  inside a section use the family colour.
+- A live oscilloscope Monitor in the centre of the shaping row with the four
+  macro knobs under it.
+- Signal-flow layout top to bottom: sources, shaping around the monitor,
+  modulation (left) and motion (right), effects chain.
+- Type: Rajdhani for titles/tabs/buttons, IBM Plex Sans for labels, IBM Plex
+  Mono for values. Download the three families from Google Fonts (OFL licence),
+  place the `.ttf` files in `resources/fonts/`, embed via `juce_add_binary_data`,
+  and load them with `Typeface::createSystemTypefaceFor`.
 
 ## Deliverables
 
-1. `src/ui/LookAndFeel.h/.cpp`: custom `LookAndFeel_V4` subclass: rotary knob with
-   value arc, tick at default, bipolar knobs drawn from centre; toggle "pill"
-   buttons; combo boxes; section headers; a mod-ring on knobs showing the summed
-   modulation range for that destination (read from the processor at 30 Hz via a
-   `Timer`, never from the audio thread directly; the processor keeps an atomic
-   snapshot of current mod offsets per destination).
-2. `src/ui/Knob.h/.cpp`: knob + label + value readout, `SliderParameterAttachment`,
+1. `resources/ui/background.png`: if a file with this name already exists in
+   the repo, use it. If not, write `tools/GenerateBackground` (a small console
+   target using `juce::Image` and `juce::Random`) that renders a 2048 x 2048
+   tileable brushed-metal tile: horizontal streaks from low-pass-filtered noise,
+   dark navy tint, seamless edges via wrap-around blending. Either way, embed it
+   with BinaryData. The editor paints: gradient, then the tile at 35 % opacity
+   (`Graphics::setTiledImageFill`), then the vignette.
+2. `src/ui/Theme.h`: all colours from the spec table as `juce::Colour`
+   constants, a `SectionFamily` enum, `familyColour(SectionFamily)`, font
+   loaders, and the base size / scale constants. Nothing else hard-codes a colour.
+3. `src/ui/LookAndFeel.h/.cpp`: `LookAndFeel_V4` subclass: rotary knob (dark
+   metal cap with radial highlight, coloured value arc from 7 o'clock to 5
+   o'clock, white pointer, bipolar knobs draw the arc from 12 o'clock), pill
+   toggle, combo box, text button, tab button, and a mod-ring painter that
+   draws the summed modulation range for a knob's destination (from an atomic
+   snapshot the processor updates at control rate, read by a 30 Hz timer).
+4. `src/ui/SectionPanel.h/.cpp`: the framed panel with the coloured header bar.
+   Constructor takes title, family, and a `std::function<String()>` for the live
+   status text, refreshed on a 10 Hz timer. Children are laid out by the owner.
+5. `src/ui/Knob.h/.cpp`: knob + label + value readout, `SliderParameterAttachment`,
    double-click reset, Ctrl for fine, mouse-wheel, right-click menu: MIDI Learn,
-   Unlearn, "Add to mod matrix →" submenu listing sources (creates a slot with the
-   next free `modK_` and amount 50 %).
-3. Sections as components in `src/ui/sections/`:
-   - `TopBar`: preset name button (opens browser), prev/next, save, category,
-     master volume, voice count meter, CPU meter, scale menu, undo/redo (parameter
-     undo via `juce::UndoManager` attached to the APVTS).
-   - `OscillatorPanel` ×3 (with the Osc 1 sync/FM, Osc 2 Super, Osc 3 mode/wavetable
-     controls; a `WavetableView` drawing the current frame at the current position,
-     with a "Load…" button using `juce::FileChooser` async), `NoisePanel`, and a
-     `VoicePanel` (mode, voices, unison, glide, bend, vintage, oversampling).
-   - `FilterPanel` ×2 with type, cutoff, res, drive, keytrack, env, lfo, velocity;
-     routing / balance / stereo offset strip; a small live frequency-response curve
-     (computed from the coefficient formulas on the UI thread).
-   - `EnvelopePanel` ×3 with mode switch and a drawn envelope shape that updates
-     with the parameters and shows curve handles (drag to set curve values).
-   - `ModulationTabs` with tabs: `LfoPanel` ×3 (shape picker draws the shape),
-     `ModMatrixPanel` (21 rows: source, via, destination combos, amount slider,
-     curve), `ControlTrackPanel` ×2 (16 draggable bars, per-step length selector,
-     length, rate/sync, smooth, swing, gate, random, direction, trigger, poly,
-     depth, dest, Randomise and Clear buttons, playhead indicator),
-     `ArpPanel` (mode, rate, octaves, gate, swing, latch, velocity mode, target,
-     16-step editor with on/tie/velocity/gate/transpose/env lanes, playhead).
-   - `EffectsPanel`: EQ, Chorus, Delay, Reverb strips with on/off.
-   - `MacroStrip`: macros 1-4 with rename (stored in preset metadata).
-4. `src/ui/PresetBrowser.h/.cpp`: overlay with category list, search box,
-   preset list, favourites toggle, author/tags display, Save dialog (name, category,
-   author, tags, comment), delete/rename, "Open user folder". Reads from
-   `PresetManager`.
-5. `WayfarerTime` and `WayfarerSpace` editors: single-panel versions using the same
-   LookAndFeel and Knob.
-6. Accessibility: every control has a name and the editor is keyboard focusable;
-   tooltips show the parameter description.
-7. Performance: repaint only what changed (use `setBufferedToImage` on static
-   panels, `repaint` on regions), 30 Hz timers for meters and playheads, no
-   allocations in `paint`.
+   Unlearn, "Add to mod matrix →" submenu listing sources. Two sizes (34 px and
+   28 px caps at base scale).
+6. `src/ui/Scope.h/.cpp` (the Monitor):
+   - In the processor: `ScopeTaps` with one `juce::AbstractFifo` per tap
+     (post-FX sum, pre-FX sum, osc 1/2/3 of the most recently started voice),
+     8192 floats each, written in `processBlock` only when `editorOpen` is true.
+     Writing is a plain memcpy into the FIFO; no allocation, no locks.
+   - In the editor: a 60 Hz timer drains the selected tap into a display buffer,
+     finds a rising zero-crossing trigger, and paints ~3 cycles of the lowest
+     sounding note (the processor exposes the lowest active MIDI note) or a
+     20 ms window when idle. Grid 12 x 6, centre line, amber trace with glow
+     (`DropShadow` on a `Path`, or a pre-blurred image layer for speed).
+   - SPEC mode: 2048-point `juce::dsp::FFT` with a Hann window, log-frequency
+     x axis 20 Hz..20 kHz, 30 dB..-90 dB, bar or line display, 20 Hz repaint.
+   - Mode tabs drawn inside the screen top-left; readout bottom-right with
+     peak dBFS, voice count, host BPM.
+7. Sections as components in `src/ui/sections/`, laid out exactly like the mockup:
+   - `TopBar`: logo, prev/next, preset name button with category chip and author
+     (opens the browser), Save, undo/redo (`UndoManager` on the APVTS), voice
+     meter, CPU meter, master knob, scale menu, and the hover readout area.
+   - `OscillatorPanel` x3 (Osc 1: sync pill, FM source combo, Lin/Exp knobs;
+     Osc 2: Super pill and its three knobs; Osc 3: mode combo, wavetable combo,
+     small `WavetableView`, Duo pill and knobs, Load… via async `FileChooser`),
+     `NoisePanel` (level, colour, Vintage slider), `VoicePanel`.
+   - `FilterPanel` x2 with a live response curve, Filter B carrying the routing
+     combo, balance and stereo-offset knobs.
+   - `EnvelopePanel` x3 with a drawn shape (curve handles draggable), mode
+     switch, and Env 3's trigger combo.
+   - `ModulationTabs` (left, row 4): tabs LFO 1 / LFO 2 / LFO 3 / Matrix. The LFO
+     view shows the shape graph, controls, and a compact list of the first eight
+     matrix rows beside it; the Matrix tab shows all 21 rows with source, via,
+     destination combos, amount slider, curve, scrollable.
+   - `MotionTabs` (right, row 4): tabs Track A / Track B / Arp with draggable
+     bar editors (per-step length selector under each bar for tracks; on / tie /
+     velocity / gate / transpose / env lanes for the arp), playhead, and the
+     control row including Randomise and Clear buttons.
+   - `EffectsPanel`: four sections EQ, Chorus, Delay, Reverb with on/off in the
+     header status area.
+8. `src/ui/PresetBrowser.h/.cpp`: overlay over rows 2-4 with category list,
+   search, preset list, favourites, metadata, Save dialog, delete/rename,
+   "Open user folder".
+9. `WayfarerTime` and `WayfarerSpace` editors: single-panel versions using the
+   same theme, with a small Scope in OUT mode.
+10. Resizing: aspect-locked scale 60 %..200 %, applied with
+    `AffineTransform::scale` on the root component; remembered globally in
+    `%APPDATA%\Wayfarer\settings.json`.
+11. Accessibility and performance: every control has a name; keyboard focus is
+    visible; static panels use `setBufferedToImage`; timers at 60 Hz for the
+    scope, 30 Hz for meters and mod-rings, 10 Hz for header status; no
+    allocations in `paint`.
 
 ## Build and verify
 
 Build all targets. Open in Standalone and in Studio One and Gig Performer at
-several window sizes. Automate a knob from the DAW and confirm the UI follows.
-Test MIDI learn via right-click. Check the editor opens and closes 50 times without
-leaks (`juce::LeakedObjectDetector` is on in Debug).
+60 %, 100 % and 150 %. Put the mockup screenshot and the running plugin side by
+side and fix layout differences until they match. Play a chord and confirm the
+Monitor shows a stable waveform in every mode, and that closing the editor drops
+CPU back to the no-editor figure. Automate a knob from the DAW and confirm the
+UI follows. Test MIDI learn via right-click. Open and close the editor 50 times
+without leaks (`LeakedObjectDetector` in Debug).
 
 ## Done when
 
-- Every parameter in `docs/PARAMETERS.md` that is meant for the UI is reachable
-  from the editor (write a quick test that walks the editor's component tree and
-  collects attached parameter IDs, then diffs against the layout, allowing a
-  documented exclusion list such as `oscN_pitch`).
+- The editor matches `docs/UI-MOCKUP.html` in layout, colours and proportions.
+- The Monitor works in all six modes with a stable trigger and costs nothing
+  when the editor is closed.
+- Every UI-facing parameter in `docs/PARAMETERS.md` is reachable (write a test
+  that walks the editor's component tree, collects attached parameter IDs, and
+  diffs against the layout with a documented exclusion list such as `oscN_pitch`).
 - No visible tearing or lag at 200 % scale.
-- Commit: `"Add full editor UI, preset browser and effect plugin editors"`.
+- Commit: `"Add colour-coded editor UI with centre Monitor, preset browser and effect editors"`.
 
 ---
 
